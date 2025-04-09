@@ -1,0 +1,21 @@
+{
+  "run": {
+    "command": "nx run account:build:development",
+    "startTime": "2025-04-01T20:31:29.199Z",
+    "endTime": "2025-04-01T20:31:32.360Z",
+    "inner": false
+  },
+  "tasks": [
+    {
+      "taskId": "account:build:development",
+      "target": "build",
+      "projectName": "account",
+      "hash": "5935172143122941247",
+      "startTime": "2025-04-01T20:31:29.329Z",
+      "endTime": "2025-04-01T20:31:32.350Z",
+      "params": "",
+      "cacheStatus": "cache-miss",
+      "status": 0
+    }
+  ]
+}

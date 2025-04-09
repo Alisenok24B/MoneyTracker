@@ -1,0 +1,1888 @@
+{
+  "1019429876157937024": {
+    "targets": {
+      "test": {
+        "command": "jest",
+        "options": {
+          "cwd": "apps/account",
+          "env": {
+            "TS_NODE_COMPILER_OPTIONS": "{\"moduleResolution\":\"node10\",\"module\":\"nodenext\",\"customConditions\":null}"
+          }
+        },
+        "metadata": {
+          "technologies": [
+            "jest"
+          ],
+          "description": "Run Jest Tests",
+          "help": {
+            "command": "npx jest --help",
+            "example": {
+              "options": {
+                "coverage": true
+              }
+            }
+          }
+        },
+        "cache": true,
+        "inputs": [
+          "default",
+          "^production",
+          "{workspaceRoot}/jest.preset.js",
+          {
+            "externalDependencies": [
+              "jest"
+            ]
+          }
+        ],
+        "outputs": [
+          "{workspaceRoot}/coverage/apps/account"
+        ]
+      }
+    }
+  },
+  "5765728237776163210": {
+    "targets": {
+      "test": {
+        "command": "jest",
+        "options": {
+          "cwd": "apps/account",
+          "env": {
+            "TS_NODE_COMPILER_OPTIONS": "{\"moduleResolution\":\"node10\",\"module\":\"nodenext\",\"customConditions\":null}"
+          }
+        },
+        "metadata": {
+          "technologies": [
+            "jest"
+          ],
+          "description": "Run Jest Tests",
+          "help": {
+            "command": "npx jest --help",
+            "example": {
+              "options": {
+                "coverage": true
+              }
+            }
+          }
+        },
+        "cache": true,
+        "inputs": [
+          "default",
+          "^production",
+          "{workspaceRoot}/jest.preset.js",
+          {
+            "externalDependencies": [
+              "jest"
+            ]
+          }
+        ],
+        "outputs": [
+          "{workspaceRoot}/coverage/apps/account"
+        ]
+      }
+    }
+  },
+  "15435972918658296540": {
+    "targets": {
+      "test": {
+        "command": "jest",
+        "options": {
+          "cwd": "apps/account",
+          "env": {
+            "TS_NODE_COMPILER_OPTIONS": "{\"moduleResolution\":\"node10\",\"module\":\"nodenext\",\"customConditions\":null}"
+          }
+        },
+        "metadata": {
+          "technologies": [
+            "jest"
+          ],
+          "description": "Run Jest Tests",
+          "help": {
+            "command": "npx jest --help",
+            "example": {
+              "options": {
+                "coverage": true
+              }
+            }
+          }
+        },
+        "cache": true,
+        "inputs": [
+          "default",
+          "^production",
+          "{workspaceRoot}/jest.preset.js",
+          {
+            "externalDependencies": [
+              "jest"
+            ]
+          }
+        ],
+        "outputs": [
+          "{workspaceRoot}/coverage/apps/account"
+        ]
+      }
+    }
+  },
+  "3799026775209338130": {
+    "targets": {
+      "test": {
+        "command": "jest",
+        "options": {
+          "cwd": "apps/account",
+          "env": {
+            "TS_NODE_COMPILER_OPTIONS": "{\"moduleResolution\":\"node10\",\"module\":\"nodenext\",\"customConditions\":null}"
+          }
+        },
+        "metadata": {
+          "technologies": [
+            "jest"
+          ],
+          "description": "Run Jest Tests",
+          "help": {
+            "command": "npx jest --help",
+            "example": {
+              "options": {
+                "coverage": true
+              }
+            }
+          }
+        },
+        "cache": true,
+        "inputs": [
+          "default",
+          "^production",
+          "{workspaceRoot}/jest.preset.js",
+          {
+            "externalDependencies": [
+              "jest"
+            ]
+          }
+        ],
+        "outputs": [
+          "{workspaceRoot}/coverage/apps/account"
+        ]
+      }
+    }
+  },
+  "12157734238894668883": {
+    "targets": {
+      "test": {
+        "command": "jest",
+        "options": {
+          "cwd": "apps/account",
+          "env": {
+            "TS_NODE_COMPILER_OPTIONS": "{\"moduleResolution\":\"node10\",\"module\":\"nodenext\",\"customConditions\":null}"
+          }
+        },
+        "metadata": {
+          "technologies": [
+            "jest"
+          ],
+          "description": "Run Jest Tests",
+          "help": {
+            "command": "npx jest --help",
+            "example": {
+              "options": {
+                "coverage": true
+              }
+            }
+          }
+        },
+        "cache": true,
+        "inputs": [
+          "default",
+          "^production",
+          "{workspaceRoot}/jest.preset.js",
+          {
+            "externalDependencies": [
+              "jest"
+            ]
+          }
+        ],
+        "outputs": [
+          "{workspaceRoot}/coverage/apps/account"
+        ]
+      }
+    }
+  },
+  "726300367984217026": {
+    "targets": {
+      "test": {
+        "command": "jest",
+        "options": {
+          "cwd": "apps/account",
+          "env": {
+            "TS_NODE_COMPILER_OPTIONS": "{\"moduleResolution\":\"node10\",\"module\":\"nodenext\",\"customConditions\":null}"
+          }
+        },
+        "metadata": {
+          "technologies": [
+            "jest"
+          ],
+          "description": "Run Jest Tests",
+          "help": {
+            "command": "npx jest --help",
+            "example": {
+              "options": {
+                "coverage": true
+              }
+            }
+          }
+        },
+        "cache": true,
+        "inputs": [
+          "default",
+          "^production",
+          "{workspaceRoot}/jest.preset.js",
+          {
+            "externalDependencies": [
+              "jest"
+            ]
+          }
+        ],
+        "outputs": [
+          "{workspaceRoot}/coverage/apps/account"
+        ]
+      }
+    }
+  },
+  "7476377813050890261": {
+    "targets": {
+      "test": {
+        "command": "jest",
+        "options": {
+          "cwd": "apps/account",
+          "env": {
+            "TS_NODE_COMPILER_OPTIONS": "{\"moduleResolution\":\"node10\",\"module\":\"nodenext\",\"customConditions\":null}"
+          }
+        },
+        "metadata": {
+          "technologies": [
+            "jest"
+          ],
+          "description": "Run Jest Tests",
+          "help": {
+            "command": "npx jest --help",
+            "example": {
+              "options": {
+                "coverage": true
+              }
+            }
+          }
+        },
+        "cache": true,
+        "inputs": [
+          "default",
+          "^production",
+          "{workspaceRoot}/jest.preset.js",
+          {
+            "externalDependencies": [
+              "jest"
+            ]
+          }
+        ],
+        "outputs": [
+          "{workspaceRoot}/coverage/apps/account"
+        ]
+      }
+    }
+  },
+  "6765123181600949320": {
+    "targets": {
+      "test": {
+        "command": "jest",
+        "options": {
+          "cwd": "apps/account",
+          "env": {
+            "TS_NODE_COMPILER_OPTIONS": "{\"moduleResolution\":\"node10\",\"module\":\"nodenext\",\"customConditions\":null}"
+          }
+        },
+        "metadata": {
+          "technologies": [
+            "jest"
+          ],
+          "description": "Run Jest Tests",
+          "help": {
+            "command": "npx jest --help",
+            "example": {
+              "options": {
+                "coverage": true
+              }
+            }
+          }
+        },
+        "cache": true,
+        "inputs": [
+          "default",
+          "^production",
+          "{workspaceRoot}/jest.preset.js",
+          {
+            "externalDependencies": [
+              "jest"
+            ]
+          }
+        ],
+        "outputs": [
+          "{workspaceRoot}/coverage/apps/account"
+        ]
+      }
+    }
+  },
+  "16058401388965200943": {
+    "targets": {
+      "test": {
+        "command": "jest",
+        "options": {
+          "cwd": "apps/account",
+          "env": {
+            "TS_NODE_COMPILER_OPTIONS": "{\"moduleResolution\":\"node10\",\"module\":\"nodenext\",\"customConditions\":null}"
+          }
+        },
+        "metadata": {
+          "technologies": [
+            "jest"
+          ],
+          "description": "Run Jest Tests",
+          "help": {
+            "command": "npx jest --help",
+            "example": {
+              "options": {
+                "coverage": true
+              }
+            }
+          }
+        },
+        "cache": true,
+        "inputs": [
+          "default",
+          "^production",
+          "{workspaceRoot}/jest.preset.js",
+          {
+            "externalDependencies": [
+              "jest"
+            ]
+          }
+        ],
+        "outputs": [
+          "{workspaceRoot}/coverage/apps/account"
+        ]
+      }
+    }
+  },
+  "8262178102561111810": {
+    "targets": {
+      "test": {
+        "command": "jest",
+        "options": {
+          "cwd": "apps/account",
+          "env": {
+            "TS_NODE_COMPILER_OPTIONS": "{\"moduleResolution\":\"node10\",\"module\":\"nodenext\",\"customConditions\":null}"
+          }
+        },
+        "metadata": {
+          "technologies": [
+            "jest"
+          ],
+          "description": "Run Jest Tests",
+          "help": {
+            "command": "npx jest --help",
+            "example": {
+              "options": {
+                "coverage": true
+              }
+            }
+          }
+        },
+        "cache": true,
+        "inputs": [
+          "default",
+          "^production",
+          "{workspaceRoot}/jest.preset.js",
+          {
+            "externalDependencies": [
+              "jest"
+            ]
+          }
+        ],
+        "outputs": [
+          "{workspaceRoot}/coverage/apps/account"
+        ]
+      }
+    }
+  },
+  "14264282388930453674": {
+    "targets": {
+      "test": {
+        "command": "jest",
+        "options": {
+          "cwd": "apps/account",
+          "env": {
+            "TS_NODE_COMPILER_OPTIONS": "{\"moduleResolution\":\"node10\",\"module\":\"nodenext\",\"customConditions\":null}"
+          }
+        },
+        "metadata": {
+          "technologies": [
+            "jest"
+          ],
+          "description": "Run Jest Tests",
+          "help": {
+            "command": "npx jest --help",
+            "example": {
+              "options": {
+                "coverage": true
+              }
+            }
+          }
+        },
+        "cache": true,
+        "inputs": [
+          "default",
+          "^production",
+          "{workspaceRoot}/jest.preset.js",
+          {
+            "externalDependencies": [
+              "jest"
+            ]
+          }
+        ],
+        "outputs": [
+          "{workspaceRoot}/coverage/apps/account"
+        ]
+      }
+    }
+  },
+  "7271735514563484089": {
+    "targets": {
+      "test": {
+        "command": "jest",
+        "options": {
+          "cwd": "apps/account",
+          "env": {
+            "TS_NODE_COMPILER_OPTIONS": "{\"moduleResolution\":\"node10\",\"module\":\"nodenext\",\"customConditions\":null}"
+          }
+        },
+        "metadata": {
+          "technologies": [
+            "jest"
+          ],
+          "description": "Run Jest Tests",
+          "help": {
+            "command": "npx jest --help",
+            "example": {
+              "options": {
+                "coverage": true
+              }
+            }
+          }
+        },
+        "cache": true,
+        "inputs": [
+          "default",
+          "^production",
+          "{workspaceRoot}/jest.preset.js",
+          {
+            "externalDependencies": [
+              "jest"
+            ]
+          }
+        ],
+        "outputs": [
+          "{workspaceRoot}/coverage/apps/account"
+        ]
+      }
+    }
+  },
+  "3163305607661880692": {
+    "targets": {
+      "test": {
+        "command": "jest",
+        "options": {
+          "cwd": "apps/account",
+          "env": {
+            "TS_NODE_COMPILER_OPTIONS": "{\"moduleResolution\":\"node10\",\"module\":\"nodenext\",\"customConditions\":null}"
+          }
+        },
+        "metadata": {
+          "technologies": [
+            "jest"
+          ],
+          "description": "Run Jest Tests",
+          "help": {
+            "command": "npx jest --help",
+            "example": {
+              "options": {
+                "coverage": true
+              }
+            }
+          }
+        },
+        "cache": true,
+        "inputs": [
+          "default",
+          "^production",
+          "{workspaceRoot}/jest.preset.js",
+          {
+            "externalDependencies": [
+              "jest"
+            ]
+          }
+        ],
+        "outputs": [
+          "{workspaceRoot}/coverage/apps/account"
+        ]
+      }
+    }
+  },
+  "18133552403473088975": {
+    "targets": {
+      "test": {
+        "command": "jest",
+        "options": {
+          "cwd": "apps/account",
+          "env": {
+            "TS_NODE_COMPILER_OPTIONS": "{\"moduleResolution\":\"node10\",\"module\":\"nodenext\",\"customConditions\":null}"
+          }
+        },
+        "metadata": {
+          "technologies": [
+            "jest"
+          ],
+          "description": "Run Jest Tests",
+          "help": {
+            "command": "npx jest --help",
+            "example": {
+              "options": {
+                "coverage": true
+              }
+            }
+          }
+        },
+        "cache": true,
+        "inputs": [
+          "default",
+          "^production",
+          "{workspaceRoot}/jest.preset.js",
+          {
+            "externalDependencies": [
+              "jest"
+            ]
+          }
+        ],
+        "outputs": [
+          "{workspaceRoot}/coverage/apps/account"
+        ]
+      }
+    }
+  },
+  "9407698109533747503": {
+    "targets": {
+      "test": {
+        "command": "jest",
+        "options": {
+          "cwd": "apps/account",
+          "env": {
+            "TS_NODE_COMPILER_OPTIONS": "{\"moduleResolution\":\"node10\",\"module\":\"nodenext\",\"customConditions\":null}"
+          }
+        },
+        "metadata": {
+          "technologies": [
+            "jest"
+          ],
+          "description": "Run Jest Tests",
+          "help": {
+            "command": "npx jest --help",
+            "example": {
+              "options": {
+                "coverage": true
+              }
+            }
+          }
+        },
+        "cache": true,
+        "inputs": [
+          "default",
+          "^production",
+          "{workspaceRoot}/jest.preset.js",
+          {
+            "externalDependencies": [
+              "jest"
+            ]
+          }
+        ],
+        "outputs": [
+          "{workspaceRoot}/coverage/apps/account"
+        ]
+      }
+    }
+  },
+  "696109726605055456": {
+    "targets": {
+      "test": {
+        "command": "jest",
+        "options": {
+          "cwd": "apps/account",
+          "env": {
+            "TS_NODE_COMPILER_OPTIONS": "{\"moduleResolution\":\"node10\",\"module\":\"nodenext\",\"customConditions\":null}"
+          }
+        },
+        "metadata": {
+          "technologies": [
+            "jest"
+          ],
+          "description": "Run Jest Tests",
+          "help": {
+            "command": "npx jest --help",
+            "example": {
+              "options": {
+                "coverage": true
+              }
+            }
+          }
+        },
+        "cache": true,
+        "inputs": [
+          "default",
+          "^production",
+          "{workspaceRoot}/jest.preset.js",
+          {
+            "externalDependencies": [
+              "jest"
+            ]
+          }
+        ],
+        "outputs": [
+          "{workspaceRoot}/coverage/apps/account"
+        ]
+      }
+    }
+  },
+  "5418970327399700989": {
+    "targets": {
+      "test": {
+        "command": "jest",
+        "options": {
+          "cwd": "apps/account",
+          "env": {
+            "TS_NODE_COMPILER_OPTIONS": "{\"moduleResolution\":\"node10\",\"module\":\"nodenext\",\"customConditions\":null}"
+          }
+        },
+        "metadata": {
+          "technologies": [
+            "jest"
+          ],
+          "description": "Run Jest Tests",
+          "help": {
+            "command": "npx jest --help",
+            "example": {
+              "options": {
+                "coverage": true
+              }
+            }
+          }
+        },
+        "cache": true,
+        "inputs": [
+          "default",
+          "^production",
+          "{workspaceRoot}/jest.preset.js",
+          {
+            "externalDependencies": [
+              "jest"
+            ]
+          }
+        ],
+        "outputs": [
+          "{workspaceRoot}/coverage/apps/account"
+        ]
+      }
+    }
+  },
+  "17980043782357891937": {
+    "targets": {
+      "test": {
+        "command": "jest",
+        "options": {
+          "cwd": "apps/account",
+          "env": {
+            "TS_NODE_COMPILER_OPTIONS": "{\"moduleResolution\":\"node10\",\"module\":\"nodenext\",\"customConditions\":null}"
+          }
+        },
+        "metadata": {
+          "technologies": [
+            "jest"
+          ],
+          "description": "Run Jest Tests",
+          "help": {
+            "command": "npx jest --help",
+            "example": {
+              "options": {
+                "coverage": true
+              }
+            }
+          }
+        },
+        "cache": true,
+        "inputs": [
+          "default",
+          "^production",
+          "{workspaceRoot}/jest.preset.js",
+          {
+            "externalDependencies": [
+              "jest"
+            ]
+          }
+        ],
+        "outputs": [
+          "{workspaceRoot}/coverage/apps/account"
+        ]
+      }
+    }
+  },
+  "17793732579634392623": {
+    "targets": {
+      "test": {
+        "command": "jest",
+        "options": {
+          "cwd": "apps/account",
+          "env": {
+            "TS_NODE_COMPILER_OPTIONS": "{\"moduleResolution\":\"node10\",\"module\":\"nodenext\",\"customConditions\":null}"
+          }
+        },
+        "metadata": {
+          "technologies": [
+            "jest"
+          ],
+          "description": "Run Jest Tests",
+          "help": {
+            "command": "npx jest --help",
+            "example": {
+              "options": {
+                "coverage": true
+              }
+            }
+          }
+        },
+        "cache": true,
+        "inputs": [
+          "default",
+          "^production",
+          "{workspaceRoot}/jest.preset.js",
+          {
+            "externalDependencies": [
+              "jest"
+            ]
+          }
+        ],
+        "outputs": [
+          "{workspaceRoot}/coverage/apps/account"
+        ]
+      }
+    }
+  },
+  "8050477535639235971": {
+    "targets": {
+      "test": {
+        "command": "jest",
+        "options": {
+          "cwd": "apps/account",
+          "env": {
+            "TS_NODE_COMPILER_OPTIONS": "{\"moduleResolution\":\"node10\",\"module\":\"nodenext\",\"customConditions\":null}"
+          }
+        },
+        "metadata": {
+          "technologies": [
+            "jest"
+          ],
+          "description": "Run Jest Tests",
+          "help": {
+            "command": "npx jest --help",
+            "example": {
+              "options": {
+                "coverage": true
+              }
+            }
+          }
+        },
+        "cache": true,
+        "inputs": [
+          "default",
+          "^production",
+          "{workspaceRoot}/jest.preset.js",
+          {
+            "externalDependencies": [
+              "jest"
+            ]
+          }
+        ],
+        "outputs": [
+          "{workspaceRoot}/coverage/apps/account"
+        ]
+      }
+    }
+  },
+  "3226916799082185932": {
+    "targets": {
+      "test": {
+        "command": "jest",
+        "options": {
+          "cwd": "apps/account",
+          "env": {
+            "TS_NODE_COMPILER_OPTIONS": "{\"moduleResolution\":\"node10\",\"module\":\"nodenext\",\"customConditions\":null}"
+          }
+        },
+        "metadata": {
+          "technologies": [
+            "jest"
+          ],
+          "description": "Run Jest Tests",
+          "help": {
+            "command": "npx jest --help",
+            "example": {
+              "options": {
+                "coverage": true
+              }
+            }
+          }
+        },
+        "cache": true,
+        "inputs": [
+          "default",
+          "^production",
+          "{workspaceRoot}/jest.preset.js",
+          {
+            "externalDependencies": [
+              "jest"
+            ]
+          }
+        ],
+        "outputs": [
+          "{workspaceRoot}/coverage/apps/account"
+        ]
+      }
+    }
+  },
+  "11493443761449831516": {
+    "targets": {
+      "test": {
+        "command": "jest",
+        "options": {
+          "cwd": "apps/account",
+          "env": {
+            "TS_NODE_COMPILER_OPTIONS": "{\"moduleResolution\":\"node10\",\"module\":\"nodenext\",\"customConditions\":null}"
+          }
+        },
+        "metadata": {
+          "technologies": [
+            "jest"
+          ],
+          "description": "Run Jest Tests",
+          "help": {
+            "command": "npx jest --help",
+            "example": {
+              "options": {
+                "coverage": true
+              }
+            }
+          }
+        },
+        "cache": true,
+        "inputs": [
+          "default",
+          "^production",
+          "{workspaceRoot}/jest.preset.js",
+          {
+            "externalDependencies": [
+              "jest"
+            ]
+          }
+        ],
+        "outputs": [
+          "{workspaceRoot}/coverage/apps/account"
+        ]
+      }
+    }
+  },
+  "12450477660546784105": {
+    "targets": {
+      "test": {
+        "command": "jest",
+        "options": {
+          "cwd": "apps/account",
+          "env": {
+            "TS_NODE_COMPILER_OPTIONS": "{\"moduleResolution\":\"node10\",\"module\":\"nodenext\",\"customConditions\":null}"
+          }
+        },
+        "metadata": {
+          "technologies": [
+            "jest"
+          ],
+          "description": "Run Jest Tests",
+          "help": {
+            "command": "npx jest --help",
+            "example": {
+              "options": {
+                "coverage": true
+              }
+            }
+          }
+        },
+        "cache": true,
+        "inputs": [
+          "default",
+          "^production",
+          "{workspaceRoot}/jest.preset.js",
+          {
+            "externalDependencies": [
+              "jest"
+            ]
+          }
+        ],
+        "outputs": [
+          "{workspaceRoot}/coverage/apps/account"
+        ]
+      }
+    }
+  },
+  "1792246138481929833": {
+    "targets": {
+      "test": {
+        "command": "jest",
+        "options": {
+          "cwd": "apps/account",
+          "env": {
+            "TS_NODE_COMPILER_OPTIONS": "{\"moduleResolution\":\"node10\",\"module\":\"nodenext\",\"customConditions\":null}"
+          }
+        },
+        "metadata": {
+          "technologies": [
+            "jest"
+          ],
+          "description": "Run Jest Tests",
+          "help": {
+            "command": "npx jest --help",
+            "example": {
+              "options": {
+                "coverage": true
+              }
+            }
+          }
+        },
+        "cache": true,
+        "inputs": [
+          "default",
+          "^production",
+          "{workspaceRoot}/jest.preset.js",
+          {
+            "externalDependencies": [
+              "jest"
+            ]
+          }
+        ],
+        "outputs": [
+          "{workspaceRoot}/coverage/apps/account"
+        ]
+      }
+    }
+  },
+  "10950757060812782473": {
+    "targets": {
+      "test": {
+        "command": "jest",
+        "options": {
+          "cwd": "apps/account",
+          "env": {
+            "TS_NODE_COMPILER_OPTIONS": "{\"moduleResolution\":\"node10\",\"module\":\"nodenext\",\"customConditions\":null}"
+          }
+        },
+        "metadata": {
+          "technologies": [
+            "jest"
+          ],
+          "description": "Run Jest Tests",
+          "help": {
+            "command": "npx jest --help",
+            "example": {
+              "options": {
+                "coverage": true
+              }
+            }
+          }
+        },
+        "cache": true,
+        "inputs": [
+          "default",
+          "^production",
+          "{workspaceRoot}/jest.preset.js",
+          {
+            "externalDependencies": [
+              "jest"
+            ]
+          }
+        ],
+        "outputs": [
+          "{workspaceRoot}/coverage/apps/account"
+        ]
+      }
+    }
+  },
+  "2368206224131945924": {
+    "targets": {
+      "test": {
+        "command": "jest",
+        "options": {
+          "cwd": "apps/account",
+          "env": {
+            "TS_NODE_COMPILER_OPTIONS": "{\"moduleResolution\":\"node10\",\"module\":\"nodenext\",\"customConditions\":null}"
+          }
+        },
+        "metadata": {
+          "technologies": [
+            "jest"
+          ],
+          "description": "Run Jest Tests",
+          "help": {
+            "command": "npx jest --help",
+            "example": {
+              "options": {
+                "coverage": true
+              }
+            }
+          }
+        },
+        "cache": true,
+        "inputs": [
+          "default",
+          "^production",
+          "{workspaceRoot}/jest.preset.js",
+          {
+            "externalDependencies": [
+              "jest"
+            ]
+          }
+        ],
+        "outputs": [
+          "{workspaceRoot}/coverage/apps/account"
+        ]
+      }
+    }
+  },
+  "1353400690708154460": {
+    "targets": {
+      "test": {
+        "command": "jest",
+        "options": {
+          "cwd": "apps/account",
+          "env": {
+            "TS_NODE_COMPILER_OPTIONS": "{\"moduleResolution\":\"node10\",\"module\":\"nodenext\",\"customConditions\":null}"
+          }
+        },
+        "metadata": {
+          "technologies": [
+            "jest"
+          ],
+          "description": "Run Jest Tests",
+          "help": {
+            "command": "npx jest --help",
+            "example": {
+              "options": {
+                "coverage": true
+              }
+            }
+          }
+        },
+        "cache": true,
+        "inputs": [
+          "default",
+          "^production",
+          "{workspaceRoot}/jest.preset.js",
+          {
+            "externalDependencies": [
+              "jest"
+            ]
+          }
+        ],
+        "outputs": [
+          "{workspaceRoot}/coverage/apps/account"
+        ]
+      }
+    }
+  },
+  "15146530552920046105": {
+    "targets": {
+      "test": {
+        "command": "jest",
+        "options": {
+          "cwd": "apps/account",
+          "env": {
+            "TS_NODE_COMPILER_OPTIONS": "{\"moduleResolution\":\"node10\",\"module\":\"nodenext\",\"customConditions\":null}"
+          }
+        },
+        "metadata": {
+          "technologies": [
+            "jest"
+          ],
+          "description": "Run Jest Tests",
+          "help": {
+            "command": "npx jest --help",
+            "example": {
+              "options": {
+                "coverage": true
+              }
+            }
+          }
+        },
+        "cache": true,
+        "inputs": [
+          "default",
+          "^production",
+          "{workspaceRoot}/jest.preset.js",
+          {
+            "externalDependencies": [
+              "jest"
+            ]
+          }
+        ],
+        "outputs": [
+          "{workspaceRoot}/coverage/apps/account"
+        ]
+      }
+    }
+  },
+  "12870872154794243617": {
+    "targets": {
+      "test": {
+        "command": "jest",
+        "options": {
+          "cwd": "apps/account",
+          "env": {
+            "TS_NODE_COMPILER_OPTIONS": "{\"moduleResolution\":\"node10\",\"module\":\"nodenext\",\"customConditions\":null}"
+          }
+        },
+        "metadata": {
+          "technologies": [
+            "jest"
+          ],
+          "description": "Run Jest Tests",
+          "help": {
+            "command": "npx jest --help",
+            "example": {
+              "options": {
+                "coverage": true
+              }
+            }
+          }
+        },
+        "cache": true,
+        "inputs": [
+          "default",
+          "^production",
+          "{workspaceRoot}/jest.preset.js",
+          {
+            "externalDependencies": [
+              "jest"
+            ]
+          }
+        ],
+        "outputs": [
+          "{workspaceRoot}/coverage/apps/account"
+        ]
+      }
+    }
+  },
+  "9409451107555866963": {
+    "targets": {
+      "test": {
+        "command": "jest",
+        "options": {
+          "cwd": "apps/account",
+          "env": {
+            "TS_NODE_COMPILER_OPTIONS": "{\"moduleResolution\":\"node10\",\"module\":\"nodenext\",\"customConditions\":null}"
+          }
+        },
+        "metadata": {
+          "technologies": [
+            "jest"
+          ],
+          "description": "Run Jest Tests",
+          "help": {
+            "command": "npx jest --help",
+            "example": {
+              "options": {
+                "coverage": true
+              }
+            }
+          }
+        },
+        "cache": true,
+        "inputs": [
+          "default",
+          "^production",
+          "{workspaceRoot}/jest.preset.js",
+          {
+            "externalDependencies": [
+              "jest"
+            ]
+          }
+        ],
+        "outputs": [
+          "{workspaceRoot}/coverage/apps/account"
+        ]
+      }
+    }
+  },
+  "10032775914532561531": {
+    "targets": {
+      "test": {
+        "command": "jest",
+        "options": {
+          "cwd": "apps/account",
+          "env": {
+            "TS_NODE_COMPILER_OPTIONS": "{\"moduleResolution\":\"node10\",\"module\":\"nodenext\",\"customConditions\":null}"
+          }
+        },
+        "metadata": {
+          "technologies": [
+            "jest"
+          ],
+          "description": "Run Jest Tests",
+          "help": {
+            "command": "npx jest --help",
+            "example": {
+              "options": {
+                "coverage": true
+              }
+            }
+          }
+        },
+        "cache": true,
+        "inputs": [
+          "default",
+          "^production",
+          "{workspaceRoot}/jest.preset.js",
+          {
+            "externalDependencies": [
+              "jest"
+            ]
+          }
+        ],
+        "outputs": [
+          "{workspaceRoot}/coverage/apps/account"
+        ]
+      }
+    }
+  },
+  "18284633451370838828": {
+    "targets": {
+      "test": {
+        "command": "jest",
+        "options": {
+          "cwd": "apps/account",
+          "env": {
+            "TS_NODE_COMPILER_OPTIONS": "{\"moduleResolution\":\"node10\",\"module\":\"nodenext\",\"customConditions\":null}"
+          }
+        },
+        "metadata": {
+          "technologies": [
+            "jest"
+          ],
+          "description": "Run Jest Tests",
+          "help": {
+            "command": "npx jest --help",
+            "example": {
+              "options": {
+                "coverage": true
+              }
+            }
+          }
+        },
+        "cache": true,
+        "inputs": [
+          "default",
+          "^production",
+          "{workspaceRoot}/jest.preset.js",
+          {
+            "externalDependencies": [
+              "jest"
+            ]
+          }
+        ],
+        "outputs": [
+          "{workspaceRoot}/coverage/apps/account"
+        ]
+      }
+    }
+  },
+  "3714327537471002022": {
+    "targets": {
+      "test": {
+        "command": "jest",
+        "options": {
+          "cwd": "apps/account",
+          "env": {
+            "TS_NODE_COMPILER_OPTIONS": "{\"moduleResolution\":\"node10\",\"module\":\"nodenext\",\"customConditions\":null}"
+          }
+        },
+        "metadata": {
+          "technologies": [
+            "jest"
+          ],
+          "description": "Run Jest Tests",
+          "help": {
+            "command": "npx jest --help",
+            "example": {
+              "options": {
+                "coverage": true
+              }
+            }
+          }
+        },
+        "cache": true,
+        "inputs": [
+          "default",
+          "^production",
+          "{workspaceRoot}/jest.preset.js",
+          {
+            "externalDependencies": [
+              "jest"
+            ]
+          }
+        ],
+        "outputs": [
+          "{workspaceRoot}/coverage/apps/account"
+        ]
+      }
+    }
+  },
+  "8129752980399684444": {
+    "targets": {
+      "test": {
+        "command": "jest",
+        "options": {
+          "cwd": "apps/account",
+          "env": {
+            "TS_NODE_COMPILER_OPTIONS": "{\"moduleResolution\":\"node10\",\"module\":\"nodenext\",\"customConditions\":null}"
+          }
+        },
+        "metadata": {
+          "technologies": [
+            "jest"
+          ],
+          "description": "Run Jest Tests",
+          "help": {
+            "command": "npx jest --help",
+            "example": {
+              "options": {
+                "coverage": true
+              }
+            }
+          }
+        },
+        "cache": true,
+        "inputs": [
+          "default",
+          "^production",
+          "{workspaceRoot}/jest.preset.js",
+          {
+            "externalDependencies": [
+              "jest"
+            ]
+          }
+        ],
+        "outputs": [
+          "{workspaceRoot}/coverage/apps/account"
+        ]
+      }
+    }
+  },
+  "9383508165670970964": {
+    "targets": {
+      "test": {
+        "command": "jest",
+        "options": {
+          "cwd": "apps/account",
+          "env": {
+            "TS_NODE_COMPILER_OPTIONS": "{\"moduleResolution\":\"node10\",\"module\":\"nodenext\",\"customConditions\":null}"
+          }
+        },
+        "metadata": {
+          "technologies": [
+            "jest"
+          ],
+          "description": "Run Jest Tests",
+          "help": {
+            "command": "npx jest --help",
+            "example": {
+              "options": {
+                "coverage": true
+              }
+            }
+          }
+        },
+        "cache": true,
+        "inputs": [
+          "default",
+          "^production",
+          "{workspaceRoot}/jest.preset.js",
+          {
+            "externalDependencies": [
+              "jest"
+            ]
+          }
+        ],
+        "outputs": [
+          "{workspaceRoot}/coverage/apps/account"
+        ]
+      }
+    }
+  },
+  "9235541148479222356": {
+    "targets": {
+      "test": {
+        "command": "jest",
+        "options": {
+          "cwd": "apps/account",
+          "env": {
+            "TS_NODE_COMPILER_OPTIONS": "{\"moduleResolution\":\"node10\",\"module\":\"nodenext\",\"customConditions\":null}"
+          }
+        },
+        "metadata": {
+          "technologies": [
+            "jest"
+          ],
+          "description": "Run Jest Tests",
+          "help": {
+            "command": "npx jest --help",
+            "example": {
+              "options": {
+                "coverage": true
+              }
+            }
+          }
+        },
+        "cache": true,
+        "inputs": [
+          "default",
+          "^production",
+          "{workspaceRoot}/jest.preset.js",
+          {
+            "externalDependencies": [
+              "jest"
+            ]
+          }
+        ],
+        "outputs": [
+          "{workspaceRoot}/coverage/apps/account"
+        ]
+      }
+    }
+  },
+  "8168921639200419717": {
+    "targets": {
+      "test": {
+        "command": "jest",
+        "options": {
+          "cwd": "apps/account",
+          "env": {
+            "TS_NODE_COMPILER_OPTIONS": "{\"moduleResolution\":\"node10\",\"module\":\"nodenext\",\"customConditions\":null}"
+          }
+        },
+        "metadata": {
+          "technologies": [
+            "jest"
+          ],
+          "description": "Run Jest Tests",
+          "help": {
+            "command": "npx jest --help",
+            "example": {
+              "options": {
+                "coverage": true
+              }
+            }
+          }
+        },
+        "cache": true,
+        "inputs": [
+          "default",
+          "^production",
+          "{workspaceRoot}/jest.preset.js",
+          {
+            "externalDependencies": [
+              "jest"
+            ]
+          }
+        ],
+        "outputs": [
+          "{workspaceRoot}/coverage/apps/account"
+        ]
+      }
+    }
+  },
+  "4032261180147773948": {
+    "targets": {
+      "test": {
+        "command": "jest",
+        "options": {
+          "cwd": "apps/account",
+          "env": {
+            "TS_NODE_COMPILER_OPTIONS": "{\"moduleResolution\":\"node10\",\"module\":\"nodenext\",\"customConditions\":null}"
+          }
+        },
+        "metadata": {
+          "technologies": [
+            "jest"
+          ],
+          "description": "Run Jest Tests",
+          "help": {
+            "command": "npx jest --help",
+            "example": {
+              "options": {
+                "coverage": true
+              }
+            }
+          }
+        },
+        "cache": true,
+        "inputs": [
+          "default",
+          "^production",
+          "{workspaceRoot}/jest.preset.js",
+          {
+            "externalDependencies": [
+              "jest"
+            ]
+          }
+        ],
+        "outputs": [
+          "{workspaceRoot}/coverage/apps/account"
+        ]
+      }
+    }
+  },
+  "354913209619675026": {
+    "targets": {
+      "test": {
+        "command": "jest",
+        "options": {
+          "cwd": "apps/account",
+          "env": {
+            "TS_NODE_COMPILER_OPTIONS": "{\"moduleResolution\":\"node10\",\"module\":\"nodenext\",\"customConditions\":null}"
+          }
+        },
+        "metadata": {
+          "technologies": [
+            "jest"
+          ],
+          "description": "Run Jest Tests",
+          "help": {
+            "command": "npx jest --help",
+            "example": {
+              "options": {
+                "coverage": true
+              }
+            }
+          }
+        },
+        "cache": true,
+        "inputs": [
+          "default",
+          "^production",
+          "{workspaceRoot}/jest.preset.js",
+          {
+            "externalDependencies": [
+              "jest"
+            ]
+          }
+        ],
+        "outputs": [
+          "{workspaceRoot}/coverage/apps/account"
+        ]
+      }
+    }
+  },
+  "17354224471989773076": {
+    "targets": {
+      "test": {
+        "command": "jest",
+        "options": {
+          "cwd": "apps/account",
+          "env": {
+            "TS_NODE_COMPILER_OPTIONS": "{\"moduleResolution\":\"node10\",\"module\":\"nodenext\",\"customConditions\":null}"
+          }
+        },
+        "metadata": {
+          "technologies": [
+            "jest"
+          ],
+          "description": "Run Jest Tests",
+          "help": {
+            "command": "npx jest --help",
+            "example": {
+              "options": {
+                "coverage": true
+              }
+            }
+          }
+        },
+        "cache": true,
+        "inputs": [
+          "default",
+          "^production",
+          "{workspaceRoot}/jest.preset.js",
+          {
+            "externalDependencies": [
+              "jest"
+            ]
+          }
+        ],
+        "outputs": [
+          "{workspaceRoot}/coverage/apps/account"
+        ]
+      }
+    }
+  },
+  "15766035086659469656": {
+    "targets": {
+      "test": {
+        "command": "jest",
+        "options": {
+          "cwd": "apps/account",
+          "env": {
+            "TS_NODE_COMPILER_OPTIONS": "{\"moduleResolution\":\"node10\",\"module\":\"nodenext\",\"customConditions\":null}"
+          }
+        },
+        "metadata": {
+          "technologies": [
+            "jest"
+          ],
+          "description": "Run Jest Tests",
+          "help": {
+            "command": "npx jest --help",
+            "example": {
+              "options": {
+                "coverage": true
+              }
+            }
+          }
+        },
+        "cache": true,
+        "inputs": [
+          "default",
+          "^production",
+          "{workspaceRoot}/jest.preset.js",
+          {
+            "externalDependencies": [
+              "jest"
+            ]
+          }
+        ],
+        "outputs": [
+          "{workspaceRoot}/coverage/apps/account"
+        ]
+      }
+    }
+  },
+  "9271947316707144205": {
+    "targets": {
+      "test": {
+        "command": "jest",
+        "options": {
+          "cwd": "apps/account",
+          "env": {
+            "TS_NODE_COMPILER_OPTIONS": "{\"moduleResolution\":\"node10\",\"module\":\"nodenext\",\"customConditions\":null}"
+          }
+        },
+        "metadata": {
+          "technologies": [
+            "jest"
+          ],
+          "description": "Run Jest Tests",
+          "help": {
+            "command": "npx jest --help",
+            "example": {
+              "options": {
+                "coverage": true
+              }
+            }
+          }
+        },
+        "cache": true,
+        "inputs": [
+          "default",
+          "^production",
+          "{workspaceRoot}/jest.preset.js",
+          {
+            "externalDependencies": [
+              "jest"
+            ]
+          }
+        ],
+        "outputs": [
+          "{workspaceRoot}/coverage/apps/account"
+        ]
+      }
+    }
+  },
+  "17972465238792538726": {
+    "targets": {
+      "test": {
+        "command": "jest",
+        "options": {
+          "cwd": "apps/account",
+          "env": {
+            "TS_NODE_COMPILER_OPTIONS": "{\"moduleResolution\":\"node10\",\"module\":\"nodenext\",\"customConditions\":null}"
+          }
+        },
+        "metadata": {
+          "technologies": [
+            "jest"
+          ],
+          "description": "Run Jest Tests",
+          "help": {
+            "command": "npx jest --help",
+            "example": {
+              "options": {
+                "coverage": true
+              }
+            }
+          }
+        },
+        "cache": true,
+        "inputs": [
+          "default",
+          "^production",
+          "{workspaceRoot}/jest.preset.js",
+          {
+            "externalDependencies": [
+              "jest"
+            ]
+          }
+        ],
+        "outputs": [
+          "{workspaceRoot}/coverage/apps/account"
+        ]
+      }
+    }
+  },
+  "9684132964819902330": {
+    "targets": {
+      "test": {
+        "command": "jest",
+        "options": {
+          "cwd": "apps/account",
+          "env": {
+            "TS_NODE_COMPILER_OPTIONS": "{\"moduleResolution\":\"node10\",\"module\":\"nodenext\",\"customConditions\":null}"
+          }
+        },
+        "metadata": {
+          "technologies": [
+            "jest"
+          ],
+          "description": "Run Jest Tests",
+          "help": {
+            "command": "npx jest --help",
+            "example": {
+              "options": {
+                "coverage": true
+              }
+            }
+          }
+        },
+        "cache": true,
+        "inputs": [
+          "default",
+          "^production",
+          "{workspaceRoot}/jest.preset.js",
+          {
+            "externalDependencies": [
+              "jest"
+            ]
+          }
+        ],
+        "outputs": [
+          "{workspaceRoot}/coverage/apps/account"
+        ]
+      }
+    }
+  },
+  "6764934185425072233": {
+    "targets": {
+      "test": {
+        "command": "jest",
+        "options": {
+          "cwd": "apps/account",
+          "env": {
+            "TS_NODE_COMPILER_OPTIONS": "{\"moduleResolution\":\"node10\",\"module\":\"nodenext\",\"customConditions\":null}"
+          }
+        },
+        "metadata": {
+          "technologies": [
+            "jest"
+          ],
+          "description": "Run Jest Tests",
+          "help": {
+            "command": "npx jest --help",
+            "example": {
+              "options": {
+                "coverage": true
+              }
+            }
+          }
+        },
+        "cache": true,
+        "inputs": [
+          "default",
+          "^production",
+          "{workspaceRoot}/jest.preset.js",
+          {
+            "externalDependencies": [
+              "jest"
+            ]
+          }
+        ],
+        "outputs": [
+          "{workspaceRoot}/coverage/apps/account"
+        ]
+      }
+    }
+  },
+  "14169908770652049699": {
+    "targets": {
+      "test": {
+        "command": "jest",
+        "options": {
+          "cwd": "apps/account",
+          "env": {
+            "TS_NODE_COMPILER_OPTIONS": "{\"moduleResolution\":\"node10\",\"module\":\"nodenext\",\"customConditions\":null}"
+          }
+        },
+        "metadata": {
+          "technologies": [
+            "jest"
+          ],
+          "description": "Run Jest Tests",
+          "help": {
+            "command": "npx jest --help",
+            "example": {
+              "options": {
+                "coverage": true
+              }
+            }
+          }
+        },
+        "cache": true,
+        "inputs": [
+          "default",
+          "^production",
+          "{workspaceRoot}/jest.preset.js",
+          {
+            "externalDependencies": [
+              "jest"
+            ]
+          }
+        ],
+        "outputs": [
+          "{workspaceRoot}/coverage/apps/account"
+        ]
+      }
+    }
+  }
+}
