@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { PassportStrategy } from "@nestjs/passport";
 import { Strategy, ExtractJwt } from "passport-jwt";
-import {IJWTPayload} from '@purpleschool/interfaces';
+import {IJWTPayload} from '@moneytracker/interfaces';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {

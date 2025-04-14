@@ -1,4 +1,4 @@
-import { IUser, IUserCourses, UserRole } from "@purpleschool/interfaces";
+import { IUser, IUserCourses, UserRole } from "@moneytracker/interfaces";
 import { compare, genSalt, hash } from "bcryptjs";
 
 export class UserEntity implements IUser {

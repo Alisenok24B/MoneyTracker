@@ -1,7 +1,7 @@
 import { Body, Controller } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { RMQRoute, RMQValidate } from 'nestjs-rmq';
-import {AccountLogin, AccountRegister} from '@purpleschool/contracts';
+import {AccountLogin, AccountRegister} from '@moneytracker/contracts';
 
 @Controller('auth')
 export class AuthController {

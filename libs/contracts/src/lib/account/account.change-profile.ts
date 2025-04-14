@@ -1,5 +1,5 @@
 import { IsString } from 'class-validator';
-import {IUser} from '@purpleschool/interfaces'
+import {IUser} from '@moneytracker/interfaces'
 
 export namespace AccountChangeProfile {
     export const topic = 'account.change-profile.command';

@@ -9,6 +9,6 @@ chunk (runtime: main) [1m[32mmain.js[39m[22m (main) 16 KiB [1m[33m[entry]
    [90m   |[39m          [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
    [90m 3 |[39m [36mimport[39m { [33mUserRepository[39m } [36mfrom[39m [32m'../user/repositories/user.repository'[39m[33m;[39m
    [90m 4 |[39m [36mimport[39m { [33mUserEntity[39m } [36mfrom[39m [32m'../user/entity/user.entity'[39m[33m;[39m
-   [90m 5 |[39m [36mimport[39m { [33mUserRole[39m } [36mfrom[39m [32m'@purpleschool/interfaces'[39m[33m;[39m[0m
+   [90m 5 |[39m [36mimport[39m { [33mUserRole[39m } [36mfrom[39m [32m'@moneytracker/interfaces'[39m[33m;[39m[0m
 
 webpack compiled with [1m[31m1 error[39m[22m (586ee7a1ec191cd0)

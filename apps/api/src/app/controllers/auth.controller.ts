@@ -1,5 +1,5 @@
 import { Body, Controller, Post, UnauthorizedException } from '@nestjs/common';
-import {AccountLogin, AccountRegister} from '@purpleschool/contracts';
+import {AccountLogin, AccountRegister} from '@moneytracker/contracts';
 import { RMQService } from 'nestjs-rmq';
 import { LoginDto } from '../dtos/login.dto';
 import { RegisterDto } from '../dtos/redister.dto';

@@ -1,6 +1,6 @@
 import { Body, Controller } from "@nestjs/common";
 import { UserRepository } from "./repositories/user.repository";
-import { AccountChangeProfile } from "@purpleschool/contracts";
+import { AccountChangeProfile } from "@moneytracker/contracts";
 import { RMQRoute, RMQValidate } from "nestjs-rmq";
 import { UserEntity } from "./entities/user.entity";
 

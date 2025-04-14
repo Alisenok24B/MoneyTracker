@@ -1,5 +1,5 @@
 import { IsString } from 'class-validator';
-import {IUserCourses} from '@purpleschool/interfaces'
+import {IUserCourses} from '@moneytracker/interfaces'
 
 export namespace AccountUserCourses {
     export const topic = 'account.user-courses.query';

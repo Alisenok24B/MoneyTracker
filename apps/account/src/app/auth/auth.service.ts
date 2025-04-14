@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { UserRepository } from '../user/repositories/user.repository';
 import { UserEntity } from '../user/entities/user.entity';
-import { UserRole } from '@purpleschool/interfaces';
+import { UserRole } from '@moneytracker/interfaces';
 import { JwtService } from '@nestjs/jwt';
-import { AccountRegister } from '@purpleschool/contracts';
+import { AccountRegister } from '@moneytracker/contracts';
 
 @Injectable()
 export class AuthService {

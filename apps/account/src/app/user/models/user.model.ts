@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
-import { IUser, IUserCourses, PurchaseState, UserRole } from '@purpleschool/interfaces';
+import { IUser, IUserCourses, PurchaseState, UserRole } from '@moneytracker/interfaces';
 
 @Schema()
 export class UserCourses extends Document implements IUserCourses {

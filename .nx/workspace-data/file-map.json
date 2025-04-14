@@ -2,10 +2,10 @@
   "version": "6.0",
   "nxVersion": "20.6.4",
   "pathMappings": {
-    "@purpleschool/contracts": [
+    "@moneytracker/contracts": [
       "libs/contracts/src/index.ts"
     ],
-    "@purpleschool/interfaces": [
+    "@moneytracker/interfaces": [
       "libs/interfaces/src/index.ts"
     ]
   },
