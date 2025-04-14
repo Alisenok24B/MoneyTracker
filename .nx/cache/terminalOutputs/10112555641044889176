@@ -1,19 +1,19 @@
 [2m> [22mwebpack-cli build node-env=production
 
-[webpack-cli] [31mFailed to load '/Users/alisenok/Self-education/Курс_Web/moneytracker/apps/webpack.config.js' config[39m
-[webpack-cli] [31mError: ENOENT: no such file or directory, stat '/Users/alisenok/Self-education/Курс_Web/moneytracker/apps/src/assets'
+[webpack-cli] [31mFailed to load '/Users/alisenok/Self-education/Курс_Web/purpleschool/apps/webpack.config.js' config[39m
+[webpack-cli] [31mError: ENOENT: no such file or directory, stat '/Users/alisenok/Self-education/Курс_Web/purpleschool/apps/src/assets'
     at statSync (node:fs:1740:25)
-    at /Users/alisenok/Self-education/Курс_Web/moneytracker/node_modules/@nx/webpack/src/plugins/nx-webpack-plugin/lib/normalize-options.js:103:51
+    at /Users/alisenok/Self-education/Курс_Web/purpleschool/node_modules/@nx/webpack/src/plugins/nx-webpack-plugin/lib/normalize-options.js:103:51
     at Array.map (<anonymous>)
-    at normalizeAssets (/Users/alisenok/Self-education/Курс_Web/moneytracker/node_modules/@nx/webpack/src/plugins/nx-webpack-plugin/lib/normalize-options.js:95:19)
-    at normalizeOptions (/Users/alisenok/Self-education/Курс_Web/moneytracker/node_modules/@nx/webpack/src/plugins/nx-webpack-plugin/lib/normalize-options.js:61:15)
-    at new NxAppWebpackPlugin (/Users/alisenok/Self-education/Курс_Web/moneytracker/node_modules/@nx/webpack/src/plugins/nx-webpack-plugin/nx-app-webpack-plugin.js:22:69)
-    at Object.<anonymous> (/Users/alisenok/Self-education/Курс_Web/moneytracker/apps/webpack.config.js:9:5)
+    at normalizeAssets (/Users/alisenok/Self-education/Курс_Web/purpleschool/node_modules/@nx/webpack/src/plugins/nx-webpack-plugin/lib/normalize-options.js:95:19)
+    at normalizeOptions (/Users/alisenok/Self-education/Курс_Web/purpleschool/node_modules/@nx/webpack/src/plugins/nx-webpack-plugin/lib/normalize-options.js:61:15)
+    at new NxAppWebpackPlugin (/Users/alisenok/Self-education/Курс_Web/purpleschool/node_modules/@nx/webpack/src/plugins/nx-webpack-plugin/nx-app-webpack-plugin.js:22:69)
+    at Object.<anonymous> (/Users/alisenok/Self-education/Курс_Web/purpleschool/apps/webpack.config.js:9:5)
     at Module._compile (node:internal/modules/cjs/loader:1554:14)
     at Object..js (node:internal/modules/cjs/loader:1706:10)
     at Module.load (node:internal/modules/cjs/loader:1289:32) {
   errno: -2,
   code: 'ENOENT',
   syscall: 'stat',
-  path: '/Users/alisenok/Self-education/Курс_Web/moneytracker/apps/src/assets'
+  path: '/Users/alisenok/Self-education/Курс_Web/purpleschool/apps/src/assets'
 }[39m

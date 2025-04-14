@@ -1,12 +1,12 @@
 [NX v20.6.4 Daemon Server] - 2025-03-27T21:11:52.055Z - Started listening on: /var/folders/dk/ksmjxg9x7tdf9kdpjrg841x80000gn/T/7070b0314752f3dda838/d.sock
-[NX v20.6.4 Daemon Server] - 2025-03-27T21:11:52.057Z - [WATCHER]: Subscribed to changes within: /Users/alisenok/Self-education/Курс_Web/moneytracker (native)
+[NX v20.6.4 Daemon Server] - 2025-03-27T21:11:52.057Z - [WATCHER]: Subscribed to changes within: /Users/alisenok/Self-education/Курс_Web/purpleschool (native)
 [NX v20.6.4 Daemon Server] - 2025-03-27T21:11:52.061Z - Established a connection. Number of open connections: 1
 [NX v20.6.4 Daemon Server] - 2025-03-27T21:11:52.061Z - Established a connection. Number of open connections: 2
 [NX v20.6.4 Daemon Server] - 2025-03-27T21:11:52.062Z - Closed a connection. Number of open connections: 1
 [NX v20.6.4 Daemon Server] - 2025-03-27T21:11:52.062Z - [REQUEST]: Client Request for Project Graph Received
 [NX v20.6.4 Daemon Server] - 2025-03-27T21:11:52.118Z - [WATCHER]: Processing file changes in outputs
-[NX v20.6.4 Daemon Server] - 2025-03-27T21:11:52.194Z - Time taken for 'Load Nx Plugin: /Users/alisenok/Self-education/Курс_Web/moneytracker/node_modules/nx/src/plugins/project-json/build-nodes/project-json' 129.45616600000002ms
-[NX v20.6.4 Daemon Server] - 2025-03-27T21:11:52.195Z - Time taken for 'Load Nx Plugin: /Users/alisenok/Self-education/Курс_Web/moneytracker/node_modules/nx/src/plugins/package-json' 130.419125ms
+[NX v20.6.4 Daemon Server] - 2025-03-27T21:11:52.194Z - Time taken for 'Load Nx Plugin: /Users/alisenok/Self-education/Курс_Web/purpleschool/node_modules/nx/src/plugins/project-json/build-nodes/project-json' 129.45616600000002ms
+[NX v20.6.4 Daemon Server] - 2025-03-27T21:11:52.195Z - Time taken for 'Load Nx Plugin: /Users/alisenok/Self-education/Курс_Web/purpleschool/node_modules/nx/src/plugins/package-json' 130.419125ms
 [NX v20.6.4 Daemon Server] - 2025-03-27T21:11:52.202Z - Time taken for 'loadDefaultNxPlugins' 138.44666600000002ms
 [NX v20.6.4 Daemon Server] - 2025-03-27T21:11:52.232Z - Time taken for 'Load Nx Plugin: @nx/eslint/plugin' 169.096542ms
 [NX v20.6.4 Daemon Server] - 2025-03-27T21:11:52.233Z - Time taken for 'Load Nx Plugin: @nx/jest/plugin' 168.93833400000003ms
@@ -297,17 +297,17 @@
 [NX v20.6.4 Daemon Server] - 2025-03-27T21:15:16.269Z - Closed a connection. Number of open connections: 2
 [NX v20.6.4 Daemon Server] - 2025-03-27T21:15:16.269Z - Closed a connection. Number of open connections: 1
 [NX v20.6.4 Daemon Server] - 2025-03-27T21:15:16.269Z - Closed a connection. Number of open connections: 0
-[NX v20.6.4 Daemon Server] - 2025-03-27T21:15:16.269Z - [WATCHER]: Stopping the watcher for /Users/alisenok/Self-education/Курс_Web/moneytracker (sources)
-[NX v20.6.4 Daemon Server] - 2025-03-27T21:15:16.269Z - [WATCHER]: Stopping the watcher for /Users/alisenok/Self-education/Курс_Web/moneytracker (outputs)
+[NX v20.6.4 Daemon Server] - 2025-03-27T21:15:16.269Z - [WATCHER]: Stopping the watcher for /Users/alisenok/Self-education/Курс_Web/purpleschool (sources)
+[NX v20.6.4 Daemon Server] - 2025-03-27T21:15:16.269Z - [WATCHER]: Stopping the watcher for /Users/alisenok/Self-education/Курс_Web/purpleschool (outputs)
 [NX v20.6.4 Daemon Server] - 2025-03-27T21:15:16.270Z - Server stopped because: "LOCK_FILES_CHANGED"
 [NX v20.6.4 Daemon Server] - 2025-03-28T16:54:01.986Z - Started listening on: /var/folders/dk/ksmjxg9x7tdf9kdpjrg841x80000gn/T/7070b0314752f3dda838/d.sock
-[NX v20.6.4 Daemon Server] - 2025-03-28T16:54:01.990Z - [WATCHER]: Subscribed to changes within: /Users/alisenok/Self-education/Курс_Web/moneytracker (native)
+[NX v20.6.4 Daemon Server] - 2025-03-28T16:54:01.990Z - [WATCHER]: Subscribed to changes within: /Users/alisenok/Self-education/Курс_Web/purpleschool (native)
 [NX v20.6.4 Daemon Server] - 2025-03-28T16:54:01.991Z - Established a connection. Number of open connections: 1
 [NX v20.6.4 Daemon Server] - 2025-03-28T16:54:01.991Z - Established a connection. Number of open connections: 2
 [NX v20.6.4 Daemon Server] - 2025-03-28T16:54:01.992Z - Closed a connection. Number of open connections: 1
 [NX v20.6.4 Daemon Server] - 2025-03-28T16:54:01.993Z - [REQUEST]: Client Request for Project Graph Received
-[NX v20.6.4 Daemon Server] - 2025-03-28T16:54:02.161Z - Time taken for 'Load Nx Plugin: /Users/alisenok/Self-education/Курс_Web/moneytracker/node_modules/nx/src/plugins/project-json/build-nodes/project-json' 164.45533300000002ms
-[NX v20.6.4 Daemon Server] - 2025-03-28T16:54:02.170Z - Time taken for 'Load Nx Plugin: /Users/alisenok/Self-education/Курс_Web/moneytracker/node_modules/nx/src/plugins/package-json' 173.0795ms
+[NX v20.6.4 Daemon Server] - 2025-03-28T16:54:02.161Z - Time taken for 'Load Nx Plugin: /Users/alisenok/Self-education/Курс_Web/purpleschool/node_modules/nx/src/plugins/project-json/build-nodes/project-json' 164.45533300000002ms
+[NX v20.6.4 Daemon Server] - 2025-03-28T16:54:02.170Z - Time taken for 'Load Nx Plugin: /Users/alisenok/Self-education/Курс_Web/purpleschool/node_modules/nx/src/plugins/package-json' 173.0795ms
 [NX v20.6.4 Daemon Server] - 2025-03-28T16:54:02.188Z - Time taken for 'loadDefaultNxPlugins' 191.99591599999997ms
 [NX v20.6.4 Daemon Server] - 2025-03-28T16:54:02.240Z - Time taken for 'Load Nx Plugin: @nx/jest/plugin' 244.11320899999998ms
 [NX v20.6.4 Daemon Server] - 2025-03-28T16:54:02.240Z - Time taken for 'Load Nx Plugin: @nx/eslint/plugin' 245.15058299999998ms
@@ -722,20 +722,20 @@
 [NX v20.6.4 Daemon Server] - 2025-03-28T17:20:56.498Z - [SYNC]: project graph hash is the same, not collecting task sync generators
 [NX v20.6.4 Daemon Server] - 2025-03-28T17:20:56.498Z - [SYNC]: nx.json hash is the same, not collecting global sync generators
 [NX v20.6.4 Daemon Server] - 2025-03-28T17:20:56.498Z - Time taken for 'total execution time for createProjectGraph()' 10.031749999849126ms
-[NX v20.6.4 Daemon Server] - 2025-03-28T20:26:15.872Z - [WATCHER]: Stopping the watcher for /Users/alisenok/Self-education/Курс_Web/moneytracker (sources)
+[NX v20.6.4 Daemon Server] - 2025-03-28T20:26:15.872Z - [WATCHER]: Stopping the watcher for /Users/alisenok/Self-education/Курс_Web/purpleschool (sources)
 [NX v20.6.4 Daemon Server] - 2025-03-28T20:26:15.873Z - Closed a connection. Number of open connections: 2
 [NX v20.6.4 Daemon Server] - 2025-03-28T20:26:15.873Z - Closed a connection. Number of open connections: 1
 [NX v20.6.4 Daemon Server] - 2025-03-28T20:26:15.873Z - Closed a connection. Number of open connections: 0
-[NX v20.6.4 Daemon Server] - 2025-03-28T20:26:15.873Z - [WATCHER]: Stopping the watcher for /Users/alisenok/Self-education/Курс_Web/moneytracker (outputs)
+[NX v20.6.4 Daemon Server] - 2025-03-28T20:26:15.873Z - [WATCHER]: Stopping the watcher for /Users/alisenok/Self-education/Курс_Web/purpleschool (outputs)
 [NX v20.6.4 Daemon Server] - 2025-03-28T20:26:15.876Z - Server stopped because: "10800000ms of inactivity"
 [NX v20.6.4 Daemon Server] - 2025-03-28T21:48:09.939Z - Started listening on: /var/folders/dk/ksmjxg9x7tdf9kdpjrg841x80000gn/T/7070b0314752f3dda838/d.sock
-[NX v20.6.4 Daemon Server] - 2025-03-28T21:48:09.944Z - [WATCHER]: Subscribed to changes within: /Users/alisenok/Self-education/Курс_Web/moneytracker (native)
+[NX v20.6.4 Daemon Server] - 2025-03-28T21:48:09.944Z - [WATCHER]: Subscribed to changes within: /Users/alisenok/Self-education/Курс_Web/purpleschool (native)
 [NX v20.6.4 Daemon Server] - 2025-03-28T21:48:09.947Z - Established a connection. Number of open connections: 1
 [NX v20.6.4 Daemon Server] - 2025-03-28T21:48:09.948Z - Established a connection. Number of open connections: 2
 [NX v20.6.4 Daemon Server] - 2025-03-28T21:48:09.948Z - Closed a connection. Number of open connections: 1
 [NX v20.6.4 Daemon Server] - 2025-03-28T21:48:09.949Z - [REQUEST]: Client Request for Project Graph Received
-[NX v20.6.4 Daemon Server] - 2025-03-28T21:48:10.131Z - Time taken for 'Load Nx Plugin: /Users/alisenok/Self-education/Курс_Web/moneytracker/node_modules/nx/src/plugins/project-json/build-nodes/project-json' 178.18200000000002ms
-[NX v20.6.4 Daemon Server] - 2025-03-28T21:48:10.131Z - Time taken for 'Load Nx Plugin: /Users/alisenok/Self-education/Курс_Web/moneytracker/node_modules/nx/src/plugins/package-json' 178.71408399999999ms
+[NX v20.6.4 Daemon Server] - 2025-03-28T21:48:10.131Z - Time taken for 'Load Nx Plugin: /Users/alisenok/Self-education/Курс_Web/purpleschool/node_modules/nx/src/plugins/project-json/build-nodes/project-json' 178.18200000000002ms
+[NX v20.6.4 Daemon Server] - 2025-03-28T21:48:10.131Z - Time taken for 'Load Nx Plugin: /Users/alisenok/Self-education/Курс_Web/purpleschool/node_modules/nx/src/plugins/package-json' 178.71408399999999ms
 [NX v20.6.4 Daemon Server] - 2025-03-28T21:48:10.141Z - Time taken for 'loadDefaultNxPlugins' 188.35220799999996ms
 [NX v20.6.4 Daemon Server] - 2025-03-28T21:48:10.187Z - Time taken for 'Load Nx Plugin: @nx/jest/plugin' 235.55779200000003ms
 [NX v20.6.4 Daemon Server] - 2025-03-28T21:48:10.188Z - Time taken for 'Load Nx Plugin: @nx/eslint/plugin' 236.509333ms
@@ -836,18 +836,18 @@
 [NX v20.6.4 Daemon Server] - 2025-03-29T00:57:37.806Z - Closed a connection. Number of open connections: 2
 [NX v20.6.4 Daemon Server] - 2025-03-29T00:57:37.929Z - Closed a connection. Number of open connections: 1
 [NX v20.6.4 Daemon Server] - 2025-03-29T00:57:37.929Z - Closed a connection. Number of open connections: 0
-[NX v20.6.4 Daemon Server] - 2025-03-29T00:57:37.930Z - [WATCHER]: Stopping the watcher for /Users/alisenok/Self-education/Курс_Web/moneytracker (sources)
-[NX v20.6.4 Daemon Server] - 2025-03-29T00:57:37.931Z - [WATCHER]: Stopping the watcher for /Users/alisenok/Self-education/Курс_Web/moneytracker (outputs)
+[NX v20.6.4 Daemon Server] - 2025-03-29T00:57:37.930Z - [WATCHER]: Stopping the watcher for /Users/alisenok/Self-education/Курс_Web/purpleschool (sources)
+[NX v20.6.4 Daemon Server] - 2025-03-29T00:57:37.931Z - [WATCHER]: Stopping the watcher for /Users/alisenok/Self-education/Курс_Web/purpleschool (outputs)
 [NX v20.6.4 Daemon Server] - 2025-03-29T00:57:37.937Z - Server stopped because: "10800000ms of inactivity"
 [NX v20.6.4 Daemon Server] - 2025-03-31T18:58:05.694Z - Started listening on: /var/folders/dk/ksmjxg9x7tdf9kdpjrg841x80000gn/T/7070b0314752f3dda838/d.sock
-[NX v20.6.4 Daemon Server] - 2025-03-31T18:58:05.697Z - [WATCHER]: Subscribed to changes within: /Users/alisenok/Self-education/Курс_Web/moneytracker (native)
+[NX v20.6.4 Daemon Server] - 2025-03-31T18:58:05.697Z - [WATCHER]: Subscribed to changes within: /Users/alisenok/Self-education/Курс_Web/purpleschool (native)
 [NX v20.6.4 Daemon Server] - 2025-03-31T18:58:05.703Z - Established a connection. Number of open connections: 1
 [NX v20.6.4 Daemon Server] - 2025-03-31T18:58:05.703Z - Established a connection. Number of open connections: 2
 [NX v20.6.4 Daemon Server] - 2025-03-31T18:58:05.704Z - Closed a connection. Number of open connections: 1
 [NX v20.6.4 Daemon Server] - 2025-03-31T18:58:05.705Z - [REQUEST]: Client Request for Project Graph Received
 [NX v20.6.4 Daemon Server] - 2025-03-31T18:58:05.756Z - [WATCHER]: Processing file changes in outputs
-[NX v20.6.4 Daemon Server] - 2025-03-31T18:58:05.860Z - Time taken for 'Load Nx Plugin: /Users/alisenok/Self-education/Курс_Web/moneytracker/node_modules/nx/src/plugins/project-json/build-nodes/project-json' 152.160666ms
-[NX v20.6.4 Daemon Server] - 2025-03-31T18:58:05.861Z - Time taken for 'Load Nx Plugin: /Users/alisenok/Self-education/Курс_Web/moneytracker/node_modules/nx/src/plugins/package-json' 152.685916ms
+[NX v20.6.4 Daemon Server] - 2025-03-31T18:58:05.860Z - Time taken for 'Load Nx Plugin: /Users/alisenok/Self-education/Курс_Web/purpleschool/node_modules/nx/src/plugins/project-json/build-nodes/project-json' 152.160666ms
+[NX v20.6.4 Daemon Server] - 2025-03-31T18:58:05.861Z - Time taken for 'Load Nx Plugin: /Users/alisenok/Self-education/Курс_Web/purpleschool/node_modules/nx/src/plugins/package-json' 152.685916ms
 [NX v20.6.4 Daemon Server] - 2025-03-31T18:58:05.872Z - Time taken for 'loadDefaultNxPlugins' 163.769584ms
 [NX v20.6.4 Daemon Server] - 2025-03-31T18:58:05.913Z - Time taken for 'Load Nx Plugin: @nx/jest/plugin' 206.378708ms
 [NX v20.6.4 Daemon Server] - 2025-03-31T18:58:05.914Z - Time taken for 'Load Nx Plugin: @nx/eslint/plugin' 207.292083ms
@@ -1464,18 +1464,18 @@
 [NX v20.6.4 Daemon Server] - 2025-03-31T19:41:24.282Z - Closed a connection. Number of open connections: 2
 [NX v20.6.4 Daemon Server] - 2025-03-31T19:41:24.282Z - Closed a connection. Number of open connections: 1
 [NX v20.6.4 Daemon Server] - 2025-03-31T19:41:24.282Z - Closed a connection. Number of open connections: 0
-[NX v20.6.4 Daemon Server] - 2025-03-31T19:41:24.283Z - [WATCHER]: Stopping the watcher for /Users/alisenok/Self-education/Курс_Web/moneytracker (sources)
-[NX v20.6.4 Daemon Server] - 2025-03-31T19:41:24.283Z - [WATCHER]: Stopping the watcher for /Users/alisenok/Self-education/Курс_Web/moneytracker (outputs)
+[NX v20.6.4 Daemon Server] - 2025-03-31T19:41:24.283Z - [WATCHER]: Stopping the watcher for /Users/alisenok/Self-education/Курс_Web/purpleschool (sources)
+[NX v20.6.4 Daemon Server] - 2025-03-31T19:41:24.283Z - [WATCHER]: Stopping the watcher for /Users/alisenok/Self-education/Курс_Web/purpleschool (outputs)
 [NX v20.6.4 Daemon Server] - 2025-03-31T19:41:24.285Z - Server stopped because: "LOCK_FILES_CHANGED"
 [NX v20.6.4 Daemon Server] - 2025-03-31T19:55:27.519Z - Started listening on: /var/folders/dk/ksmjxg9x7tdf9kdpjrg841x80000gn/T/7070b0314752f3dda838/d.sock
-[NX v20.6.4 Daemon Server] - 2025-03-31T19:55:27.522Z - [WATCHER]: Subscribed to changes within: /Users/alisenok/Self-education/Курс_Web/moneytracker (native)
+[NX v20.6.4 Daemon Server] - 2025-03-31T19:55:27.522Z - [WATCHER]: Subscribed to changes within: /Users/alisenok/Self-education/Курс_Web/purpleschool (native)
 [NX v20.6.4 Daemon Server] - 2025-03-31T19:55:27.528Z - Established a connection. Number of open connections: 1
 [NX v20.6.4 Daemon Server] - 2025-03-31T19:55:27.529Z - Established a connection. Number of open connections: 2
 [NX v20.6.4 Daemon Server] - 2025-03-31T19:55:27.529Z - Closed a connection. Number of open connections: 1
 [NX v20.6.4 Daemon Server] - 2025-03-31T19:55:27.530Z - [REQUEST]: Client Request for Project Graph Received
 [NX v20.6.4 Daemon Server] - 2025-03-31T19:55:27.581Z - [WATCHER]: Processing file changes in outputs
-[NX v20.6.4 Daemon Server] - 2025-03-31T19:55:27.707Z - Time taken for 'Load Nx Plugin: /Users/alisenok/Self-education/Курс_Web/moneytracker/node_modules/nx/src/plugins/package-json' 173.99787499999996ms
-[NX v20.6.4 Daemon Server] - 2025-03-31T19:55:27.708Z - Time taken for 'Load Nx Plugin: /Users/alisenok/Self-education/Курс_Web/moneytracker/node_modules/nx/src/plugins/project-json/build-nodes/project-json' 175.10520900000003ms
+[NX v20.6.4 Daemon Server] - 2025-03-31T19:55:27.707Z - Time taken for 'Load Nx Plugin: /Users/alisenok/Self-education/Курс_Web/purpleschool/node_modules/nx/src/plugins/package-json' 173.99787499999996ms
+[NX v20.6.4 Daemon Server] - 2025-03-31T19:55:27.708Z - Time taken for 'Load Nx Plugin: /Users/alisenok/Self-education/Курс_Web/purpleschool/node_modules/nx/src/plugins/project-json/build-nodes/project-json' 175.10520900000003ms
 [NX v20.6.4 Daemon Server] - 2025-03-31T19:55:27.717Z - Time taken for 'loadDefaultNxPlugins' 184.587375ms
 [NX v20.6.4 Daemon Server] - 2025-03-31T19:55:27.758Z - Time taken for 'Load Nx Plugin: @nx/eslint/plugin' 226.73541600000001ms
 [NX v20.6.4 Daemon Server] - 2025-03-31T19:55:27.759Z - Time taken for 'Load Nx Plugin: @nx/jest/plugin' 226.68541600000003ms
@@ -1540,7 +1540,7 @@
 [NX v20.6.4 Daemon Server] - 2025-03-31T19:55:33.588Z - Closed a connection. Number of open connections: 3
 [NX v20.6.4 Daemon Server] - 2025-03-31T19:55:33.804Z - Error when sending EndRun
 Error: This workspace is more than three days old and is not connected. Workspaces must be connected within 3 days of creation. Claim your workspace at https://cloud.nx.app
-    at Timeout._onTimeout (/Users/alisenok/Self-education/Курс_Web/moneytracker/.nx/cache/cloud/2503.26.6/lib/daemon/process-run-end.js:1:879885)
+    at Timeout._onTimeout (/Users/alisenok/Self-education/Курс_Web/purpleschool/.nx/cache/cloud/2503.26.6/lib/daemon/process-run-end.js:1:879885)
     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
 [NX v20.6.4 Daemon Server] - 2025-03-31T19:56:09.743Z - [WATCHER]: apps/account/src/app/auth/auth.service.ts was modified
 [NX v20.6.4 Daemon Server] - 2025-03-31T19:56:09.744Z - [WATCHER]: Processing file changes in outputs
@@ -1633,7 +1633,7 @@ Error: This workspace is more than three days old and is not connected. Workspac
 [NX v20.6.4 Daemon Server] - 2025-03-31T19:56:17.950Z - Closed a connection. Number of open connections: 6
 [NX v20.6.4 Daemon Server] - 2025-03-31T19:56:18.175Z - Error when sending EndRun
 Error: This workspace is more than three days old and is not connected. Workspaces must be connected within 3 days of creation. Claim your workspace at https://cloud.nx.app
-    at Timeout._onTimeout (/Users/alisenok/Self-education/Курс_Web/moneytracker/.nx/cache/cloud/2503.26.6/lib/daemon/process-run-end.js:1:879885)
+    at Timeout._onTimeout (/Users/alisenok/Self-education/Курс_Web/purpleschool/.nx/cache/cloud/2503.26.6/lib/daemon/process-run-end.js:1:879885)
     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
 [NX v20.6.4 Daemon Server] - 2025-03-31T20:02:35.906Z - [WATCHER]: libs/contracts/src/lib/account/account.login.ts was modified
 [NX v20.6.4 Daemon Server] - 2025-03-31T20:02:35.932Z - [REQUEST]: Responding to the client. File watch changed
@@ -1698,7 +1698,7 @@ Error: This workspace is more than three days old and is not connected. Workspac
 [NX v20.6.4 Daemon Server] - 2025-03-31T20:02:40.085Z - Closed a connection. Number of open connections: 6
 [NX v20.6.4 Daemon Server] - 2025-03-31T20:02:40.455Z - Error when sending EndRun
 Error: This workspace is more than three days old and is not connected. Workspaces must be connected within 3 days of creation. Claim your workspace at https://cloud.nx.app
-    at Timeout._onTimeout (/Users/alisenok/Self-education/Курс_Web/moneytracker/.nx/cache/cloud/2503.26.6/lib/daemon/process-run-end.js:1:879885)
+    at Timeout._onTimeout (/Users/alisenok/Self-education/Курс_Web/purpleschool/.nx/cache/cloud/2503.26.6/lib/daemon/process-run-end.js:1:879885)
     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
 [NX v20.6.4 Daemon Server] - 2025-03-31T20:03:17.390Z - [WATCHER]: libs/contracts/src/lib/account/account.register.ts was modified
 [NX v20.6.4 Daemon Server] - 2025-03-31T20:03:17.391Z - [REQUEST]: Responding to the client. File watch changed
@@ -1763,7 +1763,7 @@ Error: This workspace is more than three days old and is not connected. Workspac
 [NX v20.6.4 Daemon Server] - 2025-03-31T20:03:20.680Z - Closed a connection. Number of open connections: 6
 [NX v20.6.4 Daemon Server] - 2025-03-31T20:03:21.053Z - Error when sending EndRun
 Error: This workspace is more than three days old and is not connected. Workspaces must be connected within 3 days of creation. Claim your workspace at https://cloud.nx.app
-    at Timeout._onTimeout (/Users/alisenok/Self-education/Курс_Web/moneytracker/.nx/cache/cloud/2503.26.6/lib/daemon/process-run-end.js:1:879885)
+    at Timeout._onTimeout (/Users/alisenok/Self-education/Курс_Web/purpleschool/.nx/cache/cloud/2503.26.6/lib/daemon/process-run-end.js:1:879885)
     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
 [NX v20.6.4 Daemon Server] - 2025-03-31T20:03:52.067Z - [WATCHER]: apps/account/src/app/auth/auth.controller.ts was modified
 [NX v20.6.4 Daemon Server] - 2025-03-31T20:03:52.068Z - [REQUEST]: Responding to the client. File watch changed
@@ -1828,7 +1828,7 @@ Error: This workspace is more than three days old and is not connected. Workspac
 [NX v20.6.4 Daemon Server] - 2025-03-31T20:03:55.711Z - Closed a connection. Number of open connections: 6
 [NX v20.6.4 Daemon Server] - 2025-03-31T20:03:56.082Z - Error when sending EndRun
 Error: This workspace is more than three days old and is not connected. Workspaces must be connected within 3 days of creation. Claim your workspace at https://cloud.nx.app
-    at Timeout._onTimeout (/Users/alisenok/Self-education/Курс_Web/moneytracker/.nx/cache/cloud/2503.26.6/lib/daemon/process-run-end.js:1:879885)
+    at Timeout._onTimeout (/Users/alisenok/Self-education/Курс_Web/purpleschool/.nx/cache/cloud/2503.26.6/lib/daemon/process-run-end.js:1:879885)
     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
 [NX v20.6.4 Daemon Server] - 2025-03-31T20:04:04.076Z - Closed a connection. Number of open connections: 5
 [NX v20.6.4 Daemon Server] - 2025-03-31T20:04:04.085Z - Closed a connection. Number of open connections: 4
@@ -1861,8 +1861,8 @@ Error: This workspace is more than three days old and is not connected. Workspac
 [NX v20.6.4 Daemon Server] - 2025-03-31T20:26:47.432Z - Closed a connection. Number of open connections: 2
 [NX v20.6.4 Daemon Server] - 2025-03-31T20:26:47.436Z - Closed a connection. Number of open connections: 1
 [NX v20.6.4 Daemon Server] - 2025-03-31T20:26:47.454Z - Closed a connection. Number of open connections: 0
-[NX v20.6.4 Daemon Server] - 2025-03-31T20:26:47.567Z - Time taken for 'Load Nx Plugin: /Users/alisenok/Self-education/Курс_Web/moneytracker/node_modules/nx/src/plugins/package-json' 208.68866700003855ms
-[NX v20.6.4 Daemon Server] - 2025-03-31T20:26:47.568Z - Time taken for 'Load Nx Plugin: /Users/alisenok/Self-education/Курс_Web/moneytracker/node_modules/nx/src/plugins/project-json/build-nodes/project-json' 209.07237499998882ms
+[NX v20.6.4 Daemon Server] - 2025-03-31T20:26:47.567Z - Time taken for 'Load Nx Plugin: /Users/alisenok/Self-education/Курс_Web/purpleschool/node_modules/nx/src/plugins/package-json' 208.68866700003855ms
+[NX v20.6.4 Daemon Server] - 2025-03-31T20:26:47.568Z - Time taken for 'Load Nx Plugin: /Users/alisenok/Self-education/Курс_Web/purpleschool/node_modules/nx/src/plugins/project-json/build-nodes/project-json' 209.07237499998882ms
 [NX v20.6.4 Daemon Server] - 2025-03-31T20:26:47.573Z - Time taken for 'loadDefaultNxPlugins' 215.25579199986532ms
 [NX v20.6.4 Daemon Server] - 2025-03-31T20:26:47.612Z - Time taken for 'Load Nx Plugin: @nx/eslint/plugin' 254.72479100013152ms
 [NX v20.6.4 Daemon Server] - 2025-03-31T20:26:47.612Z - Time taken for 'Load Nx Plugin: @nx/jest/plugin' 254.95683399983682ms
@@ -1960,8 +1960,8 @@ Error: This workspace is more than three days old and is not connected. Workspac
 [NX v20.6.4 Daemon Server] - 2025-03-31T20:29:15.162Z - Closed a connection. Number of open connections: 2
 [NX v20.6.4 Daemon Server] - 2025-03-31T20:29:15.164Z - Closed a connection. Number of open connections: 1
 [NX v20.6.4 Daemon Server] - 2025-03-31T20:29:15.169Z - Closed a connection. Number of open connections: 0
-[NX v20.6.4 Daemon Server] - 2025-03-31T20:29:15.297Z - Time taken for 'Load Nx Plugin: /Users/alisenok/Self-education/Курс_Web/moneytracker/node_modules/nx/src/plugins/project-json/build-nodes/project-json' 142.47808300005272ms
-[NX v20.6.4 Daemon Server] - 2025-03-31T20:29:15.297Z - Time taken for 'Load Nx Plugin: /Users/alisenok/Self-education/Курс_Web/moneytracker/node_modules/nx/src/plugins/package-json' 142.79020899999887ms
+[NX v20.6.4 Daemon Server] - 2025-03-31T20:29:15.297Z - Time taken for 'Load Nx Plugin: /Users/alisenok/Self-education/Курс_Web/purpleschool/node_modules/nx/src/plugins/project-json/build-nodes/project-json' 142.47808300005272ms
+[NX v20.6.4 Daemon Server] - 2025-03-31T20:29:15.297Z - Time taken for 'Load Nx Plugin: /Users/alisenok/Self-education/Курс_Web/purpleschool/node_modules/nx/src/plugins/package-json' 142.79020899999887ms
 [NX v20.6.4 Daemon Server] - 2025-03-31T20:29:15.304Z - Time taken for 'loadDefaultNxPlugins' 149.4712920000311ms
 [NX v20.6.4 Daemon Server] - 2025-03-31T20:29:15.331Z - Time taken for 'Load Nx Plugin: @nx/eslint/plugin' 177.5918749999255ms
 [NX v20.6.4 Daemon Server] - 2025-03-31T20:29:15.331Z - Time taken for 'Load Nx Plugin: @nx/jest/plugin' 177.7481249999255ms
@@ -2094,8 +2094,8 @@ Error: This workspace is more than three days old and is not connected. Workspac
 [NX v20.6.4 Daemon Server] - 2025-03-31T20:46:56.732Z - Closed a connection. Number of open connections: 2
 [NX v20.6.4 Daemon Server] - 2025-03-31T20:46:56.792Z - Closed a connection. Number of open connections: 1
 [NX v20.6.4 Daemon Server] - 2025-03-31T20:46:56.797Z - Closed a connection. Number of open connections: 0
-[NX v20.6.4 Daemon Server] - 2025-03-31T20:46:56.913Z - Time taken for 'Load Nx Plugin: /Users/alisenok/Self-education/Курс_Web/moneytracker/node_modules/nx/src/plugins/package-json' 246.02424999978393ms
-[NX v20.6.4 Daemon Server] - 2025-03-31T20:46:56.913Z - Time taken for 'Load Nx Plugin: /Users/alisenok/Self-education/Курс_Web/moneytracker/node_modules/nx/src/plugins/project-json/build-nodes/project-json' 246.20691700000316ms
+[NX v20.6.4 Daemon Server] - 2025-03-31T20:46:56.913Z - Time taken for 'Load Nx Plugin: /Users/alisenok/Self-education/Курс_Web/purpleschool/node_modules/nx/src/plugins/package-json' 246.02424999978393ms
+[NX v20.6.4 Daemon Server] - 2025-03-31T20:46:56.913Z - Time taken for 'Load Nx Plugin: /Users/alisenok/Self-education/Курс_Web/purpleschool/node_modules/nx/src/plugins/project-json/build-nodes/project-json' 246.20691700000316ms
 [NX v20.6.4 Daemon Server] - 2025-03-31T20:46:56.919Z - Time taken for 'loadDefaultNxPlugins' 252.43829199997708ms
 [NX v20.6.4 Daemon Server] - 2025-03-31T20:46:56.956Z - Time taken for 'Load Nx Plugin: @nx/eslint/plugin' 289.90058299992234ms
 [NX v20.6.4 Daemon Server] - 2025-03-31T20:46:56.957Z - Time taken for 'Load Nx Plugin: @nx/jest/plugin' 290.56650000019ms
@@ -2699,18 +2699,18 @@ Error: This workspace is more than three days old and is not connected. Workspac
 [NX v20.6.4 Daemon Server] - 2025-03-31T21:01:51.863Z - Closed a connection. Number of open connections: 2
 [NX v20.6.4 Daemon Server] - 2025-03-31T21:01:51.863Z - Closed a connection. Number of open connections: 1
 [NX v20.6.4 Daemon Server] - 2025-03-31T21:01:51.863Z - Closed a connection. Number of open connections: 0
-[NX v20.6.4 Daemon Server] - 2025-03-31T21:01:51.864Z - [WATCHER]: Stopping the watcher for /Users/alisenok/Self-education/Курс_Web/moneytracker (sources)
-[NX v20.6.4 Daemon Server] - 2025-03-31T21:01:51.864Z - [WATCHER]: Stopping the watcher for /Users/alisenok/Self-education/Курс_Web/moneytracker (outputs)
+[NX v20.6.4 Daemon Server] - 2025-03-31T21:01:51.864Z - [WATCHER]: Stopping the watcher for /Users/alisenok/Self-education/Курс_Web/purpleschool (sources)
+[NX v20.6.4 Daemon Server] - 2025-03-31T21:01:51.864Z - [WATCHER]: Stopping the watcher for /Users/alisenok/Self-education/Курс_Web/purpleschool (outputs)
 [NX v20.6.4 Daemon Server] - 2025-03-31T21:01:51.869Z - Server stopped because: "LOCK_FILES_CHANGED"
 [NX v20.6.4 Daemon Server] - 2025-03-31T21:33:09.783Z - Started listening on: /var/folders/dk/ksmjxg9x7tdf9kdpjrg841x80000gn/T/7070b0314752f3dda838/d.sock
-[NX v20.6.4 Daemon Server] - 2025-03-31T21:33:09.785Z - [WATCHER]: Subscribed to changes within: /Users/alisenok/Self-education/Курс_Web/moneytracker (native)
+[NX v20.6.4 Daemon Server] - 2025-03-31T21:33:09.785Z - [WATCHER]: Subscribed to changes within: /Users/alisenok/Self-education/Курс_Web/purpleschool (native)
 [NX v20.6.4 Daemon Server] - 2025-03-31T21:33:09.789Z - Established a connection. Number of open connections: 1
 [NX v20.6.4 Daemon Server] - 2025-03-31T21:33:09.789Z - Established a connection. Number of open connections: 2
 [NX v20.6.4 Daemon Server] - 2025-03-31T21:33:09.790Z - Closed a connection. Number of open connections: 1
 [NX v20.6.4 Daemon Server] - 2025-03-31T21:33:09.791Z - [REQUEST]: Client Request for Project Graph Received
 [NX v20.6.4 Daemon Server] - 2025-03-31T21:33:09.844Z - [WATCHER]: Processing file changes in outputs
-[NX v20.6.4 Daemon Server] - 2025-03-31T21:33:09.925Z - Time taken for 'Load Nx Plugin: /Users/alisenok/Self-education/Курс_Web/moneytracker/node_modules/nx/src/plugins/package-json' 130.64037499999998ms
-[NX v20.6.4 Daemon Server] - 2025-03-31T21:33:09.933Z - Time taken for 'Load Nx Plugin: /Users/alisenok/Self-education/Курс_Web/moneytracker/node_modules/nx/src/plugins/project-json/build-nodes/project-json' 137.873958ms
+[NX v20.6.4 Daemon Server] - 2025-03-31T21:33:09.925Z - Time taken for 'Load Nx Plugin: /Users/alisenok/Self-education/Курс_Web/purpleschool/node_modules/nx/src/plugins/package-json' 130.64037499999998ms
+[NX v20.6.4 Daemon Server] - 2025-03-31T21:33:09.933Z - Time taken for 'Load Nx Plugin: /Users/alisenok/Self-education/Курс_Web/purpleschool/node_modules/nx/src/plugins/project-json/build-nodes/project-json' 137.873958ms
 [NX v20.6.4 Daemon Server] - 2025-03-31T21:33:09.935Z - Time taken for 'loadDefaultNxPlugins' 140.62225ms
 [NX v20.6.4 Daemon Server] - 2025-03-31T21:33:09.969Z - Time taken for 'Load Nx Plugin: @nx/jest/plugin' 175.98283300000003ms
 [NX v20.6.4 Daemon Server] - 2025-03-31T21:33:09.970Z - Time taken for 'Load Nx Plugin: @nx/eslint/plugin' 176.64454200000003ms
@@ -2810,7 +2810,7 @@ Error: This workspace is more than three days old and is not connected. Workspac
 [NX v20.6.4 Daemon Server] - 2025-03-31T21:33:18.219Z - Closed a connection. Number of open connections: 6
 [NX v20.6.4 Daemon Server] - 2025-03-31T21:33:18.919Z - Error when sending EndRun
 Error: This workspace is more than three days old and is not connected. Workspaces must be connected within 3 days of creation. Claim your workspace at https://cloud.nx.app
-    at Timeout._onTimeout (/Users/alisenok/Self-education/Курс_Web/moneytracker/.nx/cache/cloud/2503.26.6/lib/daemon/process-run-end.js:1:879885)
+    at Timeout._onTimeout (/Users/alisenok/Self-education/Курс_Web/purpleschool/.nx/cache/cloud/2503.26.6/lib/daemon/process-run-end.js:1:879885)
     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
 [NX v20.6.4 Daemon Server] - 2025-03-31T21:33:21.649Z - Closed a connection. Number of open connections: 5
 [NX v20.6.4 Daemon Server] - 2025-03-31T21:33:21.657Z - Closed a connection. Number of open connections: 4
@@ -2890,7 +2890,7 @@ Error: This workspace is more than three days old and is not connected. Workspac
 [NX v20.6.4 Daemon Server] - 2025-03-31T21:33:51.913Z - Handled RECORD_OUTPUTS_HASH. Handling time: 3. Response time: 0.
 [NX v20.6.4 Daemon Server] - 2025-03-31T21:33:52.147Z - Error when sending EndRun
 Error: This workspace is more than three days old and is not connected. Workspaces must be connected within 3 days of creation. Claim your workspace at https://cloud.nx.app
-    at Timeout._onTimeout (/Users/alisenok/Self-education/Курс_Web/moneytracker/.nx/cache/cloud/2503.26.6/lib/daemon/process-run-end.js:1:879885)
+    at Timeout._onTimeout (/Users/alisenok/Self-education/Курс_Web/purpleschool/.nx/cache/cloud/2503.26.6/lib/daemon/process-run-end.js:1:879885)
     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
 [NX v20.6.4 Daemon Server] - 2025-03-31T21:33:52.198Z - [WATCHER]: Processing file changes in outputs
 [NX v20.6.4 Daemon Server] - 2025-03-31T21:33:53.250Z - [REQUEST]: Responding to the client. recordOutputsHash
@@ -2942,7 +2942,7 @@ Error: This workspace is more than three days old and is not connected. Workspac
 [NX v20.6.4 Daemon Server] - 2025-03-31T21:33:56.311Z - Closed a connection. Number of open connections: 8
 [NX v20.6.4 Daemon Server] - 2025-03-31T21:33:56.576Z - Error when sending EndRun
 Error: This workspace is more than three days old and is not connected. Workspaces must be connected within 3 days of creation. Claim your workspace at https://cloud.nx.app
-    at Timeout._onTimeout (/Users/alisenok/Self-education/Курс_Web/moneytracker/.nx/cache/cloud/2503.26.6/lib/daemon/process-run-end.js:1:879885)
+    at Timeout._onTimeout (/Users/alisenok/Self-education/Курс_Web/purpleschool/.nx/cache/cloud/2503.26.6/lib/daemon/process-run-end.js:1:879885)
     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
 [NX v20.6.4 Daemon Server] - 2025-03-31T21:34:54.289Z - [WATCHER]: Processing file changes in outputs
 [NX v20.6.4 Daemon Server] - 2025-03-31T21:34:54.293Z - [WATCHER]: apps/account/src/main.ts was modified
@@ -3038,7 +3038,7 @@ Error: This workspace is more than three days old and is not connected. Workspac
 [NX v20.6.4 Daemon Server] - 2025-03-31T21:34:58.167Z - Closed a connection. Number of open connections: 8
 [NX v20.6.4 Daemon Server] - 2025-03-31T21:34:58.854Z - Error when sending EndRun
 Error: This workspace is more than three days old and is not connected. Workspaces must be connected within 3 days of creation. Claim your workspace at https://cloud.nx.app
-    at Timeout._onTimeout (/Users/alisenok/Self-education/Курс_Web/moneytracker/.nx/cache/cloud/2503.26.6/lib/daemon/process-run-end.js:1:879885)
+    at Timeout._onTimeout (/Users/alisenok/Self-education/Курс_Web/purpleschool/.nx/cache/cloud/2503.26.6/lib/daemon/process-run-end.js:1:879885)
     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
 [NX v20.6.4 Daemon Server] - 2025-03-31T21:35:47.846Z - [WATCHER]: apps/api/src/main.ts was modified
 [NX v20.6.4 Daemon Server] - 2025-03-31T21:35:47.852Z - [REQUEST]: Responding to the client. File watch changed
@@ -3109,7 +3109,7 @@ Error: This workspace is more than three days old and is not connected. Workspac
 [NX v20.6.4 Daemon Server] - 2025-03-31T21:35:51.588Z - Closed a connection. Number of open connections: 8
 [NX v20.6.4 Daemon Server] - 2025-03-31T21:35:52.272Z - Error when sending EndRun
 Error: This workspace is more than three days old and is not connected. Workspaces must be connected within 3 days of creation. Claim your workspace at https://cloud.nx.app
-    at Timeout._onTimeout (/Users/alisenok/Self-education/Курс_Web/moneytracker/.nx/cache/cloud/2503.26.6/lib/daemon/process-run-end.js:1:879885)
+    at Timeout._onTimeout (/Users/alisenok/Self-education/Курс_Web/purpleschool/.nx/cache/cloud/2503.26.6/lib/daemon/process-run-end.js:1:879885)
     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
 [NX v20.6.4 Daemon Server] - 2025-03-31T21:35:55.261Z - Closed a connection. Number of open connections: 7
 [NX v20.6.4 Daemon Server] - 2025-03-31T21:35:55.262Z - Closed a connection. Number of open connections: 6
@@ -3238,11 +3238,11 @@ Error: This workspace is more than three days old and is not connected. Workspac
 [NX v20.6.4 Daemon Server] - 2025-03-31T21:36:18.702Z - Closed a connection. Number of open connections: 8
 [NX v20.6.4 Daemon Server] - 2025-03-31T21:36:19.310Z - Error when sending EndRun
 Error: This workspace is more than three days old and is not connected. Workspaces must be connected within 3 days of creation. Claim your workspace at https://cloud.nx.app
-    at Timeout._onTimeout (/Users/alisenok/Self-education/Курс_Web/moneytracker/.nx/cache/cloud/2503.26.6/lib/daemon/process-run-end.js:1:879885)
+    at Timeout._onTimeout (/Users/alisenok/Self-education/Курс_Web/purpleschool/.nx/cache/cloud/2503.26.6/lib/daemon/process-run-end.js:1:879885)
     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
 [NX v20.6.4 Daemon Server] - 2025-03-31T21:36:19.405Z - Error when sending EndRun
 Error: This workspace is more than three days old and is not connected. Workspaces must be connected within 3 days of creation. Claim your workspace at https://cloud.nx.app
-    at Timeout._onTimeout (/Users/alisenok/Self-education/Курс_Web/moneytracker/.nx/cache/cloud/2503.26.6/lib/daemon/process-run-end.js:1:879885)
+    at Timeout._onTimeout (/Users/alisenok/Self-education/Курс_Web/purpleschool/.nx/cache/cloud/2503.26.6/lib/daemon/process-run-end.js:1:879885)
     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
 [NX v20.6.4 Daemon Server] - 2025-03-31T21:50:50.589Z - [WATCHER]: apps/api/src/app/dtos/login.dto.ts was modified
 [NX v20.6.4 Daemon Server] - 2025-03-31T21:50:50.598Z - [REQUEST]: Responding to the client. File watch changed
@@ -3313,7 +3313,7 @@ Error: This workspace is more than three days old and is not connected. Workspac
 [NX v20.6.4 Daemon Server] - 2025-03-31T21:50:54.633Z - Closed a connection. Number of open connections: 8
 [NX v20.6.4 Daemon Server] - 2025-03-31T21:50:55.351Z - Error when sending EndRun
 Error: This workspace is more than three days old and is not connected. Workspaces must be connected within 3 days of creation. Claim your workspace at https://cloud.nx.app
-    at Timeout._onTimeout (/Users/alisenok/Self-education/Курс_Web/moneytracker/.nx/cache/cloud/2503.26.6/lib/daemon/process-run-end.js:1:879885)
+    at Timeout._onTimeout (/Users/alisenok/Self-education/Курс_Web/purpleschool/.nx/cache/cloud/2503.26.6/lib/daemon/process-run-end.js:1:879885)
     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
 [NX v20.6.4 Daemon Server] - 2025-03-31T22:24:01.982Z - [WATCHER]: Processing file changes in outputs
 [NX v20.6.4 Daemon Server] - 2025-03-31T22:24:01.998Z - [WATCHER]: apps/account-e2e was deleted
@@ -3436,7 +3436,7 @@ Error: This workspace is more than three days old and is not connected. Workspac
 [NX v20.6.4 Daemon Server] - 2025-03-31T22:53:53.688Z - Closed a connection. Number of open connections: 8
 [NX v20.6.4 Daemon Server] - 2025-03-31T22:53:54.154Z - Error when sending EndRun
 Error: This workspace is more than three days old and is not connected. Workspaces must be connected within 3 days of creation. Claim your workspace at https://cloud.nx.app
-    at Timeout._onTimeout (/Users/alisenok/Self-education/Курс_Web/moneytracker/.nx/cache/cloud/2503.26.6/lib/daemon/process-run-end.js:1:879885)
+    at Timeout._onTimeout (/Users/alisenok/Self-education/Курс_Web/purpleschool/.nx/cache/cloud/2503.26.6/lib/daemon/process-run-end.js:1:879885)
     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
 [NX v20.6.4 Daemon Server] - 2025-03-31T22:55:50.726Z - [WATCHER]: apps/account/src/app/auth/auth.service.ts was modified
 [NX v20.6.4 Daemon Server] - 2025-03-31T22:55:50.727Z - [REQUEST]: Responding to the client. File watch changed
@@ -3507,7 +3507,7 @@ Error: This workspace is more than three days old and is not connected. Workspac
 [NX v20.6.4 Daemon Server] - 2025-03-31T22:55:54.103Z - Closed a connection. Number of open connections: 8
 [NX v20.6.4 Daemon Server] - 2025-03-31T22:55:54.525Z - Error when sending EndRun
 Error: This workspace is more than three days old and is not connected. Workspaces must be connected within 3 days of creation. Claim your workspace at https://cloud.nx.app
-    at Timeout._onTimeout (/Users/alisenok/Self-education/Курс_Web/moneytracker/.nx/cache/cloud/2503.26.6/lib/daemon/process-run-end.js:1:879885)
+    at Timeout._onTimeout (/Users/alisenok/Self-education/Курс_Web/purpleschool/.nx/cache/cloud/2503.26.6/lib/daemon/process-run-end.js:1:879885)
     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
 [NX v20.6.4 Daemon Server] - 2025-03-31T23:16:34.857Z - Closed a connection. Number of open connections: 7
 [NX v20.6.4 Daemon Server] - 2025-03-31T23:16:34.859Z - Closed a connection. Number of open connections: 6
@@ -3517,18 +3517,18 @@ Error: This workspace is more than three days old and is not connected. Workspac
 [NX v20.6.4 Daemon Server] - 2025-04-01T02:12:50.649Z - Closed a connection. Number of open connections: 2
 [NX v20.6.4 Daemon Server] - 2025-04-01T02:12:50.650Z - Closed a connection. Number of open connections: 1
 [NX v20.6.4 Daemon Server] - 2025-04-01T02:12:50.650Z - Closed a connection. Number of open connections: 0
-[NX v20.6.4 Daemon Server] - 2025-04-01T02:12:50.650Z - [WATCHER]: Stopping the watcher for /Users/alisenok/Self-education/Курс_Web/moneytracker (sources)
-[NX v20.6.4 Daemon Server] - 2025-04-01T02:12:50.650Z - [WATCHER]: Stopping the watcher for /Users/alisenok/Self-education/Курс_Web/moneytracker (outputs)
+[NX v20.6.4 Daemon Server] - 2025-04-01T02:12:50.650Z - [WATCHER]: Stopping the watcher for /Users/alisenok/Self-education/Курс_Web/purpleschool (sources)
+[NX v20.6.4 Daemon Server] - 2025-04-01T02:12:50.650Z - [WATCHER]: Stopping the watcher for /Users/alisenok/Self-education/Курс_Web/purpleschool (outputs)
 [NX v20.6.4 Daemon Server] - 2025-04-01T02:12:50.654Z - Server stopped because: "10800000ms of inactivity"
 [NX v20.6.4 Daemon Server] - 2025-04-01T19:37:24.425Z - Started listening on: /var/folders/dk/ksmjxg9x7tdf9kdpjrg841x80000gn/T/7070b0314752f3dda838/d.sock
-[NX v20.6.4 Daemon Server] - 2025-04-01T19:37:24.427Z - [WATCHER]: Subscribed to changes within: /Users/alisenok/Self-education/Курс_Web/moneytracker (native)
+[NX v20.6.4 Daemon Server] - 2025-04-01T19:37:24.427Z - [WATCHER]: Subscribed to changes within: /Users/alisenok/Self-education/Курс_Web/purpleschool (native)
 [NX v20.6.4 Daemon Server] - 2025-04-01T19:37:24.430Z - Established a connection. Number of open connections: 1
 [NX v20.6.4 Daemon Server] - 2025-04-01T19:37:24.430Z - Established a connection. Number of open connections: 2
 [NX v20.6.4 Daemon Server] - 2025-04-01T19:37:24.431Z - Closed a connection. Number of open connections: 1
 [NX v20.6.4 Daemon Server] - 2025-04-01T19:37:24.432Z - [REQUEST]: Client Request for Project Graph Received
 [NX v20.6.4 Daemon Server] - 2025-04-01T19:37:24.488Z - [WATCHER]: Processing file changes in outputs
-[NX v20.6.4 Daemon Server] - 2025-04-01T19:37:24.584Z - Time taken for 'Load Nx Plugin: /Users/alisenok/Self-education/Курс_Web/moneytracker/node_modules/nx/src/plugins/project-json/build-nodes/project-json' 149.32158300000003ms
-[NX v20.6.4 Daemon Server] - 2025-04-01T19:37:24.585Z - Time taken for 'Load Nx Plugin: /Users/alisenok/Self-education/Курс_Web/moneytracker/node_modules/nx/src/plugins/package-json' 150.135916ms
+[NX v20.6.4 Daemon Server] - 2025-04-01T19:37:24.584Z - Time taken for 'Load Nx Plugin: /Users/alisenok/Self-education/Курс_Web/purpleschool/node_modules/nx/src/plugins/project-json/build-nodes/project-json' 149.32158300000003ms
+[NX v20.6.4 Daemon Server] - 2025-04-01T19:37:24.585Z - Time taken for 'Load Nx Plugin: /Users/alisenok/Self-education/Курс_Web/purpleschool/node_modules/nx/src/plugins/package-json' 150.135916ms
 [NX v20.6.4 Daemon Server] - 2025-04-01T19:37:24.594Z - Time taken for 'loadDefaultNxPlugins' 159.61741700000002ms
 [NX v20.6.4 Daemon Server] - 2025-04-01T19:37:24.635Z - Time taken for 'Load Nx Plugin: @nx/jest/plugin' 201.412375ms
 [NX v20.6.4 Daemon Server] - 2025-04-01T19:37:24.636Z - Time taken for 'Load Nx Plugin: @nx/eslint/plugin' 202.61129199999996ms
@@ -3631,7 +3631,7 @@ Error: This workspace is more than three days old and is not connected. Workspac
 [NX v20.6.4 Daemon Server] - 2025-04-01T19:37:32.888Z - Closed a connection. Number of open connections: 6
 [NX v20.6.4 Daemon Server] - 2025-04-01T19:37:33.261Z - Error when sending EndRun
 Error: This workspace is more than three days old and is not connected. Workspaces must be connected within 3 days of creation. Claim your workspace at https://cloud.nx.app
-    at Timeout._onTimeout (/Users/alisenok/Self-education/Курс_Web/moneytracker/.nx/cache/cloud/2503.26.6.hotfix3/lib/daemon/process-run-end.js:1:905875)
+    at Timeout._onTimeout (/Users/alisenok/Self-education/Курс_Web/purpleschool/.nx/cache/cloud/2503.26.6.hotfix3/lib/daemon/process-run-end.js:1:905875)
     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
 [NX v20.6.4 Daemon Server] - 2025-04-01T19:37:48.201Z - Closed a connection. Number of open connections: 5
 [NX v20.6.4 Daemon Server] - 2025-04-01T19:37:48.208Z - Closed a connection. Number of open connections: 4
@@ -3711,7 +3711,7 @@ Error: This workspace is more than three days old and is not connected. Workspac
 [NX v20.6.4 Daemon Server] - 2025-04-01T19:39:36.815Z - Handled RECORD_OUTPUTS_HASH. Handling time: 4. Response time: 0.
 [NX v20.6.4 Daemon Server] - 2025-04-01T19:39:36.829Z - Error when sending EndRun
 Error: This workspace is more than three days old and is not connected. Workspaces must be connected within 3 days of creation. Claim your workspace at https://cloud.nx.app
-    at Timeout._onTimeout (/Users/alisenok/Self-education/Курс_Web/moneytracker/.nx/cache/cloud/2503.26.6.hotfix3/lib/daemon/process-run-end.js:1:905875)
+    at Timeout._onTimeout (/Users/alisenok/Self-education/Курс_Web/purpleschool/.nx/cache/cloud/2503.26.6.hotfix3/lib/daemon/process-run-end.js:1:905875)
     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
 [NX v20.6.4 Daemon Server] - 2025-04-01T19:39:37.270Z - [WATCHER]: Processing file changes in outputs
 [NX v20.6.4 Daemon Server] - 2025-04-01T19:39:38.499Z - [REQUEST]: Responding to the client. recordOutputsHash
@@ -3763,7 +3763,7 @@ Error: This workspace is more than three days old and is not connected. Workspac
 [NX v20.6.4 Daemon Server] - 2025-04-01T19:39:41.178Z - Closed a connection. Number of open connections: 8
 [NX v20.6.4 Daemon Server] - 2025-04-01T19:39:41.346Z - Error when sending EndRun
 Error: This workspace is more than three days old and is not connected. Workspaces must be connected within 3 days of creation. Claim your workspace at https://cloud.nx.app
-    at Timeout._onTimeout (/Users/alisenok/Self-education/Курс_Web/moneytracker/.nx/cache/cloud/2503.26.6.hotfix3/lib/daemon/process-run-end.js:1:905875)
+    at Timeout._onTimeout (/Users/alisenok/Self-education/Курс_Web/purpleschool/.nx/cache/cloud/2503.26.6.hotfix3/lib/daemon/process-run-end.js:1:905875)
     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
 [NX v20.6.4 Daemon Server] - 2025-04-01T19:47:56.852Z - [WATCHER]: apps/account/src/app/auth/auth.service.ts was modified
 [NX v20.6.4 Daemon Server] - 2025-04-01T19:47:56.860Z - [REQUEST]: Responding to the client. File watch changed
@@ -3834,7 +3834,7 @@ Error: This workspace is more than three days old and is not connected. Workspac
 [NX v20.6.4 Daemon Server] - 2025-04-01T19:47:59.815Z - Closed a connection. Number of open connections: 8
 [NX v20.6.4 Daemon Server] - 2025-04-01T19:48:00.043Z - Error when sending EndRun
 Error: This workspace is more than three days old and is not connected. Workspaces must be connected within 3 days of creation. Claim your workspace at https://cloud.nx.app
-    at Timeout._onTimeout (/Users/alisenok/Self-education/Курс_Web/moneytracker/.nx/cache/cloud/2503.26.6.hotfix3/lib/daemon/process-run-end.js:1:905875)
+    at Timeout._onTimeout (/Users/alisenok/Self-education/Курс_Web/purpleschool/.nx/cache/cloud/2503.26.6.hotfix3/lib/daemon/process-run-end.js:1:905875)
     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
 [NX v20.6.4 Daemon Server] - 2025-04-01T19:52:31.135Z - [WATCHER]: apps/account/src/app/auth/auth.service.ts was modified
 [NX v20.6.4 Daemon Server] - 2025-04-01T19:52:31.144Z - [REQUEST]: Responding to the client. File watch changed
@@ -3905,7 +3905,7 @@ Error: This workspace is more than three days old and is not connected. Workspac
 [NX v20.6.4 Daemon Server] - 2025-04-01T19:52:34.818Z - Closed a connection. Number of open connections: 8
 [NX v20.6.4 Daemon Server] - 2025-04-01T19:52:35.036Z - Error when sending EndRun
 Error: This workspace is more than three days old and is not connected. Workspaces must be connected within 3 days of creation. Claim your workspace at https://cloud.nx.app
-    at Timeout._onTimeout (/Users/alisenok/Self-education/Курс_Web/moneytracker/.nx/cache/cloud/2503.26.6.hotfix3/lib/daemon/process-run-end.js:1:905875)
+    at Timeout._onTimeout (/Users/alisenok/Self-education/Курс_Web/purpleschool/.nx/cache/cloud/2503.26.6.hotfix3/lib/daemon/process-run-end.js:1:905875)
     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
 [NX v20.6.4 Daemon Server] - 2025-04-01T19:53:09.528Z - [WATCHER]: apps/account/src/app/user/entities/user.entity.ts was modified
 [NX v20.6.4 Daemon Server] - 2025-04-01T19:53:09.528Z - [REQUEST]: Responding to the client. File watch changed
@@ -3976,7 +3976,7 @@ Error: This workspace is more than three days old and is not connected. Workspac
 [NX v20.6.4 Daemon Server] - 2025-04-01T19:53:13.020Z - Closed a connection. Number of open connections: 8
 [NX v20.6.4 Daemon Server] - 2025-04-01T19:53:13.236Z - Error when sending EndRun
 Error: This workspace is more than three days old and is not connected. Workspaces must be connected within 3 days of creation. Claim your workspace at https://cloud.nx.app
-    at Timeout._onTimeout (/Users/alisenok/Self-education/Курс_Web/moneytracker/.nx/cache/cloud/2503.26.6.hotfix3/lib/daemon/process-run-end.js:1:905875)
+    at Timeout._onTimeout (/Users/alisenok/Self-education/Курс_Web/purpleschool/.nx/cache/cloud/2503.26.6.hotfix3/lib/daemon/process-run-end.js:1:905875)
     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
 [NX v20.6.4 Daemon Server] - 2025-04-01T19:53:57.087Z - [WATCHER]: apps/account/src/app/user/entities/user.entity.ts was modified
 [NX v20.6.4 Daemon Server] - 2025-04-01T19:53:57.088Z - [REQUEST]: Responding to the client. File watch changed
@@ -4047,7 +4047,7 @@ Error: This workspace is more than three days old and is not connected. Workspac
 [NX v20.6.4 Daemon Server] - 2025-04-01T19:54:00.591Z - Closed a connection. Number of open connections: 8
 [NX v20.6.4 Daemon Server] - 2025-04-01T19:54:00.806Z - Error when sending EndRun
 Error: This workspace is more than three days old and is not connected. Workspaces must be connected within 3 days of creation. Claim your workspace at https://cloud.nx.app
-    at Timeout._onTimeout (/Users/alisenok/Self-education/Курс_Web/moneytracker/.nx/cache/cloud/2503.26.6.hotfix3/lib/daemon/process-run-end.js:1:905875)
+    at Timeout._onTimeout (/Users/alisenok/Self-education/Курс_Web/purpleschool/.nx/cache/cloud/2503.26.6.hotfix3/lib/daemon/process-run-end.js:1:905875)
     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
 [NX v20.6.4 Daemon Server] - 2025-04-01T19:58:36.344Z - [WATCHER]: apps/account/src/app/auth/auth.controller.ts was modified
 [NX v20.6.4 Daemon Server] - 2025-04-01T19:58:36.345Z - [REQUEST]: Responding to the client. File watch changed
@@ -4118,7 +4118,7 @@ Error: This workspace is more than three days old and is not connected. Workspac
 [NX v20.6.4 Daemon Server] - 2025-04-01T19:58:39.227Z - Closed a connection. Number of open connections: 8
 [NX v20.6.4 Daemon Server] - 2025-04-01T19:58:39.445Z - Error when sending EndRun
 Error: This workspace is more than three days old and is not connected. Workspaces must be connected within 3 days of creation. Claim your workspace at https://cloud.nx.app
-    at Timeout._onTimeout (/Users/alisenok/Self-education/Курс_Web/moneytracker/.nx/cache/cloud/2503.26.6.hotfix3/lib/daemon/process-run-end.js:1:905875)
+    at Timeout._onTimeout (/Users/alisenok/Self-education/Курс_Web/purpleschool/.nx/cache/cloud/2503.26.6.hotfix3/lib/daemon/process-run-end.js:1:905875)
     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
 [NX v20.6.4 Daemon Server] - 2025-04-01T20:02:11.817Z - [WATCHER]: apps/account/src/app/app.service.spec.ts was deleted
 [NX v20.6.4 Daemon Server] - 2025-04-01T20:02:11.817Z - [REQUEST]: Responding to the client. File watch changed
@@ -4190,7 +4190,7 @@ Error: This workspace is more than three days old and is not connected. Workspac
 [NX v20.6.4 Daemon Server] - 2025-04-01T20:02:12.300Z - Closed a connection. Number of open connections: 8
 [NX v20.6.4 Daemon Server] - 2025-04-01T20:02:12.518Z - Error when sending EndRun
 Error: This workspace is more than three days old and is not connected. Workspaces must be connected within 3 days of creation. Claim your workspace at https://cloud.nx.app
-    at Timeout._onTimeout (/Users/alisenok/Self-education/Курс_Web/moneytracker/.nx/cache/cloud/2503.26.6.hotfix3/lib/daemon/process-run-end.js:1:905875)
+    at Timeout._onTimeout (/Users/alisenok/Self-education/Курс_Web/purpleschool/.nx/cache/cloud/2503.26.6.hotfix3/lib/daemon/process-run-end.js:1:905875)
     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
 [NX v20.6.4 Daemon Server] - 2025-04-01T20:02:17.558Z - [WATCHER]: apps/account/src/app/app.controller.spec.ts was deleted
 [NX v20.6.4 Daemon Server] - 2025-04-01T20:02:17.559Z - [REQUEST]: Responding to the client. File watch changed
@@ -4261,7 +4261,7 @@ Error: This workspace is more than three days old and is not connected. Workspac
 [NX v20.6.4 Daemon Server] - 2025-04-01T20:02:20.129Z - Closed a connection. Number of open connections: 8
 [NX v20.6.4 Daemon Server] - 2025-04-01T20:02:20.343Z - Error when sending EndRun
 Error: This workspace is more than three days old and is not connected. Workspaces must be connected within 3 days of creation. Claim your workspace at https://cloud.nx.app
-    at Timeout._onTimeout (/Users/alisenok/Self-education/Курс_Web/moneytracker/.nx/cache/cloud/2503.26.6.hotfix3/lib/daemon/process-run-end.js:1:905875)
+    at Timeout._onTimeout (/Users/alisenok/Self-education/Курс_Web/purpleschool/.nx/cache/cloud/2503.26.6.hotfix3/lib/daemon/process-run-end.js:1:905875)
     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
 [NX v20.6.4 Daemon Server] - 2025-04-01T20:15:45.408Z - Closed a connection. Number of open connections: 7
 [NX v20.6.4 Daemon Server] - 2025-04-01T20:15:45.411Z - Closed a connection. Number of open connections: 6
@@ -4343,7 +4343,7 @@ Error: This workspace is more than three days old and is not connected. Workspac
 [NX v20.6.4 Daemon Server] - 2025-04-01T20:15:49.945Z - Handled RECORD_OUTPUTS_HASH. Handling time: 3. Response time: 0.
 [NX v20.6.4 Daemon Server] - 2025-04-01T20:15:50.102Z - Error when sending EndRun
 Error: This workspace is more than three days old and is not connected. Workspaces must be connected within 3 days of creation. Claim your workspace at https://cloud.nx.app
-    at Timeout._onTimeout (/Users/alisenok/Self-education/Курс_Web/moneytracker/.nx/cache/cloud/2503.26.6.hotfix3/lib/daemon/process-run-end.js:1:905875)
+    at Timeout._onTimeout (/Users/alisenok/Self-education/Курс_Web/purpleschool/.nx/cache/cloud/2503.26.6.hotfix3/lib/daemon/process-run-end.js:1:905875)
     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
 [NX v20.6.4 Daemon Server] - 2025-04-01T20:15:50.397Z - [WATCHER]: Processing file changes in outputs
 [NX v20.6.4 Daemon Server] - 2025-04-01T20:15:51.535Z - [REQUEST]: Responding to the client. recordOutputsHash
@@ -4397,7 +4397,7 @@ Error: This workspace is more than three days old and is not connected. Workspac
 [NX v20.6.4 Daemon Server] - 2025-04-01T20:15:52.153Z - Closed a connection. Number of open connections: 8
 [NX v20.6.4 Daemon Server] - 2025-04-01T20:15:52.308Z - Error when sending EndRun
 Error: This workspace is more than three days old and is not connected. Workspaces must be connected within 3 days of creation. Claim your workspace at https://cloud.nx.app
-    at Timeout._onTimeout (/Users/alisenok/Self-education/Курс_Web/moneytracker/.nx/cache/cloud/2503.26.6.hotfix3/lib/daemon/process-run-end.js:1:905875)
+    at Timeout._onTimeout (/Users/alisenok/Self-education/Курс_Web/purpleschool/.nx/cache/cloud/2503.26.6.hotfix3/lib/daemon/process-run-end.js:1:905875)
     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
 [NX v20.6.4 Daemon Server] - 2025-04-01T20:31:28.580Z - [WATCHER]: apps/account/src/app/user/entities/user.entity.ts was modified
 [NX v20.6.4 Daemon Server] - 2025-04-01T20:31:28.590Z - [REQUEST]: Responding to the client. File watch changed
@@ -4468,16 +4468,16 @@ Error: This workspace is more than three days old and is not connected. Workspac
 [NX v20.6.4 Daemon Server] - 2025-04-01T20:31:32.450Z - Closed a connection. Number of open connections: 8
 [NX v20.6.4 Daemon Server] - 2025-04-01T20:31:32.813Z - Error when sending EndRun
 Error: This workspace is more than three days old and is not connected. Workspaces must be connected within 3 days of creation. Claim your workspace at https://cloud.nx.app
-    at Timeout._onTimeout (/Users/alisenok/Self-education/Курс_Web/moneytracker/.nx/cache/cloud/2503.26.6.hotfix3/lib/daemon/process-run-end.js:1:905875)
+    at Timeout._onTimeout (/Users/alisenok/Self-education/Курс_Web/purpleschool/.nx/cache/cloud/2503.26.6.hotfix3/lib/daemon/process-run-end.js:1:905875)
     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
 [NX v20.6.4 Daemon Server] - 2025-04-01T20:32:44.845Z - Closed a connection. Number of open connections: 7
 [NX v20.6.4 Daemon Server] - 2025-04-01T20:32:44.869Z - Closed a connection. Number of open connections: 6
 [NX v20.6.4 Daemon Server] - 2025-04-01T20:32:44.884Z - Closed a connection. Number of open connections: 5
 [NX v20.6.4 Daemon Server] - 2025-04-01T20:32:44.889Z - Closed a connection. Number of open connections: 4
 [NX v20.6.4 Daemon Server] - 2025-04-01T20:32:44.905Z - Closed a connection. Number of open connections: 3
-[NX v20.6.4 Daemon Server] - 2025-04-01T23:31:32.383Z - [WATCHER]: Stopping the watcher for /Users/alisenok/Self-education/Курс_Web/moneytracker (sources)
+[NX v20.6.4 Daemon Server] - 2025-04-01T23:31:32.383Z - [WATCHER]: Stopping the watcher for /Users/alisenok/Self-education/Курс_Web/purpleschool (sources)
 [NX v20.6.4 Daemon Server] - 2025-04-01T23:31:32.384Z - Closed a connection. Number of open connections: 2
 [NX v20.6.4 Daemon Server] - 2025-04-01T23:31:32.384Z - Closed a connection. Number of open connections: 1
 [NX v20.6.4 Daemon Server] - 2025-04-01T23:31:32.385Z - Closed a connection. Number of open connections: 0
-[NX v20.6.4 Daemon Server] - 2025-04-01T23:31:32.386Z - [WATCHER]: Stopping the watcher for /Users/alisenok/Self-education/Курс_Web/moneytracker (outputs)
+[NX v20.6.4 Daemon Server] - 2025-04-01T23:31:32.386Z - [WATCHER]: Stopping the watcher for /Users/alisenok/Self-education/Курс_Web/purpleschool (outputs)
 [NX v20.6.4 Daemon Server] - 2025-04-01T23:31:32.396Z - Server stopped because: "10800000ms of inactivity"
