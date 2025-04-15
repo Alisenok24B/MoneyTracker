@@ -961,100 +961,6 @@
       "nx/core/project-json"
     ]
   },
-  "libs/interfaces": {
-    "root": [
-      "libs/interfaces/project.json",
-      "nx/core/project-json"
-    ],
-    "targets": [
-      "libs/interfaces/eslint.config.mjs",
-      "@nx/eslint/plugin"
-    ],
-    "targets.lint": [
-      "libs/interfaces/eslint.config.mjs",
-      "@nx/eslint/plugin"
-    ],
-    "targets.lint.cache": [
-      "libs/interfaces/eslint.config.mjs",
-      "@nx/eslint/plugin"
-    ],
-    "targets.lint.options": [
-      "libs/interfaces/eslint.config.mjs",
-      "@nx/eslint/plugin"
-    ],
-    "targets.lint.inputs": [
-      "libs/interfaces/eslint.config.mjs",
-      "@nx/eslint/plugin"
-    ],
-    "targets.lint.outputs": [
-      "libs/interfaces/eslint.config.mjs",
-      "@nx/eslint/plugin"
-    ],
-    "targets.lint.metadata": [
-      "libs/interfaces/eslint.config.mjs",
-      "@nx/eslint/plugin"
-    ],
-    "targets.lint.executor": [
-      "libs/interfaces/eslint.config.mjs",
-      "@nx/eslint/plugin"
-    ],
-    "targets.lint.options.cwd": [
-      "libs/interfaces/eslint.config.mjs",
-      "@nx/eslint/plugin"
-    ],
-    "targets.lint.options.command": [
-      "libs/interfaces/eslint.config.mjs",
-      "@nx/eslint/plugin"
-    ],
-    "targets.lint.metadata.technologies": [
-      "libs/interfaces/eslint.config.mjs",
-      "@nx/eslint/plugin"
-    ],
-    "targets.lint.metadata.technologies.0": [
-      "libs/interfaces/eslint.config.mjs",
-      "@nx/eslint/plugin"
-    ],
-    "targets.lint.metadata.description": [
-      "libs/interfaces/eslint.config.mjs",
-      "@nx/eslint/plugin"
-    ],
-    "targets.lint.metadata.help": [
-      "libs/interfaces/eslint.config.mjs",
-      "@nx/eslint/plugin"
-    ],
-    "targets.lint.metadata.help.command": [
-      "libs/interfaces/eslint.config.mjs",
-      "@nx/eslint/plugin"
-    ],
-    "targets.lint.metadata.help.example": [
-      "libs/interfaces/eslint.config.mjs",
-      "@nx/eslint/plugin"
-    ],
-    "name": [
-      "libs/interfaces/project.json",
-      "nx/core/project-json"
-    ],
-    "$schema": [
-      "libs/interfaces/project.json",
-      "nx/core/project-json"
-    ],
-    "sourceRoot": [
-      "libs/interfaces/project.json",
-      "nx/core/project-json"
-    ],
-    "projectType": [
-      "libs/interfaces/project.json",
-      "nx/core/project-json"
-    ],
-    "// targets": [
-      "libs/interfaces/project.json",
-      "nx/core/project-json"
-    ],
-    "tags": [
-      "libs/interfaces/project.json",
-      "nx/core/project-json"
-    ]
-  },
   "apps/api-e2e": {
     "root": [
       "apps/api-e2e/project.json",
@@ -1264,6 +1170,100 @@
     ],
     "tags": [
       "libs/contracts/project.json",
+      "nx/core/project-json"
+    ]
+  },
+  "libs/interfaces": {
+    "root": [
+      "libs/interfaces/project.json",
+      "nx/core/project-json"
+    ],
+    "targets": [
+      "libs/interfaces/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint": [
+      "libs/interfaces/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.cache": [
+      "libs/interfaces/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.options": [
+      "libs/interfaces/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.inputs": [
+      "libs/interfaces/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.outputs": [
+      "libs/interfaces/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.metadata": [
+      "libs/interfaces/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.executor": [
+      "libs/interfaces/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.options.cwd": [
+      "libs/interfaces/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.options.command": [
+      "libs/interfaces/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.metadata.technologies": [
+      "libs/interfaces/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.metadata.technologies.0": [
+      "libs/interfaces/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.metadata.description": [
+      "libs/interfaces/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.metadata.help": [
+      "libs/interfaces/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.metadata.help.command": [
+      "libs/interfaces/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "targets.lint.metadata.help.example": [
+      "libs/interfaces/eslint.config.mjs",
+      "@nx/eslint/plugin"
+    ],
+    "name": [
+      "libs/interfaces/project.json",
+      "nx/core/project-json"
+    ],
+    "$schema": [
+      "libs/interfaces/project.json",
+      "nx/core/project-json"
+    ],
+    "sourceRoot": [
+      "libs/interfaces/project.json",
+      "nx/core/project-json"
+    ],
+    "projectType": [
+      "libs/interfaces/project.json",
+      "nx/core/project-json"
+    ],
+    "// targets": [
+      "libs/interfaces/project.json",
+      "nx/core/project-json"
+    ],
+    "tags": [
+      "libs/interfaces/project.json",
       "nx/core/project-json"
     ]
   }

@@ -25,12 +25,12 @@ const common_1 = __webpack_require__(1);
 const app_controller_1 = __webpack_require__(5);
 const app_service_1 = __webpack_require__(6);
 const user_module_1 = __webpack_require__(7);
-const auth_module_1 = __webpack_require__(15);
-const config_1 = __webpack_require__(27);
+const auth_module_1 = __webpack_require__(27);
+const config_1 = __webpack_require__(32);
 const mongoose_1 = __webpack_require__(8);
-const mongo_config_1 = __webpack_require__(28);
-const nestjs_rmq_1 = __webpack_require__(21);
-const rmq_config_1 = __webpack_require__(29);
+const mongo_config_1 = __webpack_require__(33);
+const nestjs_rmq_1 = __webpack_require__(23);
+const rmq_config_1 = __webpack_require__(34);
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -119,6 +119,8 @@ const common_1 = __webpack_require__(1);
 const mongoose_1 = __webpack_require__(8);
 const user_model_1 = __webpack_require__(9);
 const user_repository_1 = __webpack_require__(14);
+const user_commands_1 = __webpack_require__(15);
+const user_queries_1 = __webpack_require__(26);
 let UserModule = class UserModule {
 };
 exports.UserModule = UserModule;
@@ -128,7 +130,8 @@ exports.UserModule = UserModule = tslib_1.__decorate([
                 { name: user_model_1.User.name, schema: user_model_1.UserSchema }
             ])],
         providers: [user_repository_1.UserRepository],
-        exports: [user_repository_1.UserRepository]
+        exports: [user_repository_1.UserRepository],
+        controllers: [user_commands_1.UserCommands, user_queries_1.UserQueries]
     })
 ], UserModule);
 
@@ -144,13 +147,28 @@ module.exports = require("@nestjs/mongoose");
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
-var _a;
+var _a, _b, _c;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.UserSchema = exports.User = void 0;
+exports.UserSchema = exports.User = exports.UserCoursesSchema = exports.UserCourses = void 0;
 const tslib_1 = __webpack_require__(4);
 const mongoose_1 = __webpack_require__(8);
 const mongoose_2 = __webpack_require__(10);
 const interfaces_1 = __webpack_require__(11);
+let UserCourses = class UserCourses extends mongoose_2.Document {
+};
+exports.UserCourses = UserCourses;
+tslib_1.__decorate([
+    (0, mongoose_1.Prop)({ required: true }),
+    tslib_1.__metadata("design:type", String)
+], UserCourses.prototype, "courseId", void 0);
+tslib_1.__decorate([
+    (0, mongoose_1.Prop)({ required: true, enum: interfaces_1.PurchaseState, type: String }),
+    tslib_1.__metadata("design:type", typeof (_a = typeof interfaces_1.PurchaseState !== "undefined" && interfaces_1.PurchaseState) === "function" ? _a : Object)
+], UserCourses.prototype, "purchaseState", void 0);
+exports.UserCourses = UserCourses = tslib_1.__decorate([
+    (0, mongoose_1.Schema)()
+], UserCourses);
+exports.UserCoursesSchema = mongoose_1.SchemaFactory.createForClass(UserCourses);
 let User = class User extends mongoose_2.Document {
 };
 exports.User = User;
@@ -168,8 +186,12 @@ tslib_1.__decorate([
 ], User.prototype, "passwordHash", void 0);
 tslib_1.__decorate([
     (0, mongoose_1.Prop)({ required: true, enum: interfaces_1.UserRole, type: String, default: interfaces_1.UserRole.Student }),
-    tslib_1.__metadata("design:type", typeof (_a = typeof interfaces_1.UserRole !== "undefined" && interfaces_1.UserRole) === "function" ? _a : Object)
+    tslib_1.__metadata("design:type", typeof (_b = typeof interfaces_1.UserRole !== "undefined" && interfaces_1.UserRole) === "function" ? _b : Object)
 ], User.prototype, "role", void 0);
+tslib_1.__decorate([
+    (0, mongoose_1.Prop)({ type: [exports.UserCoursesSchema], _id: false }),
+    tslib_1.__metadata("design:type", typeof (_c = typeof mongoose_2.Types !== "undefined" && mongoose_2.Types.Array) === "function" ? _c : Object)
+], User.prototype, "courses", void 0);
 exports.User = User = tslib_1.__decorate([
     (0, mongoose_1.Schema)()
 ], User);
@@ -199,12 +221,19 @@ tslib_1.__exportStar(__webpack_require__(13), exports);
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.UserRole = void 0;
+exports.PurchaseState = exports.UserRole = void 0;
 var UserRole;
 (function (UserRole) {
     UserRole["Teacher"] = "Teacher";
     UserRole["Student"] = "Student";
 })(UserRole || (exports.UserRole = UserRole = {}));
+var PurchaseState;
+(function (PurchaseState) {
+    PurchaseState["Started"] = "Started";
+    PurchaseState["WaitingForPayment"] = "WaitingForPayment";
+    PurchaseState["Purchased"] = "Purchased";
+    PurchaseState["Canceled"] = "Canceled";
+})(PurchaseState || (exports.PurchaseState = PurchaseState = {}));
 
 
 /***/ }),
@@ -236,8 +265,14 @@ let UserRepository = class UserRepository {
         const newUser = new this.userModel(user);
         return newUser.save();
     }
+    async updateUser(_id, ...rest) {
+        return this.userModel.updateOne({ _id }, { $set: { ...rest } }).exec();
+    }
     async findUser(email) {
         return this.userModel.findOne({ email }).exec();
+    }
+    async findUserById(id) {
+        return this.userModel.findById(id).exec();
     }
     async deleteUser(email) {
         this.userModel.deleteOne({ email }).exec();
@@ -256,15 +291,325 @@ exports.UserRepository = UserRepository = tslib_1.__decorate([
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
+var _a, _b, _c;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.UserCommands = void 0;
+const tslib_1 = __webpack_require__(4);
+const common_1 = __webpack_require__(1);
+const user_repository_1 = __webpack_require__(14);
+const contracts_1 = __webpack_require__(16);
+const nestjs_rmq_1 = __webpack_require__(23);
+const user_entity_1 = __webpack_require__(24);
+let UserCommands = class UserCommands {
+    constructor(userRepository) {
+        this.userRepository = userRepository;
+    }
+    async userInfo({ user, id }) {
+        const existedUser = await this.userRepository.findUserById(id);
+        if (!existedUser) {
+            throw new Error('Такого пользователя не существует');
+        }
+        const userEntity = new user_entity_1.UserEntity(existedUser).updateProfile(user.displayName);
+        await this.userRepository.updateUser(userEntity);
+        return {};
+    }
+};
+exports.UserCommands = UserCommands;
+tslib_1.__decorate([
+    (0, nestjs_rmq_1.RMQValidate)(),
+    (0, nestjs_rmq_1.RMQRoute)(contracts_1.AccountChangeProfile.topic),
+    tslib_1.__param(0, (0, common_1.Body)()),
+    tslib_1.__metadata("design:type", Function),
+    tslib_1.__metadata("design:paramtypes", [typeof (_b = typeof contracts_1.AccountChangeProfile !== "undefined" && contracts_1.AccountChangeProfile.Request) === "function" ? _b : Object]),
+    tslib_1.__metadata("design:returntype", typeof (_c = typeof Promise !== "undefined" && Promise) === "function" ? _c : Object)
+], UserCommands.prototype, "userInfo", null);
+exports.UserCommands = UserCommands = tslib_1.__decorate([
+    (0, common_1.Controller)(),
+    tslib_1.__metadata("design:paramtypes", [typeof (_a = typeof user_repository_1.UserRepository !== "undefined" && user_repository_1.UserRepository) === "function" ? _a : Object])
+], UserCommands);
+
+
+/***/ }),
+/* 16 */
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+const tslib_1 = __webpack_require__(4);
+tslib_1.__exportStar(__webpack_require__(17), exports);
+tslib_1.__exportStar(__webpack_require__(19), exports);
+tslib_1.__exportStar(__webpack_require__(20), exports);
+tslib_1.__exportStar(__webpack_require__(21), exports);
+tslib_1.__exportStar(__webpack_require__(22), exports);
+
+
+/***/ }),
+/* 17 */
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.AccountLogin = void 0;
+const tslib_1 = __webpack_require__(4);
+const class_validator_1 = __webpack_require__(18);
+var AccountLogin;
+(function (AccountLogin) {
+    AccountLogin.topic = 'account.login.command';
+    class Request {
+    }
+    tslib_1.__decorate([
+        (0, class_validator_1.IsEmail)(),
+        tslib_1.__metadata("design:type", String)
+    ], Request.prototype, "email", void 0);
+    tslib_1.__decorate([
+        (0, class_validator_1.IsString)(),
+        tslib_1.__metadata("design:type", String)
+    ], Request.prototype, "password", void 0);
+    AccountLogin.Request = Request;
+    class Response {
+    }
+    AccountLogin.Response = Response;
+})(AccountLogin || (exports.AccountLogin = AccountLogin = {}));
+
+
+/***/ }),
+/* 18 */
+/***/ ((module) => {
+
+module.exports = require("class-validator");
+
+/***/ }),
+/* 19 */
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.AccountRegister = void 0;
+const tslib_1 = __webpack_require__(4);
+const class_validator_1 = __webpack_require__(18);
+var AccountRegister;
+(function (AccountRegister) {
+    AccountRegister.topic = 'account.register.command';
+    class Request {
+    }
+    tslib_1.__decorate([
+        (0, class_validator_1.IsEmail)(),
+        tslib_1.__metadata("design:type", String)
+    ], Request.prototype, "email", void 0);
+    tslib_1.__decorate([
+        (0, class_validator_1.IsString)(),
+        tslib_1.__metadata("design:type", String)
+    ], Request.prototype, "password", void 0);
+    tslib_1.__decorate([
+        (0, class_validator_1.IsOptional)(),
+        (0, class_validator_1.IsString)(),
+        tslib_1.__metadata("design:type", String)
+    ], Request.prototype, "displayName", void 0);
+    AccountRegister.Request = Request;
+    class Response {
+    }
+    AccountRegister.Response = Response;
+})(AccountRegister || (exports.AccountRegister = AccountRegister = {}));
+
+
+/***/ }),
+/* 20 */
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.AccountUserInfo = void 0;
+const tslib_1 = __webpack_require__(4);
+const class_validator_1 = __webpack_require__(18);
+var AccountUserInfo;
+(function (AccountUserInfo) {
+    AccountUserInfo.topic = 'account.user-info.query';
+    class Request {
+    }
+    tslib_1.__decorate([
+        (0, class_validator_1.IsString)(),
+        tslib_1.__metadata("design:type", String)
+    ], Request.prototype, "id", void 0);
+    AccountUserInfo.Request = Request;
+    class Response {
+    }
+    AccountUserInfo.Response = Response;
+})(AccountUserInfo || (exports.AccountUserInfo = AccountUserInfo = {}));
+
+
+/***/ }),
+/* 21 */
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.AccountUserCourses = void 0;
+const tslib_1 = __webpack_require__(4);
+const class_validator_1 = __webpack_require__(18);
+var AccountUserCourses;
+(function (AccountUserCourses) {
+    AccountUserCourses.topic = 'account.user-courses.query';
+    class Request {
+    }
+    tslib_1.__decorate([
+        (0, class_validator_1.IsString)(),
+        tslib_1.__metadata("design:type", String)
+    ], Request.prototype, "id", void 0);
+    AccountUserCourses.Request = Request;
+    class Response {
+    }
+    AccountUserCourses.Response = Response;
+})(AccountUserCourses || (exports.AccountUserCourses = AccountUserCourses = {}));
+
+
+/***/ }),
+/* 22 */
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.AccountChangeProfile = void 0;
+const tslib_1 = __webpack_require__(4);
+const class_validator_1 = __webpack_require__(18);
+var AccountChangeProfile;
+(function (AccountChangeProfile) {
+    var _a;
+    AccountChangeProfile.topic = 'account.change-profile.command';
+    class Request {
+    }
+    tslib_1.__decorate([
+        (0, class_validator_1.IsString)(),
+        tslib_1.__metadata("design:type", String)
+    ], Request.prototype, "id", void 0);
+    tslib_1.__decorate([
+        (0, class_validator_1.IsString)(),
+        tslib_1.__metadata("design:type", typeof (_a = typeof Pick !== "undefined" && Pick) === "function" ? _a : Object)
+    ], Request.prototype, "user", void 0);
+    AccountChangeProfile.Request = Request;
+    class Response {
+    }
+    AccountChangeProfile.Response = Response;
+})(AccountChangeProfile || (exports.AccountChangeProfile = AccountChangeProfile = {}));
+
+
+/***/ }),
+/* 23 */
+/***/ ((module) => {
+
+module.exports = require("nestjs-rmq");
+
+/***/ }),
+/* 24 */
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.UserEntity = void 0;
+const bcryptjs_1 = __webpack_require__(25);
+class UserEntity {
+    constructor(user) {
+        this._id = user._id;
+        this.displayName = user.displayName;
+        this.passwordHash = user.passwordHash;
+        this.email = user.email;
+        this.role = user.role;
+        this.courses = user.courses;
+    }
+    getPublicProfile() {
+        return {
+            email: this.email,
+            role: this.role,
+            displayName: this.displayName
+        };
+    }
+    async setPassword(password) {
+        const salt = await (0, bcryptjs_1.genSalt)(10);
+        this.passwordHash = await (0, bcryptjs_1.hash)(password, salt);
+        return this;
+    }
+    validatePassword(password) {
+        return (0, bcryptjs_1.compare)(password, this.passwordHash);
+    }
+    updateProfile(displayName) {
+        this.displayName = displayName;
+    }
+}
+exports.UserEntity = UserEntity;
+
+
+/***/ }),
+/* 25 */
+/***/ ((module) => {
+
+module.exports = require("bcryptjs");
+
+/***/ }),
+/* 26 */
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+
+var _a, _b, _c, _d, _e;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.UserQueries = void 0;
+const tslib_1 = __webpack_require__(4);
+const common_1 = __webpack_require__(1);
+const contracts_1 = __webpack_require__(16);
+const nestjs_rmq_1 = __webpack_require__(23);
+const user_repository_1 = __webpack_require__(14);
+const user_entity_1 = __webpack_require__(24);
+let UserQueries = class UserQueries {
+    constructor(userRepository) {
+        this.userRepository = userRepository;
+    }
+    async userInfo({ id }) {
+        const user = await this.userRepository.findUserById(id);
+        const profile = new user_entity_1.UserEntity(user).getPublicProfile();
+        return { profile };
+    }
+    async userCourses({ id }) {
+        const user = await this.userRepository.findUserById(id);
+        return {
+            courses: user.courses
+        };
+    }
+};
+exports.UserQueries = UserQueries;
+tslib_1.__decorate([
+    (0, nestjs_rmq_1.RMQValidate)(),
+    (0, nestjs_rmq_1.RMQRoute)(contracts_1.AccountUserInfo.topic),
+    tslib_1.__param(0, (0, common_1.Body)()),
+    tslib_1.__metadata("design:type", Function),
+    tslib_1.__metadata("design:paramtypes", [typeof (_b = typeof contracts_1.AccountUserInfo !== "undefined" && contracts_1.AccountUserInfo.Request) === "function" ? _b : Object]),
+    tslib_1.__metadata("design:returntype", typeof (_c = typeof Promise !== "undefined" && Promise) === "function" ? _c : Object)
+], UserQueries.prototype, "userInfo", null);
+tslib_1.__decorate([
+    (0, nestjs_rmq_1.RMQValidate)(),
+    (0, nestjs_rmq_1.RMQRoute)(contracts_1.AccountUserCourses.topic),
+    tslib_1.__param(0, (0, common_1.Body)()),
+    tslib_1.__metadata("design:type", Function),
+    tslib_1.__metadata("design:paramtypes", [typeof (_d = typeof contracts_1.AccountUserCourses !== "undefined" && contracts_1.AccountUserCourses.Request) === "function" ? _d : Object]),
+    tslib_1.__metadata("design:returntype", typeof (_e = typeof Promise !== "undefined" && Promise) === "function" ? _e : Object)
+], UserQueries.prototype, "userCourses", null);
+exports.UserQueries = UserQueries = tslib_1.__decorate([
+    (0, common_1.Controller)(),
+    tslib_1.__metadata("design:paramtypes", [typeof (_a = typeof user_repository_1.UserRepository !== "undefined" && user_repository_1.UserRepository) === "function" ? _a : Object])
+], UserQueries);
+
+
+/***/ }),
+/* 27 */
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.AuthModule = void 0;
 const tslib_1 = __webpack_require__(4);
 const common_1 = __webpack_require__(1);
-const auth_controller_1 = __webpack_require__(16);
-const auth_service_1 = __webpack_require__(17);
+const auth_controller_1 = __webpack_require__(28);
+const auth_service_1 = __webpack_require__(29);
 const user_module_1 = __webpack_require__(7);
-const jwt_1 = __webpack_require__(20);
-const jwt_config_1 = __webpack_require__(26);
+const jwt_1 = __webpack_require__(30);
+const jwt_config_1 = __webpack_require__(31);
 let AuthModule = class AuthModule {
 };
 exports.AuthModule = AuthModule;
@@ -278,7 +623,7 @@ exports.AuthModule = AuthModule = tslib_1.__decorate([
 
 
 /***/ }),
-/* 16 */
+/* 28 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -287,9 +632,9 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.AuthController = void 0;
 const tslib_1 = __webpack_require__(4);
 const common_1 = __webpack_require__(1);
-const auth_service_1 = __webpack_require__(17);
-const nestjs_rmq_1 = __webpack_require__(21);
-const contracts_1 = __webpack_require__(22);
+const auth_service_1 = __webpack_require__(29);
+const nestjs_rmq_1 = __webpack_require__(23);
+const contracts_1 = __webpack_require__(16);
 let AuthController = class AuthController {
     constructor(authService) {
         this.authService = authService;
@@ -326,7 +671,7 @@ exports.AuthController = AuthController = tslib_1.__decorate([
 
 
 /***/ }),
-/* 17 */
+/* 29 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -336,9 +681,9 @@ exports.AuthService = void 0;
 const tslib_1 = __webpack_require__(4);
 const common_1 = __webpack_require__(1);
 const user_repository_1 = __webpack_require__(14);
-const user_entity_1 = __webpack_require__(18);
+const user_entity_1 = __webpack_require__(24);
 const interfaces_1 = __webpack_require__(11);
-const jwt_1 = __webpack_require__(20);
+const jwt_1 = __webpack_require__(30);
 let AuthService = class AuthService {
     constructor(userRepository, jwtService) {
         this.userRepository = userRepository;
@@ -384,139 +729,19 @@ exports.AuthService = AuthService = tslib_1.__decorate([
 
 
 /***/ }),
-/* 18 */
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.UserEntity = void 0;
-const bcryptjs_1 = __webpack_require__(19);
-class UserEntity {
-    constructor(user) {
-        this._id = user._id;
-        this.displayName = user.displayName;
-        this.passwordHash = user.passwordHash;
-        this.email = user.email;
-        this.role = user.role;
-    }
-    async setPassword(password) {
-        const salt = await (0, bcryptjs_1.genSalt)(10);
-        this.passwordHash = await (0, bcryptjs_1.hash)(password, salt);
-        return this;
-    }
-    validatePassword(password) {
-        return (0, bcryptjs_1.compare)(password, this.passwordHash);
-    }
-}
-exports.UserEntity = UserEntity;
-
-
-/***/ }),
-/* 19 */
-/***/ ((module) => {
-
-module.exports = require("bcryptjs");
-
-/***/ }),
-/* 20 */
+/* 30 */
 /***/ ((module) => {
 
 module.exports = require("@nestjs/jwt");
 
 /***/ }),
-/* 21 */
-/***/ ((module) => {
-
-module.exports = require("nestjs-rmq");
-
-/***/ }),
-/* 22 */
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-const tslib_1 = __webpack_require__(4);
-tslib_1.__exportStar(__webpack_require__(23), exports);
-tslib_1.__exportStar(__webpack_require__(25), exports);
-
-
-/***/ }),
-/* 23 */
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.AccountLogin = void 0;
-const tslib_1 = __webpack_require__(4);
-const class_validator_1 = __webpack_require__(24);
-var AccountLogin;
-(function (AccountLogin) {
-    AccountLogin.topic = 'account.login.command';
-    class Request {
-    }
-    tslib_1.__decorate([
-        (0, class_validator_1.IsEmail)(),
-        tslib_1.__metadata("design:type", String)
-    ], Request.prototype, "email", void 0);
-    tslib_1.__decorate([
-        (0, class_validator_1.IsString)(),
-        tslib_1.__metadata("design:type", String)
-    ], Request.prototype, "password", void 0);
-    AccountLogin.Request = Request;
-    class Response {
-    }
-    AccountLogin.Response = Response;
-})(AccountLogin || (exports.AccountLogin = AccountLogin = {}));
-
-
-/***/ }),
-/* 24 */
-/***/ ((module) => {
-
-module.exports = require("class-validator");
-
-/***/ }),
-/* 25 */
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.AccountRegister = void 0;
-const tslib_1 = __webpack_require__(4);
-const class_validator_1 = __webpack_require__(24);
-var AccountRegister;
-(function (AccountRegister) {
-    AccountRegister.topic = 'account.register.command';
-    class Request {
-    }
-    tslib_1.__decorate([
-        (0, class_validator_1.IsEmail)(),
-        tslib_1.__metadata("design:type", String)
-    ], Request.prototype, "email", void 0);
-    tslib_1.__decorate([
-        (0, class_validator_1.IsString)(),
-        tslib_1.__metadata("design:type", String)
-    ], Request.prototype, "password", void 0);
-    tslib_1.__decorate([
-        (0, class_validator_1.IsOptional)(),
-        (0, class_validator_1.IsString)(),
-        tslib_1.__metadata("design:type", String)
-    ], Request.prototype, "displayName", void 0);
-    AccountRegister.Request = Request;
-    class Response {
-    }
-    AccountRegister.Response = Response;
-})(AccountRegister || (exports.AccountRegister = AccountRegister = {}));
-
-
-/***/ }),
-/* 26 */
+/* 31 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.getJWTConfig = void 0;
-const config_1 = __webpack_require__(27);
+const config_1 = __webpack_require__(32);
 const getJWTConfig = () => ({
     imports: [config_1.ConfigModule],
     inject: [config_1.ConfigService],
@@ -528,19 +753,19 @@ exports.getJWTConfig = getJWTConfig;
 
 
 /***/ }),
-/* 27 */
+/* 32 */
 /***/ ((module) => {
 
 module.exports = require("@nestjs/config");
 
 /***/ }),
-/* 28 */
+/* 33 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.getMongoConfig = void 0;
-const config_1 = __webpack_require__(27);
+const config_1 = __webpack_require__(32);
 const getMongoConfig = () => {
     return {
         useFactory: (configService) => ({
@@ -566,13 +791,13 @@ const getMongoString = (configService) => "mongodb://" +
 
 
 /***/ }),
-/* 29 */
+/* 34 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.getRMQConfig = void 0;
-const config_1 = __webpack_require__(27);
+const config_1 = __webpack_require__(32);
 const getRMQConfig = () => ({
     inject: [config_1.ConfigService],
     imports: [config_1.ConfigModule],
@@ -587,7 +812,7 @@ const getRMQConfig = () => ({
         ],
         queueName: configService.get('AMQP_QUEUE'),
         prefetchCount: 32,
-        serviceName: 'purple-account'
+        serviceName: 'moneytracker-account'
     })
 });
 exports.getRMQConfig = getRMQConfig;
