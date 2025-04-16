@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { UserRepository } from '../user/repositories/user.repository';
 import { UserEntity } from '../user/entities/user.entity';
-import { UserRole } from '@moneytracker/interfaces';
 import { JwtService } from '@nestjs/jwt';
 import { AccountRegister } from '@moneytracker/contracts';
 
@@ -21,7 +20,6 @@ export class AuthService {
             displayName,
             email,
             passwordHash: '',
-            role: UserRole.Student
         }).setPassword(password);
         const newUser = await this.userRepository.createUser(newUserEntity);
         return {email: newUser.email}

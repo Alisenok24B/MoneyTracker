@@ -1,5 +1,5 @@
 import { Body, Controller } from "@nestjs/common";
-import { AccountUserCourses, AccountUserInfo } from "@moneytracker/contracts";
+import { AccountUserInfo } from "@moneytracker/contracts";
 import { RMQRoute, RMQValidate } from "nestjs-rmq";
 import { UserRepository } from "./repositories/user.repository";
 import { UserEntity } from "./entities/user.entity";
@@ -14,14 +14,5 @@ export class UserQueries {
         const user = await this.userRepository.findUserById(id);
         const profile = new UserEntity(user).getPublicProfile();
         return { profile };
-    }
-
-    @RMQValidate()
-    @RMQRoute(AccountUserCourses.topic)
-    async userCourses(@Body() {id}: AccountUserCourses.Request): Promise<AccountUserCourses.Response> {
-        const user = await this.userRepository.findUserById(id);
-        return {
-            courses: user.courses
-        };
     }
 }
