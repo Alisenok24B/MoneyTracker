@@ -1,4 +1,4 @@
-import { IUser } from "@moneytracker/interfaces";
+import { IDomainEvent, IUser } from "@moneytracker/interfaces";
 import { compare, genSalt, hash } from "bcryptjs";
 
 export class UserEntity implements IUser {
@@ -6,6 +6,7 @@ export class UserEntity implements IUser {
     displayName?: string;
     email: string;
     passwordHash: string;
+    events: IDomainEvent[] = [];
 
     constructor(user: IUser) {
       this._id = user._id;
