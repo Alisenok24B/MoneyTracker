@@ -2,7 +2,7 @@ import { Body, Controller, Post, UnauthorizedException } from '@nestjs/common';
 import {AccountLogin, AccountRegister} from '@moneytracker/contracts';
 import { RMQService } from 'nestjs-rmq';
 import { LoginDto } from '../dtos/login.dto';
-import { RegisterDto } from '../dtos/redister.dto';
+import { RegisterDto } from '../dtos/register.dto';
 
 @Controller('auth')
 export class AuthController {
