@@ -17,11 +17,11 @@ export class UserService {
             throw new Error('Такого пользователя не существует');
         }
         const userEntity = new UserEntity(existedUser).updateProfile(user.displayName);
-        await this.updaateUser(userEntity);
+        await this.updateUser(userEntity);
         return {};
     }
 
-    private updaateUser(user: UserEntity) {
+    private updateUser(user: UserEntity) {
         return Promise.all([
             this.userEventEmmiter.handle(user),
             this.userRepository.updateUser(user)

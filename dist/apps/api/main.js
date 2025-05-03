@@ -30,6 +30,7 @@ const jwt_1 = __webpack_require__(17);
 const jwt_config_1 = __webpack_require__(18);
 const passport_1 = __webpack_require__(19);
 const user_controller_1 = __webpack_require__(20);
+const jwt_strategy_1 = __webpack_require__(24);
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -39,9 +40,12 @@ exports.AppModule = AppModule = tslib_1.__decorate([
             config_1.ConfigModule.forRoot({ envFilePath: 'envs/.api.env', isGlobal: true }),
             nestjs_rmq_1.RMQModule.forRootAsync((0, rmq_config_1.getRMQConfig)()),
             jwt_1.JwtModule.registerAsync((0, jwt_config_1.getJWTConfig)()),
-            passport_1.PassportModule
+            passport_1.PassportModule.register({ defaultStrategy: 'jwt' })
         ],
-        controllers: [auth_controller_1.AuthController, user_controller_1.UserController]
+        controllers: [auth_controller_1.AuthController, user_controller_1.UserController],
+        providers: [
+            jwt_strategy_1.JwtStrategy
+        ]
     })
 ], AppModule);
 
@@ -65,7 +69,7 @@ const common_1 = __webpack_require__(1);
 const contracts_1 = __webpack_require__(6);
 const nestjs_rmq_1 = __webpack_require__(12);
 const login_dto_1 = __webpack_require__(13);
-const redister_dto_1 = __webpack_require__(14);
+const register_dto_1 = __webpack_require__(14);
 let AuthController = class AuthController {
     constructor(rmqService) {
         this.rmqService = rmqService;
@@ -96,7 +100,7 @@ tslib_1.__decorate([
     (0, common_1.Post)('register'),
     tslib_1.__param(0, (0, common_1.Body)()),
     tslib_1.__metadata("design:type", Function),
-    tslib_1.__metadata("design:paramtypes", [typeof (_b = typeof redister_dto_1.RegisterDto !== "undefined" && redister_dto_1.RegisterDto) === "function" ? _b : Object]),
+    tslib_1.__metadata("design:paramtypes", [typeof (_b = typeof register_dto_1.RegisterDto !== "undefined" && register_dto_1.RegisterDto) === "function" ? _b : Object]),
     tslib_1.__metadata("design:returntype", Promise)
 ], AuthController.prototype, "register", null);
 tslib_1.__decorate([
@@ -239,7 +243,7 @@ var AccountChangeProfile;
         tslib_1.__metadata("design:type", String)
     ], Request.prototype, "id", void 0);
     tslib_1.__decorate([
-        (0, class_validator_1.IsString)(),
+        (0, class_validator_1.IsObject)(),
         tslib_1.__metadata("design:type", typeof (_a = typeof Pick !== "undefined" && Pick) === "function" ? _a : Object)
     ], Request.prototype, "user", void 0);
     AccountChangeProfile.Request = Request;
@@ -372,29 +376,51 @@ module.exports = require("@nestjs/passport");
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
+var _a, _b;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.UserController = void 0;
 const tslib_1 = __webpack_require__(4);
 const common_1 = __webpack_require__(1);
 const jwt_guard_1 = __webpack_require__(21);
 const user_decorator_1 = __webpack_require__(22);
+const nestjs_rmq_1 = __webpack_require__(12);
+const contracts_1 = __webpack_require__(6);
+const change_profile_dto_1 = __webpack_require__(23);
 let UserController = class UserController {
-    constructor() { }
+    constructor(rmqService) {
+        this.rmqService = rmqService;
+    }
     async info(userId) {
+        return this.rmqService.send(contracts_1.AccountUserInfo.topic, { id: userId });
+    }
+    async changeProfile(userId, dto) {
+        return this.rmqService.send(contracts_1.AccountChangeProfile.topic, {
+            id: userId,
+            user: { displayName: dto.displayName },
+        });
     }
 };
 exports.UserController = UserController;
 tslib_1.__decorate([
     (0, common_1.UseGuards)(jwt_guard_1.JWTAuthGuard),
-    (0, common_1.Post)('info'),
+    (0, common_1.Get)('info'),
     tslib_1.__param(0, (0, user_decorator_1.UserId)()),
     tslib_1.__metadata("design:type", Function),
     tslib_1.__metadata("design:paramtypes", [String]),
     tslib_1.__metadata("design:returntype", Promise)
 ], UserController.prototype, "info", null);
+tslib_1.__decorate([
+    (0, common_1.UseGuards)(jwt_guard_1.JWTAuthGuard),
+    (0, common_1.Post)('change-profile'),
+    tslib_1.__param(0, (0, user_decorator_1.UserId)()),
+    tslib_1.__param(1, (0, common_1.Body)()),
+    tslib_1.__metadata("design:type", Function),
+    tslib_1.__metadata("design:paramtypes", [String, typeof (_b = typeof change_profile_dto_1.ChangeProfileDto !== "undefined" && change_profile_dto_1.ChangeProfileDto) === "function" ? _b : Object]),
+    tslib_1.__metadata("design:returntype", Promise)
+], UserController.prototype, "changeProfile", null);
 exports.UserController = UserController = tslib_1.__decorate([
     (0, common_1.Controller)('user'),
-    tslib_1.__metadata("design:paramtypes", [])
+    tslib_1.__metadata("design:paramtypes", [typeof (_a = typeof nestjs_rmq_1.RMQService !== "undefined" && nestjs_rmq_1.RMQService) === "function" ? _a : Object])
 ], UserController);
 
 
@@ -423,6 +449,62 @@ exports.UserId = (0, common_1.createParamDecorator)((data, ctx) => {
     return ctx.switchToHttp().getRequest()?.user;
 });
 
+
+/***/ }),
+/* 23 */
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.ChangeProfileDto = void 0;
+const tslib_1 = __webpack_require__(4);
+const class_validator_1 = __webpack_require__(8);
+class ChangeProfileDto {
+}
+exports.ChangeProfileDto = ChangeProfileDto;
+tslib_1.__decorate([
+    (0, class_validator_1.IsString)(),
+    tslib_1.__metadata("design:type", String)
+], ChangeProfileDto.prototype, "displayName", void 0);
+
+
+/***/ }),
+/* 24 */
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+
+var _a;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.JwtStrategy = void 0;
+const tslib_1 = __webpack_require__(4);
+const common_1 = __webpack_require__(1);
+const config_1 = __webpack_require__(15);
+const passport_1 = __webpack_require__(19);
+const passport_jwt_1 = __webpack_require__(25);
+let JwtStrategy = class JwtStrategy extends (0, passport_1.PassportStrategy)(passport_jwt_1.Strategy) {
+    constructor(configService) {
+        super({
+            jwtFromRequest: passport_jwt_1.ExtractJwt.fromAuthHeaderAsBearerToken(),
+            ignoreExpiration: true,
+            secretOrKey: configService.get('JWT_SECRET')
+        });
+    }
+    async validate({ id }) {
+        return id;
+    }
+};
+exports.JwtStrategy = JwtStrategy;
+exports.JwtStrategy = JwtStrategy = tslib_1.__decorate([
+    (0, common_1.Injectable)(),
+    tslib_1.__metadata("design:paramtypes", [typeof (_a = typeof config_1.ConfigService !== "undefined" && config_1.ConfigService) === "function" ? _a : Object])
+], JwtStrategy);
+
+
+/***/ }),
+/* 25 */
+/***/ ((module) => {
+
+module.exports = require("passport-jwt");
 
 /***/ })
 /******/ 	]);

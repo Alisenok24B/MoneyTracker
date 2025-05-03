@@ -1,4 +1,4 @@
-import { IsString } from 'class-validator';
+import { IsObject, IsString } from 'class-validator';
 import {IUser} from '@moneytracker/interfaces'
 
 export namespace AccountChangeProfile {
@@ -8,7 +8,7 @@ export namespace AccountChangeProfile {
         @IsString()
         id: string;
 
-        @IsString()
+        @IsObject()
         user: Pick<IUser, 'displayName'>;
     }
 

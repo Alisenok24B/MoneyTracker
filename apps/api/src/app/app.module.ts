@@ -7,14 +7,18 @@ import { JwtModule } from '@nestjs/jwt';
 import { getJWTConfig } from './configs/jwt.config';
 import { PassportModule } from '@nestjs/passport';
 import { UserController } from './controllers/user.controller';
+import { JwtStrategy } from './strategies/jwt.strategy';
 
 @Module({
   imports: [
     ConfigModule.forRoot({envFilePath: 'envs/.api.env', isGlobal: true}),
     RMQModule.forRootAsync(getRMQConfig()),
     JwtModule.registerAsync(getJWTConfig()),
-    PassportModule
+    PassportModule.register({defaultStrategy: 'jwt'})
   ],
-  controllers: [AuthController, UserController]
+  controllers: [AuthController, UserController],
+  providers: [
+    JwtStrategy
+  ]
 })
 export class AppModule {}

@@ -25,12 +25,12 @@ const common_1 = __webpack_require__(1);
 const app_controller_1 = __webpack_require__(5);
 const app_service_1 = __webpack_require__(6);
 const user_module_1 = __webpack_require__(7);
-const auth_module_1 = __webpack_require__(23);
-const config_1 = __webpack_require__(28);
+const auth_module_1 = __webpack_require__(25);
+const config_1 = __webpack_require__(30);
 const mongoose_1 = __webpack_require__(8);
-const mongo_config_1 = __webpack_require__(29);
+const mongo_config_1 = __webpack_require__(31);
 const nestjs_rmq_1 = __webpack_require__(19);
-const rmq_config_1 = __webpack_require__(30);
+const rmq_config_1 = __webpack_require__(32);
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -120,7 +120,9 @@ const mongoose_1 = __webpack_require__(8);
 const user_model_1 = __webpack_require__(9);
 const user_repository_1 = __webpack_require__(11);
 const user_commands_1 = __webpack_require__(12);
-const user_queries_1 = __webpack_require__(22);
+const user_queries_1 = __webpack_require__(24);
+const user_service_1 = __webpack_require__(20);
+const user_event_immiter_1 = __webpack_require__(23);
 let UserModule = class UserModule {
 };
 exports.UserModule = UserModule;
@@ -129,8 +131,15 @@ exports.UserModule = UserModule = tslib_1.__decorate([
         imports: [mongoose_1.MongooseModule.forFeature([
                 { name: user_model_1.User.name, schema: user_model_1.UserSchema }
             ])],
-        providers: [user_repository_1.UserRepository],
-        exports: [user_repository_1.UserRepository],
+        providers: [
+            user_repository_1.UserRepository,
+            user_service_1.UserService,
+            user_event_immiter_1.UserEventEmmiter
+        ],
+        exports: [
+            user_repository_1.UserRepository,
+            user_service_1.UserService
+        ],
         controllers: [user_commands_1.UserCommands, user_queries_1.UserQueries]
     })
 ], UserModule);
@@ -200,7 +209,8 @@ let UserRepository = class UserRepository {
         const newUser = new this.userModel(user);
         return newUser.save();
     }
-    async updateUser(_id, ...rest) {
+    async updateUser(user) {
+        const { _id, ...rest } = user;
         return this.userModel.updateOne({ _id }, { $set: { ...rest } }).exec();
     }
     async findUser(email) {
@@ -231,22 +241,15 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.UserCommands = void 0;
 const tslib_1 = __webpack_require__(4);
 const common_1 = __webpack_require__(1);
-const user_repository_1 = __webpack_require__(11);
 const contracts_1 = __webpack_require__(13);
 const nestjs_rmq_1 = __webpack_require__(19);
-const user_entity_1 = __webpack_require__(20);
+const user_service_1 = __webpack_require__(20);
 let UserCommands = class UserCommands {
-    constructor(userRepository) {
-        this.userRepository = userRepository;
+    constructor(userService) {
+        this.userService = userService;
     }
-    async userInfo({ user, id }) {
-        const existedUser = await this.userRepository.findUserById(id);
-        if (!existedUser) {
-            throw new Error('Такого пользователя не существует');
-        }
-        const userEntity = new user_entity_1.UserEntity(existedUser).updateProfile(user.displayName);
-        await this.userRepository.updateUser(userEntity);
-        return {};
+    async changeProfile({ user, id }) {
+        return this.userService.changeProfile(user, id);
     }
 };
 exports.UserCommands = UserCommands;
@@ -257,10 +260,10 @@ tslib_1.__decorate([
     tslib_1.__metadata("design:type", Function),
     tslib_1.__metadata("design:paramtypes", [typeof (_b = typeof contracts_1.AccountChangeProfile !== "undefined" && contracts_1.AccountChangeProfile.Request) === "function" ? _b : Object]),
     tslib_1.__metadata("design:returntype", typeof (_c = typeof Promise !== "undefined" && Promise) === "function" ? _c : Object)
-], UserCommands.prototype, "userInfo", null);
+], UserCommands.prototype, "changeProfile", null);
 exports.UserCommands = UserCommands = tslib_1.__decorate([
     (0, common_1.Controller)(),
-    tslib_1.__metadata("design:paramtypes", [typeof (_a = typeof user_repository_1.UserRepository !== "undefined" && user_repository_1.UserRepository) === "function" ? _a : Object])
+    tslib_1.__metadata("design:paramtypes", [typeof (_a = typeof user_service_1.UserService !== "undefined" && user_service_1.UserService) === "function" ? _a : Object])
 ], UserCommands);
 
 
@@ -391,7 +394,7 @@ var AccountChangeProfile;
         tslib_1.__metadata("design:type", String)
     ], Request.prototype, "id", void 0);
     tslib_1.__decorate([
-        (0, class_validator_1.IsString)(),
+        (0, class_validator_1.IsObject)(),
         tslib_1.__metadata("design:type", typeof (_a = typeof Pick !== "undefined" && Pick) === "function" ? _a : Object)
     ], Request.prototype, "user", void 0);
     AccountChangeProfile.Request = Request;
@@ -412,11 +415,53 @@ module.exports = require("nestjs-rmq");
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
+var _a, _b;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.UserService = void 0;
+const tslib_1 = __webpack_require__(4);
+const common_1 = __webpack_require__(1);
+const user_entity_1 = __webpack_require__(21);
+const user_repository_1 = __webpack_require__(11);
+const user_event_immiter_1 = __webpack_require__(23);
+let UserService = class UserService {
+    constructor(userRepository, userEventEmmiter) {
+        this.userRepository = userRepository;
+        this.userEventEmmiter = userEventEmmiter;
+    }
+    async changeProfile(user, id) {
+        const existedUser = await this.userRepository.findUserById(id);
+        if (!existedUser) {
+            throw new Error('Такого пользователя не существует');
+        }
+        const userEntity = new user_entity_1.UserEntity(existedUser).updateProfile(user.displayName);
+        await this.updateUser(userEntity);
+        return {};
+    }
+    updateUser(user) {
+        return Promise.all([
+            this.userEventEmmiter.handle(user),
+            this.userRepository.updateUser(user)
+        ]);
+    }
+};
+exports.UserService = UserService;
+exports.UserService = UserService = tslib_1.__decorate([
+    (0, common_1.Injectable)(),
+    tslib_1.__metadata("design:paramtypes", [typeof (_a = typeof user_repository_1.UserRepository !== "undefined" && user_repository_1.UserRepository) === "function" ? _a : Object, typeof (_b = typeof user_event_immiter_1.UserEventEmmiter !== "undefined" && user_event_immiter_1.UserEventEmmiter) === "function" ? _b : Object])
+], UserService);
+
+
+/***/ }),
+/* 21 */
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.UserEntity = void 0;
-const bcryptjs_1 = __webpack_require__(21);
+const bcryptjs_1 = __webpack_require__(22);
 class UserEntity {
     constructor(user) {
+        this.events = [];
         this._id = user._id;
         this.displayName = user.displayName;
         this.passwordHash = user.passwordHash;
@@ -445,13 +490,41 @@ exports.UserEntity = UserEntity;
 
 
 /***/ }),
-/* 21 */
+/* 22 */
 /***/ ((module) => {
 
 module.exports = require("bcryptjs");
 
 /***/ }),
-/* 22 */
+/* 23 */
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+
+var _a;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.UserEventEmmiter = void 0;
+const tslib_1 = __webpack_require__(4);
+const common_1 = __webpack_require__(1);
+const nestjs_rmq_1 = __webpack_require__(19);
+let UserEventEmmiter = class UserEventEmmiter {
+    constructor(rmqService) {
+        this.rmqService = rmqService;
+    }
+    async handle(user) {
+        for (const event of user.events) {
+            await this.rmqService.notify(event.topic, event.data);
+        }
+    }
+};
+exports.UserEventEmmiter = UserEventEmmiter;
+exports.UserEventEmmiter = UserEventEmmiter = tslib_1.__decorate([
+    (0, common_1.Injectable)(),
+    tslib_1.__metadata("design:paramtypes", [typeof (_a = typeof nestjs_rmq_1.RMQService !== "undefined" && nestjs_rmq_1.RMQService) === "function" ? _a : Object])
+], UserEventEmmiter);
+
+
+/***/ }),
+/* 24 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -463,7 +536,7 @@ const common_1 = __webpack_require__(1);
 const contracts_1 = __webpack_require__(13);
 const nestjs_rmq_1 = __webpack_require__(19);
 const user_repository_1 = __webpack_require__(11);
-const user_entity_1 = __webpack_require__(20);
+const user_entity_1 = __webpack_require__(21);
 let UserQueries = class UserQueries {
     constructor(userRepository) {
         this.userRepository = userRepository;
@@ -490,7 +563,7 @@ exports.UserQueries = UserQueries = tslib_1.__decorate([
 
 
 /***/ }),
-/* 23 */
+/* 25 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -498,11 +571,11 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.AuthModule = void 0;
 const tslib_1 = __webpack_require__(4);
 const common_1 = __webpack_require__(1);
-const auth_controller_1 = __webpack_require__(24);
-const auth_service_1 = __webpack_require__(25);
+const auth_controller_1 = __webpack_require__(26);
+const auth_service_1 = __webpack_require__(27);
 const user_module_1 = __webpack_require__(7);
-const jwt_1 = __webpack_require__(26);
-const jwt_config_1 = __webpack_require__(27);
+const jwt_1 = __webpack_require__(28);
+const jwt_config_1 = __webpack_require__(29);
 let AuthModule = class AuthModule {
 };
 exports.AuthModule = AuthModule;
@@ -516,7 +589,7 @@ exports.AuthModule = AuthModule = tslib_1.__decorate([
 
 
 /***/ }),
-/* 24 */
+/* 26 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -525,7 +598,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.AuthController = void 0;
 const tslib_1 = __webpack_require__(4);
 const common_1 = __webpack_require__(1);
-const auth_service_1 = __webpack_require__(25);
+const auth_service_1 = __webpack_require__(27);
 const nestjs_rmq_1 = __webpack_require__(19);
 const contracts_1 = __webpack_require__(13);
 let AuthController = class AuthController {
@@ -564,7 +637,7 @@ exports.AuthController = AuthController = tslib_1.__decorate([
 
 
 /***/ }),
-/* 25 */
+/* 27 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -574,8 +647,8 @@ exports.AuthService = void 0;
 const tslib_1 = __webpack_require__(4);
 const common_1 = __webpack_require__(1);
 const user_repository_1 = __webpack_require__(11);
-const user_entity_1 = __webpack_require__(20);
-const jwt_1 = __webpack_require__(26);
+const user_entity_1 = __webpack_require__(21);
+const jwt_1 = __webpack_require__(28);
 let AuthService = class AuthService {
     constructor(userRepository, jwtService) {
         this.userRepository = userRepository;
@@ -620,19 +693,19 @@ exports.AuthService = AuthService = tslib_1.__decorate([
 
 
 /***/ }),
-/* 26 */
+/* 28 */
 /***/ ((module) => {
 
 module.exports = require("@nestjs/jwt");
 
 /***/ }),
-/* 27 */
+/* 29 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.getJWTConfig = void 0;
-const config_1 = __webpack_require__(28);
+const config_1 = __webpack_require__(30);
 const getJWTConfig = () => ({
     imports: [config_1.ConfigModule],
     inject: [config_1.ConfigService],
@@ -644,19 +717,19 @@ exports.getJWTConfig = getJWTConfig;
 
 
 /***/ }),
-/* 28 */
+/* 30 */
 /***/ ((module) => {
 
 module.exports = require("@nestjs/config");
 
 /***/ }),
-/* 29 */
+/* 31 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.getMongoConfig = void 0;
-const config_1 = __webpack_require__(28);
+const config_1 = __webpack_require__(30);
 const getMongoConfig = () => {
     return {
         useFactory: (configService) => ({
@@ -682,13 +755,13 @@ const getMongoString = (configService) => "mongodb://" +
 
 
 /***/ }),
-/* 30 */
+/* 32 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.getRMQConfig = void 0;
-const config_1 = __webpack_require__(28);
+const config_1 = __webpack_require__(30);
 const getRMQConfig = () => ({
     inject: [config_1.ConfigService],
     imports: [config_1.ConfigModule],
