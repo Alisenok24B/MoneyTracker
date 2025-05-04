@@ -8,6 +8,7 @@ import { getJWTConfig } from './configs/jwt.config';
 import { PassportModule } from '@nestjs/passport';
 import { UserController } from './controllers/user.controller';
 import { JwtStrategy } from './strategies/jwt.strategy';
+import { WalletController } from './controllers/wallet.controller';
 
 @Module({
   imports: [
@@ -16,7 +17,7 @@ import { JwtStrategy } from './strategies/jwt.strategy';
     JwtModule.registerAsync(getJWTConfig()),
     PassportModule.register({defaultStrategy: 'jwt'})
   ],
-  controllers: [AuthController, UserController],
+  controllers: [AuthController, UserController, WalletController],
   providers: [
     JwtStrategy
   ]
