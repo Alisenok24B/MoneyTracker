@@ -17,8 +17,6 @@ export namespace AccountCreate {
     @IsOptional() @IsNumber() cashWithdrawalFeePercent?: number;
     @IsOptional() @IsNumber() cashWithdrawalFeeFixed?: number;
     @IsOptional() @IsNumber() cashWithdrawalLimitPerMonth?: number;
-    @IsOptional() @IsNumber() cashbackPercentMax?: number;
-    @IsOptional() @IsArray() @IsString({ each: true }) cashbackCategories?: string[];
   }
 
   export class Request {

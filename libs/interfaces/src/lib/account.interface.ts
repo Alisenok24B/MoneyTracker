@@ -39,10 +39,6 @@ export interface ICreditCardDetails {
   cashWithdrawalFeePercent?: number;
   cashWithdrawalFeeFixed?: number;
   cashWithdrawalLimitPerMonth?: number;
-
-  // кэшбэк (max% и категории)
-  cashbackPercentMax?: number;
-  cashbackCategories?: string[];
 }
 
 // Общий интерфейс для сущности «Счёт»

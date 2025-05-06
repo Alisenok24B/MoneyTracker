@@ -41,15 +41,6 @@ class CreditDetailsDto implements ICreditCardDetails {
   @IsOptional()
   @IsNumber()
   cashWithdrawalLimitPerMonth?: number;
-
-  @IsOptional()
-  @IsNumber()
-  cashbackPercentMax?: number;
-
-  @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
-  cashbackCategories?: string[];
 }
 
 export class CreateAccountDto {
