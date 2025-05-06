@@ -8,6 +8,7 @@ import {
   Body,
   Query,
   UseGuards,
+  BadRequestException,
 } from '@nestjs/common';
 import { RMQService } from 'nestjs-rmq';
 import { JWTAuthGuard } from '../guards/jwt.guard';
@@ -25,6 +26,7 @@ import { CreateAccountDto } from '../dtos/create-account.dto';
 import { UpdateAccountDto } from '../dtos/update-account.dto';
 import { ListAccountsDto } from '../dtos/list-accounts.dto';
 import { AccountIdDto } from '../dtos/account-id.dto';
+import { AccountType } from '@moneytracker/interfaces';
 
 @Controller('accounts')
 export class WalletController {
@@ -43,7 +45,10 @@ export class WalletController {
     >(AccountList.topic, { userId, peers: dto.peers || [] });
 
     const sanitized = response.accounts.map(account => {
-      const { _id, name, type, balance, currency } = account;
+      const { _id, name, type, balance, currency, creditDetails } = account;
+      if (type === AccountType.CreditCard) {
+        return { _id, name, type, balance, currency, creditDetails };
+      }
       return { _id, name, type, balance, currency };
     });
 
@@ -57,6 +62,14 @@ export class WalletController {
     @UserId() userId: string,
     @Body() dto: CreateAccountDto,
   ) {
+    // creditDetails обязательны для creditCard и запрещены для остальных
+    if (dto.type === AccountType.CreditCard && !dto.creditDetails) {
+      throw new BadRequestException('For creditCard must to write creditDetails');
+    }
+    if (dto.creditDetails && dto.type !== AccountType.CreditCard) {
+      throw new BadRequestException('creditDetails are only allowed for creditCard accounts');
+    }
+
     return this.rmqService.send<AccountCreate.Request, AccountCreate.Response>(
       AccountCreate.topic,
       { userId, ...dto },
@@ -75,7 +88,10 @@ export class WalletController {
       AccountGet.Response
     >(AccountGet.topic, { userId, id: params.id });
     const { account } = response;
-    const { _id, name, type, balance, currency } = account;
+    const { _id, name, type, balance, currency, creditDetails } = account;
+    if (type === AccountType.CreditCard) {
+      return { account: { _id, name, type, balance, currency, creditDetails } };
+    }
     return { account: { _id, name, type, balance, currency } };
   }
 

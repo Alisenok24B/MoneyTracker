@@ -1,19 +1,26 @@
-import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { AccountRepository } from './repositories/account.repository';
 import { AccountEntity } from './entities/account.entity';
-import { IAccount } from '@moneytracker/interfaces';
+import { AccountType, IAccount } from '@moneytracker/interfaces';
 import { AccountEventEmitter } from './account.event-emitter';
 
 @Injectable()
 export class AccountService {
   constructor(private readonly repo: AccountRepository, private readonly events: AccountEventEmitter) {}
 
-  async createAccount(dto: Omit<IAccount, '_id' | 'balance'>): Promise<AccountEntity> {
+  async createAccount(dto: Omit<IAccount, '_id' | 'balance' | 'deletedAt'>): Promise<AccountEntity> {
+    // Если пытаются задать creditDetails для любого типа кроме CreditCard — запрещаем
+    if (dto.creditDetails && dto.type !== AccountType.CreditCard) {
+      throw new BadRequestException('creditDetails can only be updated for CreditCard accounts');
+    }
+    if (dto.type === AccountType.CreditCard && !dto.creditDetails) {
+      throw new BadRequestException('For creditCard must to write creditDetails');
+    }
     const entity = new AccountEntity({ ...dto, balance: 0 });
-    entity.markCreated();                          // уже был
+    entity.markCreated();
     const doc = await this.repo.create(entity);
     const created = new AccountEntity(doc.toObject());
-    await this.events.emit(created.events);        // ← эмитируем события создания
+    await this.events.emit(created.events);        // эмитируем события создания
     return created;
   }
 
@@ -33,7 +40,10 @@ export class AccountService {
     const doc = await this.repo.findById(id);
     if (!doc) throw new NotFoundException('Account not found or deleted');
     if (doc.userId !== userId) throw new ForbiddenException('Access denied');
-
+    // Для не CreditCard–счетов creditDetails запрещены
+    if (update.creditDetails && doc.type !== AccountType.CreditCard) {
+      throw new BadRequestException('creditDetails can only be updated for CreditCard accounts');
+    }
     const entity = new AccountEntity(doc.toObject());
     entity.markUpdated();                          // ← генерируем событие обновления
     Object.assign(entity, update);

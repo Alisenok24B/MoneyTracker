@@ -23,15 +23,15 @@ exports.AppModule = void 0;
 const tslib_1 = __webpack_require__(4);
 const common_1 = __webpack_require__(1);
 const auth_controller_1 = __webpack_require__(5);
-const config_1 = __webpack_require__(21);
-const nestjs_rmq_1 = __webpack_require__(18);
-const rmq_config_1 = __webpack_require__(22);
-const jwt_1 = __webpack_require__(23);
-const jwt_config_1 = __webpack_require__(24);
-const passport_1 = __webpack_require__(25);
-const user_controller_1 = __webpack_require__(26);
-const jwt_strategy_1 = __webpack_require__(30);
-const wallet_controller_1 = __webpack_require__(32);
+const config_1 = __webpack_require__(26);
+const nestjs_rmq_1 = __webpack_require__(23);
+const rmq_config_1 = __webpack_require__(27);
+const jwt_1 = __webpack_require__(28);
+const jwt_config_1 = __webpack_require__(29);
+const passport_1 = __webpack_require__(30);
+const user_controller_1 = __webpack_require__(31);
+const jwt_strategy_1 = __webpack_require__(35);
+const wallet_controller_1 = __webpack_require__(37);
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -68,9 +68,9 @@ exports.AuthController = void 0;
 const tslib_1 = __webpack_require__(4);
 const common_1 = __webpack_require__(1);
 const contracts_1 = __webpack_require__(6);
-const nestjs_rmq_1 = __webpack_require__(18);
-const login_dto_1 = __webpack_require__(19);
-const register_dto_1 = __webpack_require__(20);
+const nestjs_rmq_1 = __webpack_require__(23);
+const login_dto_1 = __webpack_require__(24);
+const register_dto_1 = __webpack_require__(25);
 let AuthController = class AuthController {
     constructor(rmqService) {
         this.rmqService = rmqService;
@@ -129,10 +129,10 @@ tslib_1.__exportStar(__webpack_require__(9), exports);
 tslib_1.__exportStar(__webpack_require__(10), exports);
 tslib_1.__exportStar(__webpack_require__(11), exports);
 tslib_1.__exportStar(__webpack_require__(12), exports);
-tslib_1.__exportStar(__webpack_require__(14), exports);
-tslib_1.__exportStar(__webpack_require__(15), exports);
-tslib_1.__exportStar(__webpack_require__(16), exports);
-tslib_1.__exportStar(__webpack_require__(17), exports);
+tslib_1.__exportStar(__webpack_require__(19), exports);
+tslib_1.__exportStar(__webpack_require__(20), exports);
+tslib_1.__exportStar(__webpack_require__(21), exports);
+tslib_1.__exportStar(__webpack_require__(22), exports);
 
 
 /***/ }),
@@ -268,9 +268,11 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.AccountCreate = void 0;
 const tslib_1 = __webpack_require__(4);
 const class_validator_1 = __webpack_require__(8);
-const class_transformer_1 = __webpack_require__(13);
+const interfaces_1 = __webpack_require__(13);
+const class_transformer_1 = __webpack_require__(18);
 var AccountCreate;
 (function (AccountCreate) {
+    var _a;
     AccountCreate.topic = 'account.create.command';
     class CreditDto {
     }
@@ -281,11 +283,60 @@ var AccountCreate;
     tslib_1.__decorate([
         (0, class_validator_1.IsNumber)(),
         tslib_1.__metadata("design:type", Number)
-    ], CreditDto.prototype, "billingCycleStart", void 0);
+    ], CreditDto.prototype, "gracePeriodDays", void 0);
     tslib_1.__decorate([
-        (0, class_validator_1.IsString)(),
-        tslib_1.__metadata("design:type", String)
-    ], CreditDto.prototype, "nextBillingCycleDate", void 0);
+        (0, class_validator_1.IsIn)(['fixed', 'calendar', 'perPurchase']),
+        tslib_1.__metadata("design:type", typeof (_a = typeof interfaces_1.BillingCycleType !== "undefined" && interfaces_1.BillingCycleType) === "function" ? _a : Object)
+    ], CreditDto.prototype, "billingCycleType", void 0);
+    tslib_1.__decorate([
+        (0, class_validator_1.IsOptional)(),
+        (0, class_validator_1.IsNumber)(),
+        tslib_1.__metadata("design:type", Number)
+    ], CreditDto.prototype, "billingCycleLengthDays", void 0);
+    tslib_1.__decorate([
+        (0, class_validator_1.IsOptional)(),
+        (0, class_validator_1.IsNumber)(),
+        tslib_1.__metadata("design:type", Number)
+    ], CreditDto.prototype, "billingCycleStartDayOfMonth", void 0);
+    tslib_1.__decorate([
+        (0, class_validator_1.IsNumber)(),
+        tslib_1.__metadata("design:type", Number)
+    ], CreditDto.prototype, "paymentPeriodDays", void 0);
+    tslib_1.__decorate([
+        (0, class_validator_1.IsNumber)(),
+        tslib_1.__metadata("design:type", Number)
+    ], CreditDto.prototype, "interestRate", void 0);
+    tslib_1.__decorate([
+        (0, class_validator_1.IsOptional)(),
+        (0, class_validator_1.IsNumber)(),
+        tslib_1.__metadata("design:type", Number)
+    ], CreditDto.prototype, "annualFee", void 0);
+    tslib_1.__decorate([
+        (0, class_validator_1.IsOptional)(),
+        (0, class_validator_1.IsNumber)(),
+        tslib_1.__metadata("design:type", Number)
+    ], CreditDto.prototype, "cashWithdrawalFeePercent", void 0);
+    tslib_1.__decorate([
+        (0, class_validator_1.IsOptional)(),
+        (0, class_validator_1.IsNumber)(),
+        tslib_1.__metadata("design:type", Number)
+    ], CreditDto.prototype, "cashWithdrawalFeeFixed", void 0);
+    tslib_1.__decorate([
+        (0, class_validator_1.IsOptional)(),
+        (0, class_validator_1.IsNumber)(),
+        tslib_1.__metadata("design:type", Number)
+    ], CreditDto.prototype, "cashWithdrawalLimitPerMonth", void 0);
+    tslib_1.__decorate([
+        (0, class_validator_1.IsOptional)(),
+        (0, class_validator_1.IsNumber)(),
+        tslib_1.__metadata("design:type", Number)
+    ], CreditDto.prototype, "cashbackPercentMax", void 0);
+    tslib_1.__decorate([
+        (0, class_validator_1.IsOptional)(),
+        (0, class_validator_1.IsArray)(),
+        (0, class_validator_1.IsString)({ each: true }),
+        tslib_1.__metadata("design:type", Array)
+    ], CreditDto.prototype, "cashbackCategories", void 0);
     class Request {
     }
     tslib_1.__decorate([
@@ -297,7 +348,7 @@ var AccountCreate;
         tslib_1.__metadata("design:type", String)
     ], Request.prototype, "name", void 0);
     tslib_1.__decorate([
-        (0, class_validator_1.IsIn)(['deposit', 'savings', 'debit', 'credit']),
+        (0, class_validator_1.IsIn)(['savings', 'debit', 'creditCard']),
         tslib_1.__metadata("design:type", String)
     ], Request.prototype, "type", void 0);
     tslib_1.__decorate([
@@ -320,12 +371,64 @@ var AccountCreate;
 
 /***/ }),
 /* 13 */
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+const tslib_1 = __webpack_require__(4);
+tslib_1.__exportStar(__webpack_require__(14), exports);
+tslib_1.__exportStar(__webpack_require__(15), exports);
+tslib_1.__exportStar(__webpack_require__(16), exports);
+tslib_1.__exportStar(__webpack_require__(17), exports);
+
+
+/***/ }),
+/* 14 */
+/***/ ((__unused_webpack_module, exports) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+
+
+/***/ }),
+/* 15 */
+/***/ ((__unused_webpack_module, exports) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+
+
+/***/ }),
+/* 16 */
+/***/ ((__unused_webpack_module, exports) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+
+
+/***/ }),
+/* 17 */
+/***/ ((__unused_webpack_module, exports) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.AccountType = void 0;
+var AccountType;
+(function (AccountType) {
+    AccountType["Savings"] = "savings";
+    AccountType["Debit"] = "debit";
+    AccountType["CreditCard"] = "creditCard";
+})(AccountType || (exports.AccountType = AccountType = {}));
+
+
+/***/ }),
+/* 18 */
 /***/ ((module) => {
 
 module.exports = require("class-transformer");
 
 /***/ }),
-/* 14 */
+/* 19 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -333,28 +436,80 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.AccountUpdate = void 0;
 const tslib_1 = __webpack_require__(4);
 const class_validator_1 = __webpack_require__(8);
-const class_transformer_1 = __webpack_require__(13);
+const class_transformer_1 = __webpack_require__(18);
+const interfaces_1 = __webpack_require__(13);
 var AccountUpdate;
 (function (AccountUpdate) {
     var _a;
-    AccountUpdate.topic = 'account.update.command';
+    AccountUpdate.topic = 'wallet.update-account.command';
     class CreditDto {
     }
     tslib_1.__decorate([
         (0, class_validator_1.IsOptional)(),
-        (0, class_transformer_1.Type)(() => Number),
+        (0, class_validator_1.IsNumber)(),
         tslib_1.__metadata("design:type", Number)
     ], CreditDto.prototype, "creditLimit", void 0);
     tslib_1.__decorate([
         (0, class_validator_1.IsOptional)(),
-        (0, class_transformer_1.Type)(() => Number),
+        (0, class_validator_1.IsNumber)(),
         tslib_1.__metadata("design:type", Number)
-    ], CreditDto.prototype, "billingCycleStart", void 0);
+    ], CreditDto.prototype, "gracePeriodDays", void 0);
     tslib_1.__decorate([
         (0, class_validator_1.IsOptional)(),
-        (0, class_validator_1.IsString)(),
-        tslib_1.__metadata("design:type", String)
-    ], CreditDto.prototype, "nextBillingCycleDate", void 0);
+        (0, class_validator_1.IsIn)(Object.values(['fixed', 'calendar', 'perPurchase'])),
+        tslib_1.__metadata("design:type", typeof (_a = typeof interfaces_1.BillingCycleType !== "undefined" && interfaces_1.BillingCycleType) === "function" ? _a : Object)
+    ], CreditDto.prototype, "billingCycleType", void 0);
+    tslib_1.__decorate([
+        (0, class_validator_1.IsOptional)(),
+        (0, class_validator_1.IsNumber)(),
+        tslib_1.__metadata("design:type", Number)
+    ], CreditDto.prototype, "billingCycleLengthDays", void 0);
+    tslib_1.__decorate([
+        (0, class_validator_1.IsOptional)(),
+        (0, class_validator_1.IsNumber)(),
+        tslib_1.__metadata("design:type", Number)
+    ], CreditDto.prototype, "billingCycleStartDayOfMonth", void 0);
+    tslib_1.__decorate([
+        (0, class_validator_1.IsOptional)(),
+        (0, class_validator_1.IsNumber)(),
+        tslib_1.__metadata("design:type", Number)
+    ], CreditDto.prototype, "paymentPeriodDays", void 0);
+    tslib_1.__decorate([
+        (0, class_validator_1.IsOptional)(),
+        (0, class_validator_1.IsNumber)(),
+        tslib_1.__metadata("design:type", Number)
+    ], CreditDto.prototype, "interestRate", void 0);
+    tslib_1.__decorate([
+        (0, class_validator_1.IsOptional)(),
+        (0, class_validator_1.IsNumber)(),
+        tslib_1.__metadata("design:type", Number)
+    ], CreditDto.prototype, "annualFee", void 0);
+    tslib_1.__decorate([
+        (0, class_validator_1.IsOptional)(),
+        (0, class_validator_1.IsNumber)(),
+        tslib_1.__metadata("design:type", Number)
+    ], CreditDto.prototype, "cashWithdrawalFeePercent", void 0);
+    tslib_1.__decorate([
+        (0, class_validator_1.IsOptional)(),
+        (0, class_validator_1.IsNumber)(),
+        tslib_1.__metadata("design:type", Number)
+    ], CreditDto.prototype, "cashWithdrawalFeeFixed", void 0);
+    tslib_1.__decorate([
+        (0, class_validator_1.IsOptional)(),
+        (0, class_validator_1.IsNumber)(),
+        tslib_1.__metadata("design:type", Number)
+    ], CreditDto.prototype, "cashWithdrawalLimitPerMonth", void 0);
+    tslib_1.__decorate([
+        (0, class_validator_1.IsOptional)(),
+        (0, class_validator_1.IsNumber)(),
+        tslib_1.__metadata("design:type", Number)
+    ], CreditDto.prototype, "cashbackPercentMax", void 0);
+    tslib_1.__decorate([
+        (0, class_validator_1.IsOptional)(),
+        (0, class_validator_1.IsArray)(),
+        (0, class_validator_1.IsString)({ each: true }),
+        tslib_1.__metadata("design:type", Array)
+    ], CreditDto.prototype, "cashbackCategories", void 0);
     class Request {
     }
     tslib_1.__decorate([
@@ -372,11 +527,6 @@ var AccountUpdate;
     ], Request.prototype, "name", void 0);
     tslib_1.__decorate([
         (0, class_validator_1.IsOptional)(),
-        (0, class_validator_1.IsIn)(['deposit', 'savings', 'debit', 'credit']),
-        tslib_1.__metadata("design:type", String)
-    ], Request.prototype, "type", void 0);
-    tslib_1.__decorate([
-        (0, class_validator_1.IsOptional)(),
         (0, class_validator_1.IsString)(),
         tslib_1.__metadata("design:type", String)
     ], Request.prototype, "currency", void 0);
@@ -384,7 +534,7 @@ var AccountUpdate;
         (0, class_validator_1.IsOptional)(),
         (0, class_validator_1.ValidateNested)(),
         (0, class_transformer_1.Type)(() => CreditDto),
-        tslib_1.__metadata("design:type", typeof (_a = typeof Partial !== "undefined" && Partial) === "function" ? _a : Object)
+        tslib_1.__metadata("design:type", CreditDto)
     ], Request.prototype, "creditDetails", void 0);
     AccountUpdate.Request = Request;
     class Response {
@@ -394,7 +544,7 @@ var AccountUpdate;
 
 
 /***/ }),
-/* 15 */
+/* 20 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -423,7 +573,7 @@ var AccountGet;
 
 
 /***/ }),
-/* 16 */
+/* 21 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -453,7 +603,7 @@ var AccountList;
 
 
 /***/ }),
-/* 17 */
+/* 22 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -482,13 +632,13 @@ var AccountDelete;
 
 
 /***/ }),
-/* 18 */
+/* 23 */
 /***/ ((module) => {
 
 module.exports = require("nestjs-rmq");
 
 /***/ }),
-/* 19 */
+/* 24 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -510,7 +660,7 @@ tslib_1.__decorate([
 
 
 /***/ }),
-/* 20 */
+/* 25 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -537,19 +687,19 @@ tslib_1.__decorate([
 
 
 /***/ }),
-/* 21 */
+/* 26 */
 /***/ ((module) => {
 
 module.exports = require("@nestjs/config");
 
 /***/ }),
-/* 22 */
+/* 27 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.getRMQConfig = void 0;
-const config_1 = __webpack_require__(21);
+const config_1 = __webpack_require__(26);
 const getRMQConfig = () => ({
     inject: [config_1.ConfigService],
     imports: [config_1.ConfigModule],
@@ -570,19 +720,19 @@ exports.getRMQConfig = getRMQConfig;
 
 
 /***/ }),
-/* 23 */
+/* 28 */
 /***/ ((module) => {
 
 module.exports = require("@nestjs/jwt");
 
 /***/ }),
-/* 24 */
+/* 29 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.getJWTConfig = void 0;
-const config_1 = __webpack_require__(21);
+const config_1 = __webpack_require__(26);
 const getJWTConfig = () => ({
     imports: [config_1.ConfigModule],
     inject: [config_1.ConfigService],
@@ -594,13 +744,13 @@ exports.getJWTConfig = getJWTConfig;
 
 
 /***/ }),
-/* 25 */
+/* 30 */
 /***/ ((module) => {
 
 module.exports = require("@nestjs/passport");
 
 /***/ }),
-/* 26 */
+/* 31 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -609,11 +759,11 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.UserController = void 0;
 const tslib_1 = __webpack_require__(4);
 const common_1 = __webpack_require__(1);
-const jwt_guard_1 = __webpack_require__(27);
-const user_decorator_1 = __webpack_require__(28);
-const nestjs_rmq_1 = __webpack_require__(18);
+const jwt_guard_1 = __webpack_require__(32);
+const user_decorator_1 = __webpack_require__(33);
+const nestjs_rmq_1 = __webpack_require__(23);
 const contracts_1 = __webpack_require__(6);
-const change_profile_dto_1 = __webpack_require__(29);
+const change_profile_dto_1 = __webpack_require__(34);
 let UserController = class UserController {
     constructor(rmqService) {
         this.rmqService = rmqService;
@@ -653,20 +803,20 @@ exports.UserController = UserController = tslib_1.__decorate([
 
 
 /***/ }),
-/* 27 */
+/* 32 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.JWTAuthGuard = void 0;
-const passport_1 = __webpack_require__(25);
+const passport_1 = __webpack_require__(30);
 class JWTAuthGuard extends (0, passport_1.AuthGuard)('jwt') {
 }
 exports.JWTAuthGuard = JWTAuthGuard;
 
 
 /***/ }),
-/* 28 */
+/* 33 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -679,7 +829,7 @@ exports.UserId = (0, common_1.createParamDecorator)((data, ctx) => {
 
 
 /***/ }),
-/* 29 */
+/* 34 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -697,7 +847,7 @@ tslib_1.__decorate([
 
 
 /***/ }),
-/* 30 */
+/* 35 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -706,9 +856,9 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.JwtStrategy = void 0;
 const tslib_1 = __webpack_require__(4);
 const common_1 = __webpack_require__(1);
-const config_1 = __webpack_require__(21);
-const passport_1 = __webpack_require__(25);
-const passport_jwt_1 = __webpack_require__(31);
+const config_1 = __webpack_require__(26);
+const passport_1 = __webpack_require__(30);
+const passport_jwt_1 = __webpack_require__(36);
 let JwtStrategy = class JwtStrategy extends (0, passport_1.PassportStrategy)(passport_jwt_1.Strategy) {
     constructor(configService) {
         super({
@@ -729,13 +879,13 @@ exports.JwtStrategy = JwtStrategy = tslib_1.__decorate([
 
 
 /***/ }),
-/* 31 */
+/* 36 */
 /***/ ((module) => {
 
 module.exports = require("passport-jwt");
 
 /***/ }),
-/* 32 */
+/* 37 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -744,14 +894,15 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.WalletController = void 0;
 const tslib_1 = __webpack_require__(4);
 const common_1 = __webpack_require__(1);
-const nestjs_rmq_1 = __webpack_require__(18);
-const jwt_guard_1 = __webpack_require__(27);
-const user_decorator_1 = __webpack_require__(28);
+const nestjs_rmq_1 = __webpack_require__(23);
+const jwt_guard_1 = __webpack_require__(32);
+const user_decorator_1 = __webpack_require__(33);
 const contracts_1 = __webpack_require__(6);
-const create_account_dto_1 = __webpack_require__(33);
+const create_account_dto_1 = __webpack_require__(38);
 const update_account_dto_1 = __webpack_require__(39);
 const list_accounts_dto_1 = __webpack_require__(40);
 const account_id_dto_1 = __webpack_require__(41);
+const interfaces_1 = __webpack_require__(13);
 let WalletController = class WalletController {
     constructor(rmqService) {
         this.rmqService = rmqService;
@@ -760,20 +911,33 @@ let WalletController = class WalletController {
     async list(userId, dto) {
         const response = await this.rmqService.send(contracts_1.AccountList.topic, { userId, peers: dto.peers || [] });
         const sanitized = response.accounts.map(account => {
-            const { _id, name, type, balance, currency } = account;
+            const { _id, name, type, balance, currency, creditDetails } = account;
+            if (type === interfaces_1.AccountType.CreditCard) {
+                return { _id, name, type, balance, currency, creditDetails };
+            }
             return { _id, name, type, balance, currency };
         });
         return { accounts: sanitized };
     }
     // 2) Создать новый счет
     async create(userId, dto) {
+        // creditDetails обязательны для creditCard и запрещены для остальных
+        if (dto.type === interfaces_1.AccountType.CreditCard && !dto.creditDetails) {
+            throw new common_1.BadRequestException('For creditCard must to write creditDetails');
+        }
+        if (dto.creditDetails && dto.type !== interfaces_1.AccountType.CreditCard) {
+            throw new common_1.BadRequestException('creditDetails are only allowed for creditCard accounts');
+        }
         return this.rmqService.send(contracts_1.AccountCreate.topic, { userId, ...dto });
     }
     // 3) Получить один счет по ID, возвращая только определённые поля
     async getById(userId, params) {
         const response = await this.rmqService.send(contracts_1.AccountGet.topic, { userId, id: params.id });
         const { account } = response;
-        const { _id, name, type, balance, currency } = account;
+        const { _id, name, type, balance, currency, creditDetails } = account;
+        if (type === interfaces_1.AccountType.CreditCard) {
+            return { account: { _id, name, type, balance, currency, creditDetails } };
+        }
         return { account: { _id, name, type, balance, currency } };
     }
     // 4) Обновить счет по ID
@@ -846,17 +1010,17 @@ exports.WalletController = WalletController = tslib_1.__decorate([
 
 
 /***/ }),
-/* 33 */
+/* 38 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
-var _a;
+var _a, _b;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.CreateAccountDto = void 0;
 const tslib_1 = __webpack_require__(4);
 const class_validator_1 = __webpack_require__(8);
-const class_transformer_1 = __webpack_require__(13);
-const interfaces_1 = __webpack_require__(34);
+const class_transformer_1 = __webpack_require__(18);
+const interfaces_1 = __webpack_require__(13);
 class CreditDetailsDto {
 }
 tslib_1.__decorate([
@@ -866,11 +1030,60 @@ tslib_1.__decorate([
 tslib_1.__decorate([
     (0, class_validator_1.IsNumber)(),
     tslib_1.__metadata("design:type", Number)
-], CreditDetailsDto.prototype, "billingCycleStart", void 0);
+], CreditDetailsDto.prototype, "gracePeriodDays", void 0);
 tslib_1.__decorate([
-    (0, class_validator_1.IsString)(),
-    tslib_1.__metadata("design:type", String)
-], CreditDetailsDto.prototype, "nextBillingCycleDate", void 0);
+    (0, class_validator_1.IsIn)(['fixed', 'calendar', 'perPurchase']),
+    tslib_1.__metadata("design:type", typeof (_a = typeof interfaces_1.BillingCycleType !== "undefined" && interfaces_1.BillingCycleType) === "function" ? _a : Object)
+], CreditDetailsDto.prototype, "billingCycleType", void 0);
+tslib_1.__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsNumber)(),
+    tslib_1.__metadata("design:type", Number)
+], CreditDetailsDto.prototype, "billingCycleLengthDays", void 0);
+tslib_1.__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsNumber)(),
+    tslib_1.__metadata("design:type", Number)
+], CreditDetailsDto.prototype, "billingCycleStartDayOfMonth", void 0);
+tslib_1.__decorate([
+    (0, class_validator_1.IsNumber)(),
+    tslib_1.__metadata("design:type", Number)
+], CreditDetailsDto.prototype, "paymentPeriodDays", void 0);
+tslib_1.__decorate([
+    (0, class_validator_1.IsNumber)(),
+    tslib_1.__metadata("design:type", Number)
+], CreditDetailsDto.prototype, "interestRate", void 0);
+tslib_1.__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsNumber)(),
+    tslib_1.__metadata("design:type", Number)
+], CreditDetailsDto.prototype, "annualFee", void 0);
+tslib_1.__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsNumber)(),
+    tslib_1.__metadata("design:type", Number)
+], CreditDetailsDto.prototype, "cashWithdrawalFeePercent", void 0);
+tslib_1.__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsNumber)(),
+    tslib_1.__metadata("design:type", Number)
+], CreditDetailsDto.prototype, "cashWithdrawalFeeFixed", void 0);
+tslib_1.__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsNumber)(),
+    tslib_1.__metadata("design:type", Number)
+], CreditDetailsDto.prototype, "cashWithdrawalLimitPerMonth", void 0);
+tslib_1.__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsNumber)(),
+    tslib_1.__metadata("design:type", Number)
+], CreditDetailsDto.prototype, "cashbackPercentMax", void 0);
+tslib_1.__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsArray)(),
+    (0, class_validator_1.IsString)({ each: true }),
+    tslib_1.__metadata("design:type", Array)
+], CreditDetailsDto.prototype, "cashbackCategories", void 0);
 class CreateAccountDto {
 }
 exports.CreateAccountDto = CreateAccountDto;
@@ -880,7 +1093,7 @@ tslib_1.__decorate([
 ], CreateAccountDto.prototype, "name", void 0);
 tslib_1.__decorate([
     (0, class_validator_1.IsIn)(Object.values(interfaces_1.AccountType)),
-    tslib_1.__metadata("design:type", typeof (_a = typeof interfaces_1.AccountType !== "undefined" && interfaces_1.AccountType) === "function" ? _a : Object)
+    tslib_1.__metadata("design:type", typeof (_b = typeof interfaces_1.AccountType !== "undefined" && interfaces_1.AccountType) === "function" ? _b : Object)
 ], CreateAccountDto.prototype, "type", void 0);
 tslib_1.__decorate([
     (0, class_validator_1.IsOptional)(),
@@ -896,58 +1109,6 @@ tslib_1.__decorate([
 
 
 /***/ }),
-/* 34 */
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-const tslib_1 = __webpack_require__(4);
-tslib_1.__exportStar(__webpack_require__(35), exports);
-tslib_1.__exportStar(__webpack_require__(36), exports);
-tslib_1.__exportStar(__webpack_require__(37), exports);
-tslib_1.__exportStar(__webpack_require__(38), exports);
-
-
-/***/ }),
-/* 35 */
-/***/ ((__unused_webpack_module, exports) => {
-
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-
-
-/***/ }),
-/* 36 */
-/***/ ((__unused_webpack_module, exports) => {
-
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-
-
-/***/ }),
-/* 37 */
-/***/ ((__unused_webpack_module, exports) => {
-
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-
-
-/***/ }),
-/* 38 */
-/***/ ((__unused_webpack_module, exports) => {
-
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.AccountType = void 0;
-var AccountType;
-(function (AccountType) {
-    AccountType["Savings"] = "savings";
-    AccountType["Debit"] = "debit";
-    AccountType["CreditCard"] = "creditCard";
-})(AccountType || (exports.AccountType = AccountType = {}));
-
-
-/***/ }),
 /* 39 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
@@ -957,8 +1118,8 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.UpdateAccountDto = void 0;
 const tslib_1 = __webpack_require__(4);
 const class_validator_1 = __webpack_require__(8);
-const class_transformer_1 = __webpack_require__(13);
-const interfaces_1 = __webpack_require__(34);
+const class_transformer_1 = __webpack_require__(18);
+const interfaces_1 = __webpack_require__(13);
 class CreditDetailsUpdateDto {
 }
 tslib_1.__decorate([
@@ -970,12 +1131,63 @@ tslib_1.__decorate([
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsNumber)(),
     tslib_1.__metadata("design:type", Number)
-], CreditDetailsUpdateDto.prototype, "billingCycleStart", void 0);
+], CreditDetailsUpdateDto.prototype, "gracePeriodDays", void 0);
 tslib_1.__decorate([
     (0, class_validator_1.IsOptional)(),
-    (0, class_validator_1.IsString)(),
-    tslib_1.__metadata("design:type", String)
-], CreditDetailsUpdateDto.prototype, "nextBillingCycleDate", void 0);
+    (0, class_validator_1.IsIn)(['fixed', 'calendar', 'perPurchase']),
+    tslib_1.__metadata("design:type", typeof (_a = typeof interfaces_1.BillingCycleType !== "undefined" && interfaces_1.BillingCycleType) === "function" ? _a : Object)
+], CreditDetailsUpdateDto.prototype, "billingCycleType", void 0);
+tslib_1.__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsNumber)(),
+    tslib_1.__metadata("design:type", Number)
+], CreditDetailsUpdateDto.prototype, "billingCycleLengthDays", void 0);
+tslib_1.__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsNumber)(),
+    tslib_1.__metadata("design:type", Number)
+], CreditDetailsUpdateDto.prototype, "billingCycleStartDayOfMonth", void 0);
+tslib_1.__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsNumber)(),
+    tslib_1.__metadata("design:type", Number)
+], CreditDetailsUpdateDto.prototype, "paymentPeriodDays", void 0);
+tslib_1.__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsNumber)(),
+    tslib_1.__metadata("design:type", Number)
+], CreditDetailsUpdateDto.prototype, "interestRate", void 0);
+tslib_1.__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsNumber)(),
+    tslib_1.__metadata("design:type", Number)
+], CreditDetailsUpdateDto.prototype, "annualFee", void 0);
+tslib_1.__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsNumber)(),
+    tslib_1.__metadata("design:type", Number)
+], CreditDetailsUpdateDto.prototype, "cashWithdrawalFeePercent", void 0);
+tslib_1.__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsNumber)(),
+    tslib_1.__metadata("design:type", Number)
+], CreditDetailsUpdateDto.prototype, "cashWithdrawalFeeFixed", void 0);
+tslib_1.__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsNumber)(),
+    tslib_1.__metadata("design:type", Number)
+], CreditDetailsUpdateDto.prototype, "cashWithdrawalLimitPerMonth", void 0);
+tslib_1.__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsNumber)(),
+    tslib_1.__metadata("design:type", Number)
+], CreditDetailsUpdateDto.prototype, "cashbackPercentMax", void 0);
+tslib_1.__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsArray)(),
+    (0, class_validator_1.IsString)({ each: true }),
+    tslib_1.__metadata("design:type", Array)
+], CreditDetailsUpdateDto.prototype, "cashbackCategories", void 0);
 class UpdateAccountDto {
 }
 exports.UpdateAccountDto = UpdateAccountDto;
@@ -984,11 +1196,6 @@ tslib_1.__decorate([
     (0, class_validator_1.IsString)(),
     tslib_1.__metadata("design:type", String)
 ], UpdateAccountDto.prototype, "name", void 0);
-tslib_1.__decorate([
-    (0, class_validator_1.IsOptional)(),
-    (0, class_validator_1.IsIn)(Object.values(interfaces_1.AccountType)),
-    tslib_1.__metadata("design:type", typeof (_a = typeof interfaces_1.AccountType !== "undefined" && interfaces_1.AccountType) === "function" ? _a : Object)
-], UpdateAccountDto.prototype, "type", void 0);
 tslib_1.__decorate([
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsString)(),

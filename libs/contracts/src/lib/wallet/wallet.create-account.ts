@@ -1,20 +1,30 @@
-import { IsString, IsIn, IsOptional, IsNumber, ValidateNested } from 'class-validator';
-import { ICreditDetails } from '@moneytracker/interfaces';
+import { IsString, IsIn, IsOptional, IsNumber, ValidateNested, IsArray } from 'class-validator';
+import { BillingCycleType, ICreditCardDetails } from '@moneytracker/interfaces';
 import { Type } from 'class-transformer';
 
 export namespace AccountCreate {
   export const topic = 'account.create.command';
 
-  class CreditDto implements ICreditDetails {
+  class CreditDto implements ICreditCardDetails {
     @IsNumber() creditLimit: number;
-    @IsNumber() billingCycleStart: number;
-    @IsString() nextBillingCycleDate: string;
+    @IsNumber() gracePeriodDays: number;
+    @IsIn(['fixed','calendar','perPurchase'] as BillingCycleType[]) billingCycleType: BillingCycleType;
+    @IsOptional() @IsNumber() billingCycleLengthDays?: number;
+    @IsOptional() @IsNumber() billingCycleStartDayOfMonth?: number;
+    @IsNumber() paymentPeriodDays: number;
+    @IsNumber() interestRate: number;
+    @IsOptional() @IsNumber() annualFee?: number;
+    @IsOptional() @IsNumber() cashWithdrawalFeePercent?: number;
+    @IsOptional() @IsNumber() cashWithdrawalFeeFixed?: number;
+    @IsOptional() @IsNumber() cashWithdrawalLimitPerMonth?: number;
+    @IsOptional() @IsNumber() cashbackPercentMax?: number;
+    @IsOptional() @IsArray() @IsString({ each: true }) cashbackCategories?: string[];
   }
 
   export class Request {
     @IsString() userId: string;
     @IsString() name: string;
-    @IsIn(['deposit', 'savings', 'debit', 'credit']) type: string;
+    @IsIn(['savings', 'debit', 'creditCard']) type: string;
     @IsOptional() @IsString() currency?: string;
 
     // Если credit

@@ -6,7 +6,7 @@ import {
   AccountDelete,
 } from '@moneytracker/contracts';
 import { AccountService } from './account.service';
-import { AccountType, ICreditDetails, IAccount } from '@moneytracker/interfaces';
+import { AccountType, ICreditCardDetails, IAccount } from '@moneytracker/interfaces';
 
 @Controller()
 export class AccountCommands {
@@ -42,12 +42,11 @@ export class AccountCommands {
   async update(
     payload: AccountUpdate.Request,
   ): Promise<AccountUpdate.Response> {
-    const { userId, id, name, type, currency, creditDetails } = payload;
+    const { userId, id, name, currency, creditDetails } = payload;
     const updateData: Partial<IAccount> = {};
     if (name !== undefined) updateData.name = name;
-    if (type !== undefined) updateData.type = type as AccountType;
     if (currency !== undefined) updateData.currency = currency;
-    if (creditDetails !== undefined) updateData.creditDetails = creditDetails as ICreditDetails;
+    if (creditDetails !== undefined) updateData.creditDetails = creditDetails as ICreditCardDetails;
 
     await this.service.updateAccount(userId, id, updateData);
     return {};

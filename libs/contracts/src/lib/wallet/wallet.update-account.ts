@@ -1,28 +1,54 @@
-import { IsString, IsOptional, IsIn, ValidateNested } from 'class-validator';
+import {
+  IsString,
+  IsOptional,
+  IsIn,
+  ValidateNested,
+  IsNumber,
+  IsArray,
+} from 'class-validator';
 import { Type } from 'class-transformer';
+import { BillingCycleType, ICreditCardDetails } from '@moneytracker/interfaces';
 
 export namespace AccountUpdate {
-  export const topic = 'account.update.command';
+  export const topic = 'wallet.update-account.command';
 
-  class CreditDto {
-    @IsOptional() @Type(() => Number) creditLimit?: number;
-    @IsOptional() @Type(() => Number) billingCycleStart?: number;
-    @IsOptional() @IsString() nextBillingCycleDate?: string;
+  class CreditDto implements Partial<ICreditCardDetails> {
+    @IsOptional() @IsNumber() creditLimit?: number;
+    @IsOptional() @IsNumber() gracePeriodDays?: number;
+    @IsOptional()
+    @IsIn(Object.values(['fixed','calendar','perPurchase']) as BillingCycleType[])
+    billingCycleType?: BillingCycleType;
+    @IsOptional() @IsNumber() billingCycleLengthDays?: number;
+    @IsOptional() @IsNumber() billingCycleStartDayOfMonth?: number;
+    @IsOptional() @IsNumber() paymentPeriodDays?: number;
+    @IsOptional() @IsNumber() interestRate?: number;
+    @IsOptional() @IsNumber() annualFee?: number;
+    @IsOptional() @IsNumber() cashWithdrawalFeePercent?: number;
+    @IsOptional() @IsNumber() cashWithdrawalFeeFixed?: number;
+    @IsOptional() @IsNumber() cashWithdrawalLimitPerMonth?: number;
+    @IsOptional() @IsNumber() cashbackPercentMax?: number;
+    @IsOptional() @IsArray() @IsString({ each: true }) cashbackCategories?: string[];
   }
 
   export class Request {
-    @IsString() userId: string;
-    @IsString() id: string;
+    @IsString()
+    userId: string;
 
-    // По аналогии с create, но все поля опциональны
-    @IsOptional() @IsString() name?: string;
-    @IsOptional() @IsIn(['deposit', 'savings', 'debit', 'credit']) type?: string;
-    @IsOptional() @IsString() currency?: string;
+    @IsString()
+    id: string;
+
+    @IsOptional()
+    @IsString()
+    name?: string;
+
+    @IsOptional()
+    @IsString()
+    currency?: string;
 
     @IsOptional()
     @ValidateNested()
     @Type(() => CreditDto)
-    creditDetails?: Partial<CreditDto>;
+    creditDetails?: CreditDto;
   }
 
   export class Response {}

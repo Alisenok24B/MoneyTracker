@@ -1,21 +1,24 @@
-import { IAccount, AccountType, ICreditDetails, IDomainEvent } from '@moneytracker/interfaces';
+import {
+  IAccount,
+  ICreditCardDetails,
+  IDomainEvent,
+} from '@moneytracker/interfaces';
 
 export class AccountEntity implements IAccount {
   _id?: string;
   userId: string;
   name: string;
-  type: AccountType;
+  type: any;
   balance: number;
   currency: string;
-  creditDetails?: ICreditDetails;
-  events: IDomainEvent[] = [];
+  creditDetails?: ICreditCardDetails;
   deletedAt?: Date;
+  events: IDomainEvent[] = [];
 
   constructor(data: IAccount) {
     Object.assign(this, data);
   }
 
-  // Пример доменного метода: генерация события после создания
   markCreated() {
     this.events.push({
       topic: 'account.created.event',
@@ -24,21 +27,19 @@ export class AccountEntity implements IAccount {
     return this;
   }
 
-  // Помечаем счёт удалённым
-  markDeleted() {
-    this.deletedAt = new Date();
+  markUpdated() {
     this.events.push({
-      topic: 'account.deleted.event',
+      topic: 'account.updated.event',
       data: { accountId: this._id },
     });
     return this;
   }
 
-  /** Генерирует событие обновления метаданных счёта */
-  markUpdated() {
+  markDeleted() {
+    this.deletedAt = new Date();
     this.events.push({
-      topic: 'account.updated.event',
-      data: { accountId: this._id, changes: { /* можно описать, что менялось */ } },
+      topic: 'account.deleted.event',
+      data: { accountId: this._id },
     });
     return this;
   }
