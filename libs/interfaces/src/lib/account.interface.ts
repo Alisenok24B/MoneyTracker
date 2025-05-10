@@ -39,6 +39,9 @@ export interface ICreditCardDetails {
   cashWithdrawalFeePercent?: number;
   cashWithdrawalFeeFixed?: number;
   cashWithdrawalLimitPerMonth?: number;
+
+  // новая дата старта РАСЧЁТНОГО периода
+  initialPeriodStartDate?: string;
 }
 
 // Общий интерфейс для сущности «Счёт»

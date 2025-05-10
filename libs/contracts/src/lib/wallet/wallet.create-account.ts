@@ -17,6 +17,7 @@ export namespace AccountCreate {
     @IsOptional() @IsNumber() cashWithdrawalFeePercent?: number;
     @IsOptional() @IsNumber() cashWithdrawalFeeFixed?: number;
     @IsOptional() @IsNumber() cashWithdrawalLimitPerMonth?: number;
+    @IsString() initialPeriodStartDate: string;
   }
 
   export class Request {
