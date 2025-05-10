@@ -7,4 +7,9 @@ export * from './lib/wallet/wallet.update-account';
 export * from './lib/wallet/wallet.get-account';
 export * from './lib/wallet/wallet.list-accounts';
 export * from './lib/wallet/wallet.delete-account';
+export * from './lib/category/category.delete';
+export * from './lib/category/category.create';
+export * from './lib/category/category.get';
+export * from './lib/category/category.list';
+export * from './lib/category/category.update';
 

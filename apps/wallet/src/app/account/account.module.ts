@@ -5,7 +5,6 @@ import { AccountService } from './account.service';
 import { AccountRepository } from './repositories/account.repository';
 import { AccountCommands } from './account.commands';
 import { AccountQueries } from './account.queries';
-import { RMQModule } from 'nestjs-rmq';
 import { AccountEventEmitter } from './account.event-emitter';
 
 @Module({

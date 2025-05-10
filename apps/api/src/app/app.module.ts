@@ -9,6 +9,7 @@ import { PassportModule } from '@nestjs/passport';
 import { UserController } from './controllers/user.controller';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { WalletController } from './controllers/wallet.controller';
+import { CategoryController } from './controllers/category.controller';
 
 @Module({
   imports: [
@@ -17,7 +18,7 @@ import { WalletController } from './controllers/wallet.controller';
     JwtModule.registerAsync(getJWTConfig()),
     PassportModule.register({defaultStrategy: 'jwt'})
   ],
-  controllers: [AuthController, UserController, WalletController],
+  controllers: [AuthController, UserController, WalletController, CategoryController],
   providers: [
     JwtStrategy
   ]

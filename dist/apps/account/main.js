@@ -25,12 +25,12 @@ const common_1 = __webpack_require__(1);
 const app_controller_1 = __webpack_require__(5);
 const app_service_1 = __webpack_require__(6);
 const user_module_1 = __webpack_require__(7);
-const auth_module_1 = __webpack_require__(36);
-const config_1 = __webpack_require__(41);
+const auth_module_1 = __webpack_require__(42);
+const config_1 = __webpack_require__(47);
 const mongoose_1 = __webpack_require__(8);
-const mongo_config_1 = __webpack_require__(42);
-const nestjs_rmq_1 = __webpack_require__(30);
-const rmq_config_1 = __webpack_require__(43);
+const mongo_config_1 = __webpack_require__(48);
+const nestjs_rmq_1 = __webpack_require__(36);
+const rmq_config_1 = __webpack_require__(49);
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -120,9 +120,9 @@ const mongoose_1 = __webpack_require__(8);
 const user_model_1 = __webpack_require__(9);
 const user_repository_1 = __webpack_require__(11);
 const user_commands_1 = __webpack_require__(12);
-const user_queries_1 = __webpack_require__(35);
-const user_service_1 = __webpack_require__(31);
-const user_event_immiter_1 = __webpack_require__(34);
+const user_queries_1 = __webpack_require__(41);
+const user_service_1 = __webpack_require__(37);
+const user_event_immiter_1 = __webpack_require__(40);
 let UserModule = class UserModule {
 };
 exports.UserModule = UserModule;
@@ -242,8 +242,8 @@ exports.UserCommands = void 0;
 const tslib_1 = __webpack_require__(4);
 const common_1 = __webpack_require__(1);
 const contracts_1 = __webpack_require__(13);
-const nestjs_rmq_1 = __webpack_require__(30);
-const user_service_1 = __webpack_require__(31);
+const nestjs_rmq_1 = __webpack_require__(36);
+const user_service_1 = __webpack_require__(37);
 let UserCommands = class UserCommands {
     constructor(userService) {
         this.userService = userService;
@@ -279,10 +279,15 @@ tslib_1.__exportStar(__webpack_require__(16), exports);
 tslib_1.__exportStar(__webpack_require__(17), exports);
 tslib_1.__exportStar(__webpack_require__(18), exports);
 tslib_1.__exportStar(__webpack_require__(19), exports);
-tslib_1.__exportStar(__webpack_require__(26), exports);
 tslib_1.__exportStar(__webpack_require__(27), exports);
 tslib_1.__exportStar(__webpack_require__(28), exports);
 tslib_1.__exportStar(__webpack_require__(29), exports);
+tslib_1.__exportStar(__webpack_require__(30), exports);
+tslib_1.__exportStar(__webpack_require__(31), exports);
+tslib_1.__exportStar(__webpack_require__(32), exports);
+tslib_1.__exportStar(__webpack_require__(33), exports);
+tslib_1.__exportStar(__webpack_require__(34), exports);
+tslib_1.__exportStar(__webpack_require__(35), exports);
 
 
 /***/ }),
@@ -419,7 +424,7 @@ exports.AccountCreate = void 0;
 const tslib_1 = __webpack_require__(4);
 const class_validator_1 = __webpack_require__(15);
 const interfaces_1 = __webpack_require__(20);
-const class_transformer_1 = __webpack_require__(25);
+const class_transformer_1 = __webpack_require__(26);
 var AccountCreate;
 (function (AccountCreate) {
     var _a;
@@ -476,17 +481,6 @@ var AccountCreate;
         (0, class_validator_1.IsNumber)(),
         tslib_1.__metadata("design:type", Number)
     ], CreditDto.prototype, "cashWithdrawalLimitPerMonth", void 0);
-    tslib_1.__decorate([
-        (0, class_validator_1.IsOptional)(),
-        (0, class_validator_1.IsNumber)(),
-        tslib_1.__metadata("design:type", Number)
-    ], CreditDto.prototype, "cashbackPercentMax", void 0);
-    tslib_1.__decorate([
-        (0, class_validator_1.IsOptional)(),
-        (0, class_validator_1.IsArray)(),
-        (0, class_validator_1.IsString)({ each: true }),
-        tslib_1.__metadata("design:type", Array)
-    ], CreditDto.prototype, "cashbackCategories", void 0);
     class Request {
     }
     tslib_1.__decorate([
@@ -530,6 +524,7 @@ tslib_1.__exportStar(__webpack_require__(21), exports);
 tslib_1.__exportStar(__webpack_require__(22), exports);
 tslib_1.__exportStar(__webpack_require__(23), exports);
 tslib_1.__exportStar(__webpack_require__(24), exports);
+tslib_1.__exportStar(__webpack_require__(25), exports);
 
 
 /***/ }),
@@ -573,12 +568,35 @@ var AccountType;
 
 /***/ }),
 /* 25 */
+/***/ ((__unused_webpack_module, exports) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.CategoryType = exports.CategoryIcon = void 0;
+var CategoryIcon;
+(function (CategoryIcon) {
+    CategoryIcon["FOOD"] = "food";
+    CategoryIcon["TRANSPORT"] = "transport";
+    CategoryIcon["SHOPPING"] = "shopping";
+    CategoryIcon["SALARY"] = "salary";
+    CategoryIcon["RENT"] = "rent";
+    // Добавьте остальные иконки здесь
+})(CategoryIcon || (exports.CategoryIcon = CategoryIcon = {}));
+var CategoryType;
+(function (CategoryType) {
+    CategoryType["Income"] = "income";
+    CategoryType["Expense"] = "expense";
+})(CategoryType || (exports.CategoryType = CategoryType = {}));
+
+
+/***/ }),
+/* 26 */
 /***/ ((module) => {
 
 module.exports = require("class-transformer");
 
 /***/ }),
-/* 26 */
+/* 27 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -586,7 +604,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.AccountUpdate = void 0;
 const tslib_1 = __webpack_require__(4);
 const class_validator_1 = __webpack_require__(15);
-const class_transformer_1 = __webpack_require__(25);
+const class_transformer_1 = __webpack_require__(26);
 const interfaces_1 = __webpack_require__(20);
 var AccountUpdate;
 (function (AccountUpdate) {
@@ -649,17 +667,6 @@ var AccountUpdate;
         (0, class_validator_1.IsNumber)(),
         tslib_1.__metadata("design:type", Number)
     ], CreditDto.prototype, "cashWithdrawalLimitPerMonth", void 0);
-    tslib_1.__decorate([
-        (0, class_validator_1.IsOptional)(),
-        (0, class_validator_1.IsNumber)(),
-        tslib_1.__metadata("design:type", Number)
-    ], CreditDto.prototype, "cashbackPercentMax", void 0);
-    tslib_1.__decorate([
-        (0, class_validator_1.IsOptional)(),
-        (0, class_validator_1.IsArray)(),
-        (0, class_validator_1.IsString)({ each: true }),
-        tslib_1.__metadata("design:type", Array)
-    ], CreditDto.prototype, "cashbackCategories", void 0);
     class Request {
     }
     tslib_1.__decorate([
@@ -694,7 +701,7 @@ var AccountUpdate;
 
 
 /***/ }),
-/* 27 */
+/* 28 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -723,7 +730,7 @@ var AccountGet;
 
 
 /***/ }),
-/* 28 */
+/* 29 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -753,7 +760,7 @@ var AccountList;
 
 
 /***/ }),
-/* 29 */
+/* 30 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -782,13 +789,183 @@ var AccountDelete;
 
 
 /***/ }),
-/* 30 */
+/* 31 */
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.CategoryDelete = void 0;
+const tslib_1 = __webpack_require__(4);
+const class_validator_1 = __webpack_require__(15);
+var CategoryDelete;
+(function (CategoryDelete) {
+    CategoryDelete.topic = 'category.delete.command';
+    class Request {
+    }
+    tslib_1.__decorate([
+        (0, class_validator_1.IsString)(),
+        tslib_1.__metadata("design:type", String)
+    ], Request.prototype, "userId", void 0);
+    tslib_1.__decorate([
+        (0, class_validator_1.IsString)(),
+        tslib_1.__metadata("design:type", String)
+    ], Request.prototype, "id", void 0);
+    CategoryDelete.Request = Request;
+    class Response {
+    }
+    CategoryDelete.Response = Response;
+})(CategoryDelete || (exports.CategoryDelete = CategoryDelete = {}));
+
+
+/***/ }),
+/* 32 */
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.CategoryCreate = void 0;
+const tslib_1 = __webpack_require__(4);
+const class_validator_1 = __webpack_require__(15);
+const interfaces_1 = __webpack_require__(20);
+var CategoryCreate;
+(function (CategoryCreate) {
+    var _a, _b;
+    CategoryCreate.topic = 'category.create.command';
+    class Request {
+    }
+    tslib_1.__decorate([
+        (0, class_validator_1.IsString)(),
+        tslib_1.__metadata("design:type", String)
+    ], Request.prototype, "userId", void 0);
+    tslib_1.__decorate([
+        (0, class_validator_1.IsString)(),
+        tslib_1.__metadata("design:type", String)
+    ], Request.prototype, "name", void 0);
+    tslib_1.__decorate([
+        (0, class_validator_1.IsEnum)(interfaces_1.CategoryType, { message: 'type must be income or expense' }),
+        tslib_1.__metadata("design:type", typeof (_a = typeof interfaces_1.CategoryType !== "undefined" && interfaces_1.CategoryType) === "function" ? _a : Object)
+    ], Request.prototype, "type", void 0);
+    tslib_1.__decorate([
+        (0, class_validator_1.IsEnum)(interfaces_1.CategoryIcon),
+        tslib_1.__metadata("design:type", typeof (_b = typeof interfaces_1.CategoryIcon !== "undefined" && interfaces_1.CategoryIcon) === "function" ? _b : Object)
+    ], Request.prototype, "icon", void 0);
+    CategoryCreate.Request = Request;
+    class Response {
+    }
+    CategoryCreate.Response = Response;
+})(CategoryCreate || (exports.CategoryCreate = CategoryCreate = {}));
+
+
+/***/ }),
+/* 33 */
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.CategoryGet = void 0;
+const tslib_1 = __webpack_require__(4);
+const class_validator_1 = __webpack_require__(15);
+var CategoryGet;
+(function (CategoryGet) {
+    CategoryGet.topic = 'category.get.query';
+    class Request {
+    }
+    tslib_1.__decorate([
+        (0, class_validator_1.IsString)(),
+        tslib_1.__metadata("design:type", String)
+    ], Request.prototype, "userId", void 0);
+    tslib_1.__decorate([
+        (0, class_validator_1.IsString)(),
+        tslib_1.__metadata("design:type", String)
+    ], Request.prototype, "id", void 0);
+    CategoryGet.Request = Request;
+    class Response {
+    }
+    CategoryGet.Response = Response;
+})(CategoryGet || (exports.CategoryGet = CategoryGet = {}));
+
+
+/***/ }),
+/* 34 */
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.CategoryList = void 0;
+const tslib_1 = __webpack_require__(4);
+const class_validator_1 = __webpack_require__(15);
+const interfaces_1 = __webpack_require__(20);
+var CategoryList;
+(function (CategoryList) {
+    var _a;
+    CategoryList.topic = 'category.list.query';
+    class Request {
+    }
+    tslib_1.__decorate([
+        (0, class_validator_1.IsString)(),
+        tslib_1.__metadata("design:type", String)
+    ], Request.prototype, "userId", void 0);
+    tslib_1.__decorate([
+        (0, class_validator_1.IsOptional)(),
+        (0, class_validator_1.IsEnum)(interfaces_1.CategoryType, { message: 'type must be income or expense' }),
+        tslib_1.__metadata("design:type", typeof (_a = typeof interfaces_1.CategoryType !== "undefined" && interfaces_1.CategoryType) === "function" ? _a : Object)
+    ], Request.prototype, "type", void 0);
+    CategoryList.Request = Request;
+    class Response {
+    }
+    CategoryList.Response = Response;
+})(CategoryList || (exports.CategoryList = CategoryList = {}));
+
+
+/***/ }),
+/* 35 */
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.CategoryUpdate = void 0;
+const tslib_1 = __webpack_require__(4);
+const class_validator_1 = __webpack_require__(15);
+const interfaces_1 = __webpack_require__(20);
+var CategoryUpdate;
+(function (CategoryUpdate) {
+    var _a;
+    CategoryUpdate.topic = 'category.update.command';
+    class Request {
+    }
+    tslib_1.__decorate([
+        (0, class_validator_1.IsString)(),
+        tslib_1.__metadata("design:type", String)
+    ], Request.prototype, "userId", void 0);
+    tslib_1.__decorate([
+        (0, class_validator_1.IsString)(),
+        tslib_1.__metadata("design:type", String)
+    ], Request.prototype, "id", void 0);
+    tslib_1.__decorate([
+        (0, class_validator_1.IsOptional)(),
+        (0, class_validator_1.IsString)(),
+        tslib_1.__metadata("design:type", String)
+    ], Request.prototype, "name", void 0);
+    tslib_1.__decorate([
+        (0, class_validator_1.IsOptional)(),
+        (0, class_validator_1.IsEnum)(interfaces_1.CategoryIcon),
+        tslib_1.__metadata("design:type", typeof (_a = typeof interfaces_1.CategoryIcon !== "undefined" && interfaces_1.CategoryIcon) === "function" ? _a : Object)
+    ], Request.prototype, "icon", void 0);
+    CategoryUpdate.Request = Request;
+    class Response {
+    }
+    CategoryUpdate.Response = Response;
+})(CategoryUpdate || (exports.CategoryUpdate = CategoryUpdate = {}));
+
+
+/***/ }),
+/* 36 */
 /***/ ((module) => {
 
 module.exports = require("nestjs-rmq");
 
 /***/ }),
-/* 31 */
+/* 37 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -797,9 +974,9 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.UserService = void 0;
 const tslib_1 = __webpack_require__(4);
 const common_1 = __webpack_require__(1);
-const user_entity_1 = __webpack_require__(32);
+const user_entity_1 = __webpack_require__(38);
 const user_repository_1 = __webpack_require__(11);
-const user_event_immiter_1 = __webpack_require__(34);
+const user_event_immiter_1 = __webpack_require__(40);
 let UserService = class UserService {
     constructor(userRepository, userEventEmmiter) {
         this.userRepository = userRepository;
@@ -829,13 +1006,13 @@ exports.UserService = UserService = tslib_1.__decorate([
 
 
 /***/ }),
-/* 32 */
+/* 38 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.UserEntity = void 0;
-const bcryptjs_1 = __webpack_require__(33);
+const bcryptjs_1 = __webpack_require__(39);
 class UserEntity {
     constructor(user) {
         this.events = [];
@@ -867,13 +1044,13 @@ exports.UserEntity = UserEntity;
 
 
 /***/ }),
-/* 33 */
+/* 39 */
 /***/ ((module) => {
 
 module.exports = require("bcryptjs");
 
 /***/ }),
-/* 34 */
+/* 40 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -882,7 +1059,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.UserEventEmmiter = void 0;
 const tslib_1 = __webpack_require__(4);
 const common_1 = __webpack_require__(1);
-const nestjs_rmq_1 = __webpack_require__(30);
+const nestjs_rmq_1 = __webpack_require__(36);
 let UserEventEmmiter = class UserEventEmmiter {
     constructor(rmqService) {
         this.rmqService = rmqService;
@@ -901,7 +1078,7 @@ exports.UserEventEmmiter = UserEventEmmiter = tslib_1.__decorate([
 
 
 /***/ }),
-/* 35 */
+/* 41 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -911,9 +1088,9 @@ exports.UserQueries = void 0;
 const tslib_1 = __webpack_require__(4);
 const common_1 = __webpack_require__(1);
 const contracts_1 = __webpack_require__(13);
-const nestjs_rmq_1 = __webpack_require__(30);
+const nestjs_rmq_1 = __webpack_require__(36);
 const user_repository_1 = __webpack_require__(11);
-const user_entity_1 = __webpack_require__(32);
+const user_entity_1 = __webpack_require__(38);
 let UserQueries = class UserQueries {
     constructor(userRepository) {
         this.userRepository = userRepository;
@@ -940,7 +1117,7 @@ exports.UserQueries = UserQueries = tslib_1.__decorate([
 
 
 /***/ }),
-/* 36 */
+/* 42 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -948,11 +1125,11 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.AuthModule = void 0;
 const tslib_1 = __webpack_require__(4);
 const common_1 = __webpack_require__(1);
-const auth_controller_1 = __webpack_require__(37);
-const auth_service_1 = __webpack_require__(38);
+const auth_controller_1 = __webpack_require__(43);
+const auth_service_1 = __webpack_require__(44);
 const user_module_1 = __webpack_require__(7);
-const jwt_1 = __webpack_require__(39);
-const jwt_config_1 = __webpack_require__(40);
+const jwt_1 = __webpack_require__(45);
+const jwt_config_1 = __webpack_require__(46);
 let AuthModule = class AuthModule {
 };
 exports.AuthModule = AuthModule;
@@ -966,7 +1143,7 @@ exports.AuthModule = AuthModule = tslib_1.__decorate([
 
 
 /***/ }),
-/* 37 */
+/* 43 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -975,8 +1152,8 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.AuthController = void 0;
 const tslib_1 = __webpack_require__(4);
 const common_1 = __webpack_require__(1);
-const auth_service_1 = __webpack_require__(38);
-const nestjs_rmq_1 = __webpack_require__(30);
+const auth_service_1 = __webpack_require__(44);
+const nestjs_rmq_1 = __webpack_require__(36);
 const contracts_1 = __webpack_require__(13);
 let AuthController = class AuthController {
     constructor(authService) {
@@ -1014,7 +1191,7 @@ exports.AuthController = AuthController = tslib_1.__decorate([
 
 
 /***/ }),
-/* 38 */
+/* 44 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -1024,8 +1201,8 @@ exports.AuthService = void 0;
 const tslib_1 = __webpack_require__(4);
 const common_1 = __webpack_require__(1);
 const user_repository_1 = __webpack_require__(11);
-const user_entity_1 = __webpack_require__(32);
-const jwt_1 = __webpack_require__(39);
+const user_entity_1 = __webpack_require__(38);
+const jwt_1 = __webpack_require__(45);
 let AuthService = class AuthService {
     constructor(userRepository, jwtService) {
         this.userRepository = userRepository;
@@ -1070,19 +1247,19 @@ exports.AuthService = AuthService = tslib_1.__decorate([
 
 
 /***/ }),
-/* 39 */
+/* 45 */
 /***/ ((module) => {
 
 module.exports = require("@nestjs/jwt");
 
 /***/ }),
-/* 40 */
+/* 46 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.getJWTConfig = void 0;
-const config_1 = __webpack_require__(41);
+const config_1 = __webpack_require__(47);
 const getJWTConfig = () => ({
     imports: [config_1.ConfigModule],
     inject: [config_1.ConfigService],
@@ -1094,19 +1271,19 @@ exports.getJWTConfig = getJWTConfig;
 
 
 /***/ }),
-/* 41 */
+/* 47 */
 /***/ ((module) => {
 
 module.exports = require("@nestjs/config");
 
 /***/ }),
-/* 42 */
+/* 48 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.getMongoConfig = void 0;
-const config_1 = __webpack_require__(41);
+const config_1 = __webpack_require__(47);
 const getMongoConfig = () => {
     return {
         useFactory: (configService) => ({
@@ -1132,13 +1309,13 @@ const getMongoString = (configService) => "mongodb://" +
 
 
 /***/ }),
-/* 43 */
+/* 49 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.getRMQConfig = void 0;
-const config_1 = __webpack_require__(41);
+const config_1 = __webpack_require__(47);
 const getRMQConfig = () => ({
     inject: [config_1.ConfigService],
     imports: [config_1.ConfigModule],
