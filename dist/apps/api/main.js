@@ -23,16 +23,17 @@ exports.AppModule = void 0;
 const tslib_1 = __webpack_require__(4);
 const common_1 = __webpack_require__(1);
 const auth_controller_1 = __webpack_require__(5);
-const config_1 = __webpack_require__(32);
-const nestjs_rmq_1 = __webpack_require__(29);
-const rmq_config_1 = __webpack_require__(33);
-const jwt_1 = __webpack_require__(34);
-const jwt_config_1 = __webpack_require__(35);
-const passport_1 = __webpack_require__(36);
-const user_controller_1 = __webpack_require__(37);
-const jwt_strategy_1 = __webpack_require__(41);
-const wallet_controller_1 = __webpack_require__(43);
-const category_controller_1 = __webpack_require__(48);
+const config_1 = __webpack_require__(38);
+const nestjs_rmq_1 = __webpack_require__(35);
+const rmq_config_1 = __webpack_require__(39);
+const jwt_1 = __webpack_require__(40);
+const jwt_config_1 = __webpack_require__(41);
+const passport_1 = __webpack_require__(42);
+const user_controller_1 = __webpack_require__(43);
+const jwt_strategy_1 = __webpack_require__(47);
+const wallet_controller_1 = __webpack_require__(49);
+const category_controller_1 = __webpack_require__(54);
+const transaction_controller_1 = __webpack_require__(59);
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -44,7 +45,7 @@ exports.AppModule = AppModule = tslib_1.__decorate([
             jwt_1.JwtModule.registerAsync((0, jwt_config_1.getJWTConfig)()),
             passport_1.PassportModule.register({ defaultStrategy: 'jwt' })
         ],
-        controllers: [auth_controller_1.AuthController, user_controller_1.UserController, wallet_controller_1.WalletController, category_controller_1.CategoryController],
+        controllers: [auth_controller_1.AuthController, user_controller_1.UserController, wallet_controller_1.WalletController, category_controller_1.CategoryController, transaction_controller_1.TransactionController],
         providers: [
             jwt_strategy_1.JwtStrategy
         ]
@@ -69,9 +70,9 @@ exports.AuthController = void 0;
 const tslib_1 = __webpack_require__(4);
 const common_1 = __webpack_require__(1);
 const contracts_1 = __webpack_require__(6);
-const nestjs_rmq_1 = __webpack_require__(29);
-const login_dto_1 = __webpack_require__(30);
-const register_dto_1 = __webpack_require__(31);
+const nestjs_rmq_1 = __webpack_require__(35);
+const login_dto_1 = __webpack_require__(36);
+const register_dto_1 = __webpack_require__(37);
 let AuthController = class AuthController {
     constructor(rmqService) {
         this.rmqService = rmqService;
@@ -130,7 +131,6 @@ tslib_1.__exportStar(__webpack_require__(9), exports);
 tslib_1.__exportStar(__webpack_require__(10), exports);
 tslib_1.__exportStar(__webpack_require__(11), exports);
 tslib_1.__exportStar(__webpack_require__(12), exports);
-tslib_1.__exportStar(__webpack_require__(20), exports);
 tslib_1.__exportStar(__webpack_require__(21), exports);
 tslib_1.__exportStar(__webpack_require__(22), exports);
 tslib_1.__exportStar(__webpack_require__(23), exports);
@@ -139,6 +139,12 @@ tslib_1.__exportStar(__webpack_require__(25), exports);
 tslib_1.__exportStar(__webpack_require__(26), exports);
 tslib_1.__exportStar(__webpack_require__(27), exports);
 tslib_1.__exportStar(__webpack_require__(28), exports);
+tslib_1.__exportStar(__webpack_require__(29), exports);
+tslib_1.__exportStar(__webpack_require__(30), exports);
+tslib_1.__exportStar(__webpack_require__(31), exports);
+tslib_1.__exportStar(__webpack_require__(32), exports);
+tslib_1.__exportStar(__webpack_require__(33), exports);
+tslib_1.__exportStar(__webpack_require__(34), exports);
 
 
 /***/ }),
@@ -275,7 +281,7 @@ exports.AccountCreate = void 0;
 const tslib_1 = __webpack_require__(4);
 const class_validator_1 = __webpack_require__(8);
 const interfaces_1 = __webpack_require__(13);
-const class_transformer_1 = __webpack_require__(19);
+const class_transformer_1 = __webpack_require__(20);
 var AccountCreate;
 (function (AccountCreate) {
     var _a;
@@ -376,6 +382,7 @@ tslib_1.__exportStar(__webpack_require__(15), exports);
 tslib_1.__exportStar(__webpack_require__(16), exports);
 tslib_1.__exportStar(__webpack_require__(17), exports);
 tslib_1.__exportStar(__webpack_require__(18), exports);
+tslib_1.__exportStar(__webpack_require__(19), exports);
 
 
 /***/ }),
@@ -442,12 +449,26 @@ var CategoryType;
 
 /***/ }),
 /* 19 */
+/***/ ((__unused_webpack_module, exports) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.TransactionType = void 0;
+var TransactionType;
+(function (TransactionType) {
+    TransactionType["Income"] = "income";
+    TransactionType["Expense"] = "expense";
+})(TransactionType || (exports.TransactionType = TransactionType = {}));
+
+
+/***/ }),
+/* 20 */
 /***/ ((module) => {
 
 module.exports = require("class-transformer");
 
 /***/ }),
-/* 20 */
+/* 21 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -455,7 +476,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.AccountUpdate = void 0;
 const tslib_1 = __webpack_require__(4);
 const class_validator_1 = __webpack_require__(8);
-const class_transformer_1 = __webpack_require__(19);
+const class_transformer_1 = __webpack_require__(20);
 const interfaces_1 = __webpack_require__(13);
 var AccountUpdate;
 (function (AccountUpdate) {
@@ -552,7 +573,7 @@ var AccountUpdate;
 
 
 /***/ }),
-/* 21 */
+/* 22 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -581,7 +602,7 @@ var AccountGet;
 
 
 /***/ }),
-/* 22 */
+/* 23 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -611,7 +632,7 @@ var AccountList;
 
 
 /***/ }),
-/* 23 */
+/* 24 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -640,7 +661,7 @@ var AccountDelete;
 
 
 /***/ }),
-/* 24 */
+/* 25 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -669,7 +690,7 @@ var CategoryDelete;
 
 
 /***/ }),
-/* 25 */
+/* 26 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -708,7 +729,7 @@ var CategoryCreate;
 
 
 /***/ }),
-/* 26 */
+/* 27 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -737,7 +758,7 @@ var CategoryGet;
 
 
 /***/ }),
-/* 27 */
+/* 28 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -769,7 +790,7 @@ var CategoryList;
 
 
 /***/ }),
-/* 28 */
+/* 29 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -810,13 +831,231 @@ var CategoryUpdate;
 
 
 /***/ }),
-/* 29 */
+/* 30 */
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.TransactionUpdate = void 0;
+const tslib_1 = __webpack_require__(4);
+// libs/contracts/src/lib/transaction/transaction.update.ts
+const class_validator_1 = __webpack_require__(8);
+const interfaces_1 = __webpack_require__(13);
+const class_transformer_1 = __webpack_require__(20);
+var TransactionUpdate;
+(function (TransactionUpdate) {
+    var _a, _b;
+    TransactionUpdate.topic = 'transaction.update.command';
+    class Request {
+    }
+    tslib_1.__decorate([
+        (0, class_validator_1.IsString)(),
+        tslib_1.__metadata("design:type", String)
+    ], Request.prototype, "userId", void 0);
+    tslib_1.__decorate([
+        (0, class_validator_1.IsString)(),
+        tslib_1.__metadata("design:type", String)
+    ], Request.prototype, "id", void 0);
+    tslib_1.__decorate([
+        (0, class_validator_1.IsOptional)(),
+        (0, class_validator_1.IsString)(),
+        tslib_1.__metadata("design:type", String)
+    ], Request.prototype, "accountId", void 0);
+    tslib_1.__decorate([
+        (0, class_validator_1.IsOptional)(),
+        (0, class_validator_1.IsString)(),
+        tslib_1.__metadata("design:type", String)
+    ], Request.prototype, "categoryId", void 0);
+    tslib_1.__decorate([
+        (0, class_validator_1.IsOptional)(),
+        (0, class_validator_1.IsEnum)(interfaces_1.TransactionType),
+        tslib_1.__metadata("design:type", typeof (_a = typeof interfaces_1.TransactionType !== "undefined" && interfaces_1.TransactionType) === "function" ? _a : Object)
+    ], Request.prototype, "type", void 0);
+    tslib_1.__decorate([
+        (0, class_validator_1.IsOptional)(),
+        (0, class_validator_1.IsNumber)(),
+        tslib_1.__metadata("design:type", Number)
+    ], Request.prototype, "amount", void 0);
+    tslib_1.__decorate([
+        (0, class_validator_1.IsOptional)(),
+        (0, class_validator_1.IsDateString)(),
+        (0, class_transformer_1.Type)(() => Date),
+        tslib_1.__metadata("design:type", typeof (_b = typeof Date !== "undefined" && Date) === "function" ? _b : Object)
+    ], Request.prototype, "date", void 0);
+    tslib_1.__decorate([
+        (0, class_validator_1.IsOptional)(),
+        (0, class_validator_1.IsString)(),
+        tslib_1.__metadata("design:type", String)
+    ], Request.prototype, "description", void 0);
+    TransactionUpdate.Request = Request;
+    class Response {
+    }
+    TransactionUpdate.Response = Response;
+})(TransactionUpdate || (exports.TransactionUpdate = TransactionUpdate = {}));
+
+
+/***/ }),
+/* 31 */
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.TransactionCreate = void 0;
+const tslib_1 = __webpack_require__(4);
+// libs/contracts/src/lib/transaction/transaction.create.ts
+const class_validator_1 = __webpack_require__(8);
+const interfaces_1 = __webpack_require__(13);
+const class_transformer_1 = __webpack_require__(20);
+var TransactionCreate;
+(function (TransactionCreate) {
+    var _a, _b;
+    TransactionCreate.topic = 'transaction.create.command';
+    class Request {
+    }
+    tslib_1.__decorate([
+        (0, class_validator_1.IsString)(),
+        tslib_1.__metadata("design:type", String)
+    ], Request.prototype, "userId", void 0);
+    tslib_1.__decorate([
+        (0, class_validator_1.IsString)(),
+        tslib_1.__metadata("design:type", String)
+    ], Request.prototype, "accountId", void 0);
+    tslib_1.__decorate([
+        (0, class_validator_1.IsString)(),
+        tslib_1.__metadata("design:type", String)
+    ], Request.prototype, "categoryId", void 0);
+    tslib_1.__decorate([
+        (0, class_validator_1.IsEnum)(interfaces_1.TransactionType),
+        tslib_1.__metadata("design:type", typeof (_a = typeof interfaces_1.TransactionType !== "undefined" && interfaces_1.TransactionType) === "function" ? _a : Object)
+    ], Request.prototype, "type", void 0);
+    tslib_1.__decorate([
+        (0, class_validator_1.IsNumber)(),
+        tslib_1.__metadata("design:type", Number)
+    ], Request.prototype, "amount", void 0);
+    tslib_1.__decorate([
+        (0, class_validator_1.IsDateString)(),
+        (0, class_transformer_1.Type)(() => Date),
+        tslib_1.__metadata("design:type", typeof (_b = typeof Date !== "undefined" && Date) === "function" ? _b : Object)
+    ], Request.prototype, "date", void 0);
+    tslib_1.__decorate([
+        (0, class_validator_1.IsOptional)(),
+        (0, class_validator_1.IsString)(),
+        tslib_1.__metadata("design:type", String)
+    ], Request.prototype, "description", void 0);
+    TransactionCreate.Request = Request;
+    class Response {
+    }
+    TransactionCreate.Response = Response;
+})(TransactionCreate || (exports.TransactionCreate = TransactionCreate = {}));
+
+
+/***/ }),
+/* 32 */
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.TransactionDelete = void 0;
+const tslib_1 = __webpack_require__(4);
+const class_validator_1 = __webpack_require__(8);
+var TransactionDelete;
+(function (TransactionDelete) {
+    TransactionDelete.topic = 'transaction.delete.command';
+    class Request {
+    }
+    tslib_1.__decorate([
+        (0, class_validator_1.IsString)(),
+        tslib_1.__metadata("design:type", String)
+    ], Request.prototype, "userId", void 0);
+    tslib_1.__decorate([
+        (0, class_validator_1.IsString)(),
+        tslib_1.__metadata("design:type", String)
+    ], Request.prototype, "id", void 0);
+    TransactionDelete.Request = Request;
+    class Response {
+    }
+    TransactionDelete.Response = Response;
+})(TransactionDelete || (exports.TransactionDelete = TransactionDelete = {}));
+
+
+/***/ }),
+/* 33 */
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.TransactionGet = void 0;
+const tslib_1 = __webpack_require__(4);
+const class_validator_1 = __webpack_require__(8);
+var TransactionGet;
+(function (TransactionGet) {
+    TransactionGet.topic = 'transaction.get.query';
+    class Request {
+    }
+    tslib_1.__decorate([
+        (0, class_validator_1.IsString)(),
+        tslib_1.__metadata("design:type", String)
+    ], Request.prototype, "userId", void 0);
+    tslib_1.__decorate([
+        (0, class_validator_1.IsOptional)(),
+        (0, class_validator_1.IsArray)(),
+        (0, class_validator_1.IsString)({ each: true }),
+        tslib_1.__metadata("design:type", Array)
+    ], Request.prototype, "peers", void 0);
+    tslib_1.__decorate([
+        (0, class_validator_1.IsString)(),
+        tslib_1.__metadata("design:type", String)
+    ], Request.prototype, "id", void 0);
+    TransactionGet.Request = Request;
+    class Response {
+    }
+    TransactionGet.Response = Response;
+})(TransactionGet || (exports.TransactionGet = TransactionGet = {}));
+
+
+/***/ }),
+/* 34 */
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.TransactionList = void 0;
+const tslib_1 = __webpack_require__(4);
+const class_validator_1 = __webpack_require__(8);
+var TransactionList;
+(function (TransactionList) {
+    TransactionList.topic = 'transaction.list.query';
+    class Request {
+    }
+    tslib_1.__decorate([
+        (0, class_validator_1.IsString)(),
+        tslib_1.__metadata("design:type", String)
+    ], Request.prototype, "userId", void 0);
+    tslib_1.__decorate([
+        (0, class_validator_1.IsString)(),
+        tslib_1.__metadata("design:type", String)
+    ], Request.prototype, "accountId", void 0);
+    tslib_1.__decorate([
+        (0, class_validator_1.IsOptional)(),
+        (0, class_validator_1.IsArray)(),
+        (0, class_validator_1.IsString)({ each: true }),
+        tslib_1.__metadata("design:type", Array)
+    ], Request.prototype, "peers", void 0);
+    TransactionList.Request = Request;
+    class Response {
+    }
+    TransactionList.Response = Response;
+})(TransactionList || (exports.TransactionList = TransactionList = {}));
+
+
+/***/ }),
+/* 35 */
 /***/ ((module) => {
 
 module.exports = require("nestjs-rmq");
 
 /***/ }),
-/* 30 */
+/* 36 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -838,7 +1077,7 @@ tslib_1.__decorate([
 
 
 /***/ }),
-/* 31 */
+/* 37 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -865,19 +1104,19 @@ tslib_1.__decorate([
 
 
 /***/ }),
-/* 32 */
+/* 38 */
 /***/ ((module) => {
 
 module.exports = require("@nestjs/config");
 
 /***/ }),
-/* 33 */
+/* 39 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.getRMQConfig = void 0;
-const config_1 = __webpack_require__(32);
+const config_1 = __webpack_require__(38);
 const getRMQConfig = () => ({
     inject: [config_1.ConfigService],
     imports: [config_1.ConfigModule],
@@ -898,19 +1137,19 @@ exports.getRMQConfig = getRMQConfig;
 
 
 /***/ }),
-/* 34 */
+/* 40 */
 /***/ ((module) => {
 
 module.exports = require("@nestjs/jwt");
 
 /***/ }),
-/* 35 */
+/* 41 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.getJWTConfig = void 0;
-const config_1 = __webpack_require__(32);
+const config_1 = __webpack_require__(38);
 const getJWTConfig = () => ({
     imports: [config_1.ConfigModule],
     inject: [config_1.ConfigService],
@@ -922,13 +1161,13 @@ exports.getJWTConfig = getJWTConfig;
 
 
 /***/ }),
-/* 36 */
+/* 42 */
 /***/ ((module) => {
 
 module.exports = require("@nestjs/passport");
 
 /***/ }),
-/* 37 */
+/* 43 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -937,11 +1176,11 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.UserController = void 0;
 const tslib_1 = __webpack_require__(4);
 const common_1 = __webpack_require__(1);
-const jwt_guard_1 = __webpack_require__(38);
-const user_decorator_1 = __webpack_require__(39);
-const nestjs_rmq_1 = __webpack_require__(29);
+const jwt_guard_1 = __webpack_require__(44);
+const user_decorator_1 = __webpack_require__(45);
+const nestjs_rmq_1 = __webpack_require__(35);
 const contracts_1 = __webpack_require__(6);
-const change_profile_dto_1 = __webpack_require__(40);
+const change_profile_dto_1 = __webpack_require__(46);
 let UserController = class UserController {
     constructor(rmqService) {
         this.rmqService = rmqService;
@@ -981,20 +1220,20 @@ exports.UserController = UserController = tslib_1.__decorate([
 
 
 /***/ }),
-/* 38 */
+/* 44 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.JWTAuthGuard = void 0;
-const passport_1 = __webpack_require__(36);
+const passport_1 = __webpack_require__(42);
 class JWTAuthGuard extends (0, passport_1.AuthGuard)('jwt') {
 }
 exports.JWTAuthGuard = JWTAuthGuard;
 
 
 /***/ }),
-/* 39 */
+/* 45 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -1007,7 +1246,7 @@ exports.UserId = (0, common_1.createParamDecorator)((data, ctx) => {
 
 
 /***/ }),
-/* 40 */
+/* 46 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -1025,7 +1264,7 @@ tslib_1.__decorate([
 
 
 /***/ }),
-/* 41 */
+/* 47 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -1034,9 +1273,9 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.JwtStrategy = void 0;
 const tslib_1 = __webpack_require__(4);
 const common_1 = __webpack_require__(1);
-const config_1 = __webpack_require__(32);
-const passport_1 = __webpack_require__(36);
-const passport_jwt_1 = __webpack_require__(42);
+const config_1 = __webpack_require__(38);
+const passport_1 = __webpack_require__(42);
+const passport_jwt_1 = __webpack_require__(48);
 let JwtStrategy = class JwtStrategy extends (0, passport_1.PassportStrategy)(passport_jwt_1.Strategy) {
     constructor(configService) {
         super({
@@ -1057,13 +1296,13 @@ exports.JwtStrategy = JwtStrategy = tslib_1.__decorate([
 
 
 /***/ }),
-/* 42 */
+/* 48 */
 /***/ ((module) => {
 
 module.exports = require("passport-jwt");
 
 /***/ }),
-/* 43 */
+/* 49 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -1072,14 +1311,14 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.WalletController = void 0;
 const tslib_1 = __webpack_require__(4);
 const common_1 = __webpack_require__(1);
-const nestjs_rmq_1 = __webpack_require__(29);
-const jwt_guard_1 = __webpack_require__(38);
-const user_decorator_1 = __webpack_require__(39);
+const nestjs_rmq_1 = __webpack_require__(35);
+const jwt_guard_1 = __webpack_require__(44);
+const user_decorator_1 = __webpack_require__(45);
 const contracts_1 = __webpack_require__(6);
-const create_account_dto_1 = __webpack_require__(44);
-const update_account_dto_1 = __webpack_require__(45);
-const list_accounts_dto_1 = __webpack_require__(46);
-const account_id_dto_1 = __webpack_require__(47);
+const create_account_dto_1 = __webpack_require__(50);
+const update_account_dto_1 = __webpack_require__(51);
+const list_accounts_dto_1 = __webpack_require__(52);
+const account_id_dto_1 = __webpack_require__(53);
 const interfaces_1 = __webpack_require__(13);
 let WalletController = class WalletController {
     constructor(rmqService) {
@@ -1188,7 +1427,7 @@ exports.WalletController = WalletController = tslib_1.__decorate([
 
 
 /***/ }),
-/* 44 */
+/* 50 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -1197,7 +1436,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.CreateAccountDto = void 0;
 const tslib_1 = __webpack_require__(4);
 const class_validator_1 = __webpack_require__(8);
-const class_transformer_1 = __webpack_require__(19);
+const class_transformer_1 = __webpack_require__(20);
 const interfaces_1 = __webpack_require__(13);
 class CreditDetailsDto {
 }
@@ -1276,7 +1515,7 @@ tslib_1.__decorate([
 
 
 /***/ }),
-/* 45 */
+/* 51 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -1285,7 +1524,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.UpdateAccountDto = void 0;
 const tslib_1 = __webpack_require__(4);
 const class_validator_1 = __webpack_require__(8);
-const class_transformer_1 = __webpack_require__(19);
+const class_transformer_1 = __webpack_require__(20);
 const interfaces_1 = __webpack_require__(13);
 class CreditDetailsUpdateDto {
 }
@@ -1366,7 +1605,7 @@ tslib_1.__decorate([
 
 
 /***/ }),
-/* 46 */
+/* 52 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -1386,7 +1625,7 @@ tslib_1.__decorate([
 
 
 /***/ }),
-/* 47 */
+/* 53 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -1404,7 +1643,7 @@ tslib_1.__decorate([
 
 
 /***/ }),
-/* 48 */
+/* 54 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -1413,14 +1652,14 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.CategoryController = void 0;
 const tslib_1 = __webpack_require__(4);
 const common_1 = __webpack_require__(1);
-const nestjs_rmq_1 = __webpack_require__(29);
-const jwt_guard_1 = __webpack_require__(38);
-const user_decorator_1 = __webpack_require__(39);
+const nestjs_rmq_1 = __webpack_require__(35);
+const jwt_guard_1 = __webpack_require__(44);
+const user_decorator_1 = __webpack_require__(45);
 const contracts_1 = __webpack_require__(6);
-const list_categories_dto_1 = __webpack_require__(49);
-const category_id_dto_1 = __webpack_require__(50);
-const create_category_dto_1 = __webpack_require__(51);
-const update_category_dto_1 = __webpack_require__(52);
+const list_categories_dto_1 = __webpack_require__(55);
+const category_id_dto_1 = __webpack_require__(56);
+const create_category_dto_1 = __webpack_require__(57);
+const update_category_dto_1 = __webpack_require__(58);
 let CategoryController = class CategoryController {
     constructor(rmqService) {
         this.rmqService = rmqService;
@@ -1517,7 +1756,7 @@ exports.CategoryController = CategoryController = tslib_1.__decorate([
 
 
 /***/ }),
-/* 49 */
+/* 55 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -1538,7 +1777,7 @@ tslib_1.__decorate([
 
 
 /***/ }),
-/* 50 */
+/* 56 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -1556,7 +1795,7 @@ tslib_1.__decorate([
 
 
 /***/ }),
-/* 51 */
+/* 57 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -1584,7 +1823,7 @@ tslib_1.__decorate([
 
 
 /***/ }),
-/* 52 */
+/* 58 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -1607,6 +1846,260 @@ tslib_1.__decorate([
     (0, class_validator_1.IsEnum)(interfaces_1.CategoryIcon, { message: 'icon must be a valid CategoryIcon' }),
     tslib_1.__metadata("design:type", typeof (_a = typeof interfaces_1.CategoryIcon !== "undefined" && interfaces_1.CategoryIcon) === "function" ? _a : Object)
 ], UpdateCategoryDto.prototype, "icon", void 0);
+
+
+/***/ }),
+/* 59 */
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+
+var _a, _b, _c, _d, _e, _f, _g;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.TransactionController = void 0;
+const tslib_1 = __webpack_require__(4);
+// apps/api/src/app/controllers/transaction.controller.ts
+const common_1 = __webpack_require__(1);
+const nestjs_rmq_1 = __webpack_require__(35);
+const jwt_guard_1 = __webpack_require__(44);
+const user_decorator_1 = __webpack_require__(45);
+const contracts_1 = __webpack_require__(6);
+const create_transaction_dto_1 = __webpack_require__(60);
+const list_transactions_dto_1 = __webpack_require__(61);
+const transaction_id_dto_1 = __webpack_require__(62);
+const update_transaction_dto_1 = __webpack_require__(63);
+let TransactionController = class TransactionController {
+    constructor(rmq) {
+        this.rmq = rmq;
+    }
+    async create(userId, dto) {
+        await this.rmq.send(contracts_1.TransactionCreate.topic, {
+            userId,
+            ...dto,
+            date: new Date(dto.date),
+        });
+        return {};
+    }
+    async list(userId, dto) {
+        const res = await this.rmq.send(contracts_1.TransactionList.topic, {
+            userId,
+            accountId: dto.accountId,
+            peers: dto.peers || [],
+        });
+        return { transactions: res.transactions };
+    }
+    async get(userId, params) {
+        const res = await this.rmq.send(contracts_1.TransactionGet.topic, {
+            userId,
+            id: params.id,
+            peers: params.peers || [],
+        });
+        return { transaction: res.transaction };
+    }
+    async update(userId, params, dto) {
+        const { date, ...rest } = dto;
+        await this.rmq.send(contracts_1.TransactionUpdate.topic, {
+            userId,
+            id: params.id,
+            ...rest,
+            ...(date ? { date: new Date(date) } : {}),
+        });
+        return {};
+    }
+    async delete(userId, params) {
+        await this.rmq.send(contracts_1.TransactionDelete.topic, {
+            userId,
+            id: params.id,
+        });
+        return {};
+    }
+};
+exports.TransactionController = TransactionController;
+tslib_1.__decorate([
+    (0, common_1.UseGuards)(jwt_guard_1.JWTAuthGuard),
+    (0, common_1.Post)(),
+    tslib_1.__param(0, (0, user_decorator_1.UserId)()),
+    tslib_1.__param(1, (0, common_1.Body)()),
+    tslib_1.__metadata("design:type", Function),
+    tslib_1.__metadata("design:paramtypes", [String, typeof (_b = typeof create_transaction_dto_1.CreateTransactionDto !== "undefined" && create_transaction_dto_1.CreateTransactionDto) === "function" ? _b : Object]),
+    tslib_1.__metadata("design:returntype", Promise)
+], TransactionController.prototype, "create", null);
+tslib_1.__decorate([
+    (0, common_1.UseGuards)(jwt_guard_1.JWTAuthGuard),
+    (0, common_1.Get)(),
+    tslib_1.__param(0, (0, user_decorator_1.UserId)()),
+    tslib_1.__param(1, (0, common_1.Query)()),
+    tslib_1.__metadata("design:type", Function),
+    tslib_1.__metadata("design:paramtypes", [String, typeof (_c = typeof list_transactions_dto_1.ListTransactionsDto !== "undefined" && list_transactions_dto_1.ListTransactionsDto) === "function" ? _c : Object]),
+    tslib_1.__metadata("design:returntype", Promise)
+], TransactionController.prototype, "list", null);
+tslib_1.__decorate([
+    (0, common_1.UseGuards)(jwt_guard_1.JWTAuthGuard),
+    (0, common_1.Get)(':id'),
+    tslib_1.__param(0, (0, user_decorator_1.UserId)()),
+    tslib_1.__param(1, (0, common_1.Param)()),
+    tslib_1.__metadata("design:type", Function),
+    tslib_1.__metadata("design:paramtypes", [String, typeof (_d = typeof transaction_id_dto_1.TransactionIdDto !== "undefined" && transaction_id_dto_1.TransactionIdDto) === "function" ? _d : Object]),
+    tslib_1.__metadata("design:returntype", Promise)
+], TransactionController.prototype, "get", null);
+tslib_1.__decorate([
+    (0, common_1.UseGuards)(jwt_guard_1.JWTAuthGuard),
+    (0, common_1.Patch)(':id'),
+    tslib_1.__param(0, (0, user_decorator_1.UserId)()),
+    tslib_1.__param(1, (0, common_1.Param)()),
+    tslib_1.__param(2, (0, common_1.Body)()),
+    tslib_1.__metadata("design:type", Function),
+    tslib_1.__metadata("design:paramtypes", [String, typeof (_e = typeof transaction_id_dto_1.TransactionIdDto !== "undefined" && transaction_id_dto_1.TransactionIdDto) === "function" ? _e : Object, typeof (_f = typeof update_transaction_dto_1.UpdateTransactionDto !== "undefined" && update_transaction_dto_1.UpdateTransactionDto) === "function" ? _f : Object]),
+    tslib_1.__metadata("design:returntype", Promise)
+], TransactionController.prototype, "update", null);
+tslib_1.__decorate([
+    (0, common_1.UseGuards)(jwt_guard_1.JWTAuthGuard),
+    (0, common_1.Delete)(':id'),
+    tslib_1.__param(0, (0, user_decorator_1.UserId)()),
+    tslib_1.__param(1, (0, common_1.Param)()),
+    tslib_1.__metadata("design:type", Function),
+    tslib_1.__metadata("design:paramtypes", [String, typeof (_g = typeof transaction_id_dto_1.TransactionIdDto !== "undefined" && transaction_id_dto_1.TransactionIdDto) === "function" ? _g : Object]),
+    tslib_1.__metadata("design:returntype", Promise)
+], TransactionController.prototype, "delete", null);
+exports.TransactionController = TransactionController = tslib_1.__decorate([
+    (0, common_1.Controller)('transactions'),
+    tslib_1.__metadata("design:paramtypes", [typeof (_a = typeof nestjs_rmq_1.RMQService !== "undefined" && nestjs_rmq_1.RMQService) === "function" ? _a : Object])
+], TransactionController);
+
+
+/***/ }),
+/* 60 */
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+
+var _a;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.CreateTransactionDto = void 0;
+const tslib_1 = __webpack_require__(4);
+// apps/api/src/app/dtos/create-transaction.dto.ts
+const class_validator_1 = __webpack_require__(8);
+const interfaces_1 = __webpack_require__(13);
+class CreateTransactionDto {
+}
+exports.CreateTransactionDto = CreateTransactionDto;
+tslib_1.__decorate([
+    (0, class_validator_1.IsString)(),
+    tslib_1.__metadata("design:type", String)
+], CreateTransactionDto.prototype, "accountId", void 0);
+tslib_1.__decorate([
+    (0, class_validator_1.IsString)(),
+    tslib_1.__metadata("design:type", String)
+], CreateTransactionDto.prototype, "categoryId", void 0);
+tslib_1.__decorate([
+    (0, class_validator_1.IsEnum)(interfaces_1.TransactionType, { message: 'type must be income or expense' }),
+    tslib_1.__metadata("design:type", typeof (_a = typeof interfaces_1.TransactionType !== "undefined" && interfaces_1.TransactionType) === "function" ? _a : Object)
+], CreateTransactionDto.prototype, "type", void 0);
+tslib_1.__decorate([
+    (0, class_validator_1.IsNumber)(),
+    tslib_1.__metadata("design:type", Number)
+], CreateTransactionDto.prototype, "amount", void 0);
+tslib_1.__decorate([
+    (0, class_validator_1.IsDateString)(),
+    tslib_1.__metadata("design:type", String)
+], CreateTransactionDto.prototype, "date", void 0);
+tslib_1.__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    tslib_1.__metadata("design:type", String)
+], CreateTransactionDto.prototype, "description", void 0);
+
+
+/***/ }),
+/* 61 */
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.ListTransactionsDto = void 0;
+const tslib_1 = __webpack_require__(4);
+const class_validator_1 = __webpack_require__(8);
+class ListTransactionsDto {
+}
+exports.ListTransactionsDto = ListTransactionsDto;
+tslib_1.__decorate([
+    (0, class_validator_1.IsString)(),
+    tslib_1.__metadata("design:type", String)
+], ListTransactionsDto.prototype, "accountId", void 0);
+tslib_1.__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsArray)(),
+    (0, class_validator_1.IsString)({ each: true }),
+    tslib_1.__metadata("design:type", Array)
+], ListTransactionsDto.prototype, "peers", void 0);
+
+
+/***/ }),
+/* 62 */
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.TransactionIdDto = void 0;
+const tslib_1 = __webpack_require__(4);
+const class_validator_1 = __webpack_require__(8);
+class TransactionIdDto {
+}
+exports.TransactionIdDto = TransactionIdDto;
+tslib_1.__decorate([
+    (0, class_validator_1.IsString)(),
+    tslib_1.__metadata("design:type", String)
+], TransactionIdDto.prototype, "id", void 0);
+tslib_1.__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsArray)(),
+    (0, class_validator_1.IsString)({ each: true }),
+    tslib_1.__metadata("design:type", Array)
+], TransactionIdDto.prototype, "peers", void 0);
+
+
+/***/ }),
+/* 63 */
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+
+var _a;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.UpdateTransactionDto = void 0;
+const tslib_1 = __webpack_require__(4);
+const interfaces_1 = __webpack_require__(13);
+const class_validator_1 = __webpack_require__(8);
+class UpdateTransactionDto {
+}
+exports.UpdateTransactionDto = UpdateTransactionDto;
+tslib_1.__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    tslib_1.__metadata("design:type", String)
+], UpdateTransactionDto.prototype, "accountId", void 0);
+tslib_1.__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    tslib_1.__metadata("design:type", String)
+], UpdateTransactionDto.prototype, "categoryId", void 0);
+tslib_1.__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsEnum)(interfaces_1.TransactionType, { message: 'type must be income or expense' }),
+    tslib_1.__metadata("design:type", typeof (_a = typeof interfaces_1.TransactionType !== "undefined" && interfaces_1.TransactionType) === "function" ? _a : Object)
+], UpdateTransactionDto.prototype, "type", void 0);
+tslib_1.__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsNumber)(),
+    tslib_1.__metadata("design:type", Number)
+], UpdateTransactionDto.prototype, "amount", void 0);
+tslib_1.__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsDateString)(),
+    tslib_1.__metadata("design:type", String)
+], UpdateTransactionDto.prototype, "date", void 0);
+tslib_1.__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    tslib_1.__metadata("design:type", String)
+], UpdateTransactionDto.prototype, "description", void 0);
 
 
 /***/ })

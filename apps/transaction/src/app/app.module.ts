@@ -7,13 +7,18 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { RMQModule } from 'nestjs-rmq';
 import { getMongoConfig } from './configs/mongo.config';
 import { getRMQConfig } from './configs/rmq.config';
+import { TransactionModule } from './transaction/transaction.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({isGlobal: true, envFilePath: 'envs/.transaction.env'}), 
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: 'envs/.transaction.env',
+    }),
     RMQModule.forRootAsync(getRMQConfig()),
     CategoryModule,
-    MongooseModule.forRootAsync(getMongoConfig())
+    MongooseModule.forRootAsync(getMongoConfig()),
+    TransactionModule,
   ],
   controllers: [AppController],
   providers: [AppService],

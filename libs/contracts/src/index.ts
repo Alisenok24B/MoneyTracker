@@ -12,4 +12,9 @@ export * from './lib/category/category.create';
 export * from './lib/category/category.get';
 export * from './lib/category/category.list';
 export * from './lib/category/category.update';
+export * from './lib/transaction/transaction.update';
+export * from './lib/transaction/transaction.create';
+export * from './lib/transaction/transaction.delete';
+export * from './lib/transaction/transaction.get';
+export * from './lib/transaction/transaction.list';
 
