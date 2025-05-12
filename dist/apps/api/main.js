@@ -458,6 +458,7 @@ var TransactionType;
 (function (TransactionType) {
     TransactionType["Income"] = "income";
     TransactionType["Expense"] = "expense";
+    TransactionType["Transfer"] = "transfer";
 })(TransactionType || (exports.TransactionType = TransactionType = {}));
 
 
@@ -858,19 +859,26 @@ var TransactionUpdate;
     ], Request.prototype, "id", void 0);
     tslib_1.__decorate([
         (0, class_validator_1.IsOptional)(),
+        (0, class_validator_1.IsEnum)(interfaces_1.TransactionType),
+        tslib_1.__metadata("design:type", typeof (_a = typeof interfaces_1.TransactionType !== "undefined" && interfaces_1.TransactionType) === "function" ? _a : Object)
+    ], Request.prototype, "type", void 0);
+    tslib_1.__decorate([
+        (0, class_validator_1.IsOptional)(),
         (0, class_validator_1.IsString)(),
         tslib_1.__metadata("design:type", String)
     ], Request.prototype, "accountId", void 0);
     tslib_1.__decorate([
+        (0, class_validator_1.ValidateIf)(o => o.type !== 'transfer'),
         (0, class_validator_1.IsOptional)(),
         (0, class_validator_1.IsString)(),
         tslib_1.__metadata("design:type", String)
     ], Request.prototype, "categoryId", void 0);
     tslib_1.__decorate([
+        (0, class_validator_1.ValidateIf)(o => o.type === 'transfer'),
         (0, class_validator_1.IsOptional)(),
-        (0, class_validator_1.IsEnum)(interfaces_1.TransactionType),
-        tslib_1.__metadata("design:type", typeof (_a = typeof interfaces_1.TransactionType !== "undefined" && interfaces_1.TransactionType) === "function" ? _a : Object)
-    ], Request.prototype, "type", void 0);
+        (0, class_validator_1.IsString)(),
+        tslib_1.__metadata("design:type", String)
+    ], Request.prototype, "toAccountId", void 0);
     tslib_1.__decorate([
         (0, class_validator_1.IsOptional)(),
         (0, class_validator_1.IsNumber)(),
@@ -921,13 +929,19 @@ var TransactionCreate;
         tslib_1.__metadata("design:type", String)
     ], Request.prototype, "accountId", void 0);
     tslib_1.__decorate([
+        (0, class_validator_1.IsEnum)(interfaces_1.TransactionType),
+        tslib_1.__metadata("design:type", typeof (_a = typeof interfaces_1.TransactionType !== "undefined" && interfaces_1.TransactionType) === "function" ? _a : Object)
+    ], Request.prototype, "type", void 0);
+    tslib_1.__decorate([
+        (0, class_validator_1.ValidateIf)(o => o.type !== 'transfer'),
         (0, class_validator_1.IsString)(),
         tslib_1.__metadata("design:type", String)
     ], Request.prototype, "categoryId", void 0);
     tslib_1.__decorate([
-        (0, class_validator_1.IsEnum)(interfaces_1.TransactionType),
-        tslib_1.__metadata("design:type", typeof (_a = typeof interfaces_1.TransactionType !== "undefined" && interfaces_1.TransactionType) === "function" ? _a : Object)
-    ], Request.prototype, "type", void 0);
+        (0, class_validator_1.ValidateIf)(o => o.type === 'transfer'),
+        (0, class_validator_1.IsString)(),
+        tslib_1.__metadata("design:type", String)
+    ], Request.prototype, "toAccountId", void 0);
     tslib_1.__decorate([
         (0, class_validator_1.IsNumber)(),
         tslib_1.__metadata("design:type", Number)
@@ -1022,8 +1036,10 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.TransactionList = void 0;
 const tslib_1 = __webpack_require__(4);
 const class_validator_1 = __webpack_require__(8);
+const interfaces_1 = __webpack_require__(13);
 var TransactionList;
 (function (TransactionList) {
+    var _a;
     TransactionList.topic = 'transaction.list.query';
     class Request {
     }
@@ -1032,15 +1048,16 @@ var TransactionList;
         tslib_1.__metadata("design:type", String)
     ], Request.prototype, "userId", void 0);
     tslib_1.__decorate([
-        (0, class_validator_1.IsString)(),
-        tslib_1.__metadata("design:type", String)
-    ], Request.prototype, "accountId", void 0);
-    tslib_1.__decorate([
         (0, class_validator_1.IsOptional)(),
         (0, class_validator_1.IsArray)(),
         (0, class_validator_1.IsString)({ each: true }),
         tslib_1.__metadata("design:type", Array)
     ], Request.prototype, "peers", void 0);
+    tslib_1.__decorate([
+        (0, class_validator_1.IsOptional)(),
+        (0, class_validator_1.IsIn)(Object.values(interfaces_1.TransactionType)),
+        tslib_1.__metadata("design:type", typeof (_a = typeof interfaces_1.TransactionType !== "undefined" && interfaces_1.TransactionType) === "function" ? _a : Object)
+    ], Request.prototype, "type", void 0);
     TransactionList.Request = Request;
     class Response {
     }
@@ -1862,11 +1879,12 @@ const common_1 = __webpack_require__(1);
 const nestjs_rmq_1 = __webpack_require__(35);
 const jwt_guard_1 = __webpack_require__(44);
 const user_decorator_1 = __webpack_require__(45);
+const lodash_1 = __webpack_require__(60);
 const contracts_1 = __webpack_require__(6);
-const create_transaction_dto_1 = __webpack_require__(60);
-const list_transactions_dto_1 = __webpack_require__(61);
-const transaction_id_dto_1 = __webpack_require__(62);
-const update_transaction_dto_1 = __webpack_require__(63);
+const create_transaction_dto_1 = __webpack_require__(61);
+const list_transactions_dto_1 = __webpack_require__(62);
+const transaction_id_dto_1 = __webpack_require__(63);
+const update_transaction_dto_1 = __webpack_require__(64);
 let TransactionController = class TransactionController {
     constructor(rmq) {
         this.rmq = rmq;
@@ -1880,20 +1898,109 @@ let TransactionController = class TransactionController {
         return {};
     }
     async list(userId, dto) {
-        const res = await this.rmq.send(contracts_1.TransactionList.topic, {
+        const { transactions: flat } = await this.rmq.send(contracts_1.TransactionList.topic, {
             userId,
-            accountId: dto.accountId,
             peers: dto.peers || [],
+            type: dto.type,
         });
-        return { transactions: res.transactions };
+        const enriched = await Promise.all(flat.map(async (tx) => {
+            if (tx.type === 'transfer') {
+                const [fromAccRes, toAccRes] = await Promise.all([
+                    this.rmq.send(contracts_1.AccountGet.topic, { userId, id: tx.accountId }),
+                    this.rmq.send(contracts_1.AccountGet.topic, { userId, id: tx.toAccountId }),
+                ]);
+                const toOwnerId = toAccRes.account.userId;
+                let toOwner;
+                if (toOwnerId !== userId) {
+                    const ownerRes = await this.rmq.send(contracts_1.AccountUserInfo.topic, { id: toOwnerId });
+                    toOwner = { name: ownerRes.profile.displayName };
+                }
+                return {
+                    _id: tx._id,
+                    type: tx.type,
+                    amount: tx.amount,
+                    date: tx.date,
+                    description: tx.description,
+                    fromAccount: (0, lodash_1.pick)(fromAccRes.account, ['name', 'type', 'balance', 'currency', 'creditDetails']),
+                    toAccount: {
+                        ...(0, lodash_1.pick)(toAccRes.account, ['name', 'type', 'balance', 'currency', 'creditDetails']),
+                        owner: toOwner,
+                    },
+                };
+            }
+            else {
+                const [userRes, accRes, catRes] = await Promise.all([
+                    this.rmq.send(contracts_1.AccountUserInfo.topic, { id: tx.userId }),
+                    this.rmq.send(contracts_1.AccountGet.topic, { userId, id: tx.accountId }),
+                    this.rmq.send(contracts_1.CategoryGet.topic, { userId, id: tx.categoryId }),
+                ]);
+                return {
+                    _id: tx._id,
+                    user: { name: userRes.profile.displayName },
+                    account: (0, lodash_1.pick)(accRes.account, ['name', 'type', 'balance', 'currency', 'creditDetails']),
+                    category: (0, lodash_1.pick)(catRes.category, ['name', 'type', 'icon']),
+                    type: tx.type,
+                    amount: tx.amount,
+                    date: tx.date,
+                    description: tx.description
+                };
+            }
+        }));
+        return { transactions: enriched };
     }
     async get(userId, params) {
-        const res = await this.rmq.send(contracts_1.TransactionGet.topic, {
+        const { transaction: tx } = await this.rmq.send(contracts_1.TransactionGet.topic, {
             userId,
             id: params.id,
             peers: params.peers || [],
         });
-        return { transaction: res.transaction };
+        if (tx.type === 'transfer') {
+            const [fromAccRes, toAccRes] = await Promise.all([
+                this.rmq.send(contracts_1.AccountGet.topic, { userId, id: tx.accountId }),
+                this.rmq.send(contracts_1.AccountGet.topic, { userId, id: tx.toAccountId }),
+            ]);
+            const toOwnerId = toAccRes.account.userId;
+            let toOwner;
+            if (toOwnerId !== userId) {
+                const ownerRes = await this.rmq.send(contracts_1.AccountUserInfo.topic, { id: toOwnerId });
+                toOwner = { name: ownerRes.profile.displayName };
+            }
+            return {
+                transaction: {
+                    _id: tx._id,
+                    type: tx.type,
+                    amount: tx.amount,
+                    date: tx.date,
+                    description: tx.description,
+                    deletedAt: tx.deletedAt ?? null,
+                    fromAccount: (0, lodash_1.pick)(fromAccRes.account, ['name', 'type', 'balance', 'currency', 'creditDetails']),
+                    toAccount: {
+                        ...(0, lodash_1.pick)(toAccRes.account, ['name', 'type', 'balance', 'currency', 'creditDetails']),
+                        owner: toOwner,
+                    },
+                },
+            };
+        }
+        else {
+            const [userRes, accRes, catRes] = await Promise.all([
+                this.rmq.send(contracts_1.AccountUserInfo.topic, { id: tx.userId }),
+                this.rmq.send(contracts_1.AccountGet.topic, { userId, id: tx.accountId }),
+                this.rmq.send(contracts_1.CategoryGet.topic, { userId, id: tx.categoryId }),
+            ]);
+            return {
+                transaction: {
+                    _id: tx._id,
+                    user: { name: userRes.profile.displayName },
+                    account: (0, lodash_1.pick)(accRes.account, ['name', 'type', 'balance', 'currency', 'creditDetails']),
+                    category: (0, lodash_1.pick)(catRes.category, ['name', 'type', 'icon']),
+                    type: tx.type,
+                    amount: tx.amount,
+                    date: tx.date,
+                    description: tx.description,
+                    deletedAt: tx.deletedAt ?? null,
+                },
+            };
+        }
     }
     async update(userId, params, dto) {
         const { date, ...rest } = dto;
@@ -1968,6 +2075,12 @@ exports.TransactionController = TransactionController = tslib_1.__decorate([
 
 /***/ }),
 /* 60 */
+/***/ ((module) => {
+
+module.exports = require("lodash");
+
+/***/ }),
+/* 61 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -1986,9 +2099,15 @@ tslib_1.__decorate([
     tslib_1.__metadata("design:type", String)
 ], CreateTransactionDto.prototype, "accountId", void 0);
 tslib_1.__decorate([
+    (0, class_validator_1.ValidateIf)(o => o.type !== 'transfer'),
     (0, class_validator_1.IsString)(),
     tslib_1.__metadata("design:type", String)
 ], CreateTransactionDto.prototype, "categoryId", void 0);
+tslib_1.__decorate([
+    (0, class_validator_1.ValidateIf)(o => o.type === 'transfer'),
+    (0, class_validator_1.IsString)(),
+    tslib_1.__metadata("design:type", String)
+], CreateTransactionDto.prototype, "toAccountId", void 0);
 tslib_1.__decorate([
     (0, class_validator_1.IsEnum)(interfaces_1.TransactionType, { message: 'type must be income or expense' }),
     tslib_1.__metadata("design:type", typeof (_a = typeof interfaces_1.TransactionType !== "undefined" && interfaces_1.TransactionType) === "function" ? _a : Object)
@@ -2009,31 +2128,34 @@ tslib_1.__decorate([
 
 
 /***/ }),
-/* 61 */
+/* 62 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
+var _a;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ListTransactionsDto = void 0;
 const tslib_1 = __webpack_require__(4);
 const class_validator_1 = __webpack_require__(8);
+const interfaces_1 = __webpack_require__(13);
 class ListTransactionsDto {
 }
 exports.ListTransactionsDto = ListTransactionsDto;
-tslib_1.__decorate([
-    (0, class_validator_1.IsString)(),
-    tslib_1.__metadata("design:type", String)
-], ListTransactionsDto.prototype, "accountId", void 0);
 tslib_1.__decorate([
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsArray)(),
     (0, class_validator_1.IsString)({ each: true }),
     tslib_1.__metadata("design:type", Array)
 ], ListTransactionsDto.prototype, "peers", void 0);
+tslib_1.__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsIn)(Object.values(interfaces_1.TransactionType)),
+    tslib_1.__metadata("design:type", typeof (_a = typeof interfaces_1.TransactionType !== "undefined" && interfaces_1.TransactionType) === "function" ? _a : Object)
+], ListTransactionsDto.prototype, "type", void 0);
 
 
 /***/ }),
-/* 62 */
+/* 63 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -2057,7 +2179,7 @@ tslib_1.__decorate([
 
 
 /***/ }),
-/* 63 */
+/* 64 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -2076,10 +2198,17 @@ tslib_1.__decorate([
     tslib_1.__metadata("design:type", String)
 ], UpdateTransactionDto.prototype, "accountId", void 0);
 tslib_1.__decorate([
+    (0, class_validator_1.ValidateIf)(o => o.type !== 'transfer'),
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsString)(),
     tslib_1.__metadata("design:type", String)
 ], UpdateTransactionDto.prototype, "categoryId", void 0);
+tslib_1.__decorate([
+    (0, class_validator_1.ValidateIf)(o => o.type === 'transfer'),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    tslib_1.__metadata("design:type", String)
+], UpdateTransactionDto.prototype, "toAccountId", void 0);
 tslib_1.__decorate([
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsEnum)(interfaces_1.TransactionType, { message: 'type must be income or expense' }),

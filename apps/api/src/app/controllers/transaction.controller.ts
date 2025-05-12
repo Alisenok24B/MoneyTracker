@@ -13,12 +13,16 @@ import {
   import { RMQService } from 'nestjs-rmq';
   import { JWTAuthGuard } from '../guards/jwt.guard';
   import { UserId } from '../guards/user.decorator';
+  import { pick } from 'lodash';
   import {
     TransactionCreate,
     TransactionList,
     TransactionGet,
     TransactionUpdate,
     TransactionDelete,
+    AccountUserInfo,
+    AccountGet,
+    CategoryGet,
   } from '@moneytracker/contracts';
   import { CreateTransactionDto } from '../dtos/create-transaction.dto';
   import { ListTransactionsDto } from '../dtos/list-transactions.dto';
@@ -55,38 +59,190 @@ import {
       @UserId() userId: string,
       @Query() dto: ListTransactionsDto,
     ) {
-      const res = await this.rmq.send<
+      const { transactions: flat } = await this.rmq.send<
         TransactionList.Request,
         TransactionList.Response
-      >(
-        TransactionList.topic,
-        {
-          userId,
-          accountId: dto.accountId,
-          peers: dto.peers || [],
-        },
+      >(TransactionList.topic, {
+        userId,
+        peers: dto.peers || [],
+        type: dto.type,
+      });
+
+      const enriched = await Promise.all(
+        flat.map(async tx => {
+          if (tx.type === 'transfer') {
+            const [fromAccRes, toAccRes] = await Promise.all([
+              this.rmq.send<AccountGet.Request, AccountGet.Response>(
+                AccountGet.topic,
+                { userId, id: tx.accountId },
+              ),
+              this.rmq.send<AccountGet.Request, AccountGet.Response>(
+                AccountGet.topic,
+                { userId, id: tx.toAccountId! },
+              ),
+            ]);
+
+            const toOwnerId = toAccRes.account.userId;
+            let toOwner: { name: string } | undefined;
+            if (toOwnerId !== userId) {
+              const ownerRes = await this.rmq.send<
+                AccountUserInfo.Request,
+                AccountUserInfo.Response
+              >(AccountUserInfo.topic, { id: toOwnerId });
+              toOwner = { name: ownerRes.profile.displayName };
+            }
+
+            return {
+              _id: tx._id,
+              type: tx.type,
+              amount: tx.amount,
+              date: tx.date,
+              description: tx.description,
+              fromAccount: pick(
+                fromAccRes.account,
+                ['name', 'type', 'balance', 'currency', 'creditDetails'],
+              ),
+              toAccount: {
+                ...pick(
+                  toAccRes.account,
+                  ['name', 'type', 'balance', 'currency', 'creditDetails'],
+                ),
+                owner: toOwner,
+              },
+            };
+          } else {
+            const [userRes, accRes, catRes] = await Promise.all([
+              this.rmq.send<AccountUserInfo.Request, AccountUserInfo.Response>(
+                AccountUserInfo.topic,
+                { id: tx.userId },
+              ),
+              this.rmq.send<AccountGet.Request, AccountGet.Response>(
+                AccountGet.topic,
+                { userId, id: tx.accountId },
+              ),
+              this.rmq.send<CategoryGet.Request, CategoryGet.Response>(
+                CategoryGet.topic,
+                { userId, id: tx.categoryId! },
+              ),
+            ]);
+
+            return {
+              _id: tx._id,
+              user: { name: userRes.profile.displayName },
+              account: pick(
+                accRes.account,
+                ['name', 'type', 'balance', 'currency', 'creditDetails'],
+              ),
+              category: pick(
+                catRes.category,
+                ['name', 'type', 'icon'],
+              ),
+              type: tx.type,
+              amount: tx.amount,
+              date: tx.date,
+              description: tx.description
+            };
+          }
+        }),
       );
-      return { transactions: res.transactions };
+
+      return { transactions: enriched };
     }
-  
+    
     @UseGuards(JWTAuthGuard)
     @Get(':id')
     async get(
       @UserId() userId: string,
       @Param() params: TransactionIdDto,
     ) {
-      const res = await this.rmq.send<
+      const { transaction: tx } = await this.rmq.send<
         TransactionGet.Request,
         TransactionGet.Response
-      >(
-        TransactionGet.topic,
-        {
-          userId,
-          id: params.id,
-          peers: params.peers || [],
-        },
-      );
-      return { transaction: res.transaction };
+      >(TransactionGet.topic, {
+        userId,
+        id: params.id,
+        peers: params.peers || [],
+      });
+
+      if (tx.type === 'transfer') {
+        const [fromAccRes, toAccRes] = await Promise.all([
+          this.rmq.send<AccountGet.Request, AccountGet.Response>(
+            AccountGet.topic,
+            { userId, id: tx.accountId },
+          ),
+          this.rmq.send<AccountGet.Request, AccountGet.Response>(
+            AccountGet.topic,
+            { userId, id: tx.toAccountId! },
+          ),
+        ]);
+
+        const toOwnerId = toAccRes.account.userId;
+        let toOwner: { name: string } | undefined;
+        if (toOwnerId !== userId) {
+          const ownerRes = await this.rmq.send<
+            AccountUserInfo.Request,
+            AccountUserInfo.Response
+          >(AccountUserInfo.topic, { id: toOwnerId });
+          toOwner = { name: ownerRes.profile.displayName };
+        }
+
+        return {
+          transaction: {
+            _id: tx._id,
+            type: tx.type,
+            amount: tx.amount,
+            date: tx.date,
+            description: tx.description,
+            deletedAt: tx.deletedAt ?? null,
+            fromAccount: pick(
+              fromAccRes.account,
+              ['name', 'type', 'balance', 'currency', 'creditDetails'],
+            ),
+            toAccount: {
+              ...pick(
+                toAccRes.account,
+                ['name', 'type', 'balance', 'currency', 'creditDetails'],
+              ),
+              owner: toOwner,
+            },
+          },
+        };
+      } else {
+        const [userRes, accRes, catRes] = await Promise.all([
+          this.rmq.send<AccountUserInfo.Request, AccountUserInfo.Response>(
+            AccountUserInfo.topic,
+            { id: tx.userId },
+          ),
+          this.rmq.send<AccountGet.Request, AccountGet.Response>(
+            AccountGet.topic,
+            { userId, id: tx.accountId },
+          ),
+          this.rmq.send<CategoryGet.Request, CategoryGet.Response>(
+            CategoryGet.topic,
+            { userId, id: tx.categoryId! },
+          ),
+        ]);
+
+        return {
+          transaction: {
+            _id: tx._id,
+            user: { name: userRes.profile.displayName },
+            account: pick(
+              accRes.account,
+              ['name', 'type', 'balance', 'currency', 'creditDetails'],
+            ),
+            category: pick(
+              catRes.category,
+              ['name', 'type', 'icon'],
+            ),
+            type: tx.type,
+            amount: tx.amount,
+            date: tx.date,
+            description: tx.description,
+            deletedAt: tx.deletedAt ?? null,
+          },
+        };
+      }
     }
   
     @UseGuards(JWTAuthGuard)

@@ -9,8 +9,12 @@ export class TransactionQueries {
 
   @RMQValidate()
   @RMQRoute(TransactionList.topic)
-  async list(@Body() dto: TransactionList.Request): Promise<TransactionList.Response> {
-    const txs = await this.svc.list(dto.userId, [dto.accountId, ...(dto.peers || [])]);
+  async list(
+    @Body() dto: TransactionList.Request): Promise<TransactionList.Response> {
+    const txs = await this.svc.list(
+      dto.userId,
+      dto.peers || [],
+      dto.type,    );
     return { transactions: txs };
   }
 

@@ -1,11 +1,13 @@
-import { IsString, IsOptional, IsArray } from 'class-validator';
+import { IsOptional, IsArray, IsString, IsIn } from 'class-validator';
+import { TransactionType } from '@moneytracker/interfaces';
 
 export class ListTransactionsDto {
-  @IsString()
-  accountId: string;
-
   @IsOptional()
   @IsArray()
   @IsString({ each: true })
   peers?: string[];
+
+  @IsOptional()
+  @IsIn(Object.values(TransactionType))
+  type?: TransactionType;
 }

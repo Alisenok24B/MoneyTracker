@@ -4,7 +4,8 @@ export class TransactionEntity implements ITransaction {
   _id?: string;
   userId: string;
   accountId: string;
-  categoryId: string;
+  toAccountId?: string;
+  categoryId?: string;
   type: TransactionType;
   amount: number;
   date: Date;

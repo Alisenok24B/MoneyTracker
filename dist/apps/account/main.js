@@ -606,6 +606,7 @@ var TransactionType;
 (function (TransactionType) {
     TransactionType["Income"] = "income";
     TransactionType["Expense"] = "expense";
+    TransactionType["Transfer"] = "transfer";
 })(TransactionType || (exports.TransactionType = TransactionType = {}));
 
 
@@ -1006,19 +1007,26 @@ var TransactionUpdate;
     ], Request.prototype, "id", void 0);
     tslib_1.__decorate([
         (0, class_validator_1.IsOptional)(),
+        (0, class_validator_1.IsEnum)(interfaces_1.TransactionType),
+        tslib_1.__metadata("design:type", typeof (_a = typeof interfaces_1.TransactionType !== "undefined" && interfaces_1.TransactionType) === "function" ? _a : Object)
+    ], Request.prototype, "type", void 0);
+    tslib_1.__decorate([
+        (0, class_validator_1.IsOptional)(),
         (0, class_validator_1.IsString)(),
         tslib_1.__metadata("design:type", String)
     ], Request.prototype, "accountId", void 0);
     tslib_1.__decorate([
+        (0, class_validator_1.ValidateIf)(o => o.type !== 'transfer'),
         (0, class_validator_1.IsOptional)(),
         (0, class_validator_1.IsString)(),
         tslib_1.__metadata("design:type", String)
     ], Request.prototype, "categoryId", void 0);
     tslib_1.__decorate([
+        (0, class_validator_1.ValidateIf)(o => o.type === 'transfer'),
         (0, class_validator_1.IsOptional)(),
-        (0, class_validator_1.IsEnum)(interfaces_1.TransactionType),
-        tslib_1.__metadata("design:type", typeof (_a = typeof interfaces_1.TransactionType !== "undefined" && interfaces_1.TransactionType) === "function" ? _a : Object)
-    ], Request.prototype, "type", void 0);
+        (0, class_validator_1.IsString)(),
+        tslib_1.__metadata("design:type", String)
+    ], Request.prototype, "toAccountId", void 0);
     tslib_1.__decorate([
         (0, class_validator_1.IsOptional)(),
         (0, class_validator_1.IsNumber)(),
@@ -1069,13 +1077,19 @@ var TransactionCreate;
         tslib_1.__metadata("design:type", String)
     ], Request.prototype, "accountId", void 0);
     tslib_1.__decorate([
+        (0, class_validator_1.IsEnum)(interfaces_1.TransactionType),
+        tslib_1.__metadata("design:type", typeof (_a = typeof interfaces_1.TransactionType !== "undefined" && interfaces_1.TransactionType) === "function" ? _a : Object)
+    ], Request.prototype, "type", void 0);
+    tslib_1.__decorate([
+        (0, class_validator_1.ValidateIf)(o => o.type !== 'transfer'),
         (0, class_validator_1.IsString)(),
         tslib_1.__metadata("design:type", String)
     ], Request.prototype, "categoryId", void 0);
     tslib_1.__decorate([
-        (0, class_validator_1.IsEnum)(interfaces_1.TransactionType),
-        tslib_1.__metadata("design:type", typeof (_a = typeof interfaces_1.TransactionType !== "undefined" && interfaces_1.TransactionType) === "function" ? _a : Object)
-    ], Request.prototype, "type", void 0);
+        (0, class_validator_1.ValidateIf)(o => o.type === 'transfer'),
+        (0, class_validator_1.IsString)(),
+        tslib_1.__metadata("design:type", String)
+    ], Request.prototype, "toAccountId", void 0);
     tslib_1.__decorate([
         (0, class_validator_1.IsNumber)(),
         tslib_1.__metadata("design:type", Number)
@@ -1170,8 +1184,10 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.TransactionList = void 0;
 const tslib_1 = __webpack_require__(4);
 const class_validator_1 = __webpack_require__(15);
+const interfaces_1 = __webpack_require__(20);
 var TransactionList;
 (function (TransactionList) {
+    var _a;
     TransactionList.topic = 'transaction.list.query';
     class Request {
     }
@@ -1180,15 +1196,16 @@ var TransactionList;
         tslib_1.__metadata("design:type", String)
     ], Request.prototype, "userId", void 0);
     tslib_1.__decorate([
-        (0, class_validator_1.IsString)(),
-        tslib_1.__metadata("design:type", String)
-    ], Request.prototype, "accountId", void 0);
-    tslib_1.__decorate([
         (0, class_validator_1.IsOptional)(),
         (0, class_validator_1.IsArray)(),
         (0, class_validator_1.IsString)({ each: true }),
         tslib_1.__metadata("design:type", Array)
     ], Request.prototype, "peers", void 0);
+    tslib_1.__decorate([
+        (0, class_validator_1.IsOptional)(),
+        (0, class_validator_1.IsIn)(Object.values(interfaces_1.TransactionType)),
+        tslib_1.__metadata("design:type", typeof (_a = typeof interfaces_1.TransactionType !== "undefined" && interfaces_1.TransactionType) === "function" ? _a : Object)
+    ], Request.prototype, "type", void 0);
     TransactionList.Request = Request;
     class Response {
     }
