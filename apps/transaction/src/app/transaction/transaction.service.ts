@@ -67,34 +67,55 @@ export class TransactionService {
 
 
 
-  /** Список транзакций по счётам */
-  async list(
-    userId: string,
-    peers: string[] = [],
-    type?: FlowType,
-  ): Promise<TransactionEntity[]> {
-    // 1) Запросить все счета (ваши + peers) у Wallet-микросервиса
-    const { accounts } = await this.rmq.send<
-      AccountList.Request,
-      AccountList.Response
-    >(AccountList.topic, { userId, peers });
+  /** Список транзакций со множеством фильтров */
+async list(
+  userId: string,
+  peers: string[] = [],
+  type?: FlowType,
+  accountIdsFilter: string[] = [],
+  userIdsFilter: string[] = [],
+  categoryIdsFilter: string[] = [],
+): Promise<TransactionEntity[]> {
 
-    const accountIds = accounts.map(a => a._id);
+  /* 1. Получаем доступные счёта (ваши + peers) */
+  const { accounts } = await this.rmq.send<
+    AccountList.Request,
+    AccountList.Response
+  >(AccountList.topic, { userId, peers });
 
-    // 2) Забрать все транзакции по этим счетам
-    const all = await this.repo.findByAccountIds(accountIds);
+  const accessibleAccountIds = accounts
+    .filter((a): a is { _id: string } => !!a && !!a._id)
+    .map(a => a._id);
 
-    // 3) Отфильтровать только не удалённые и по типу
-    const filtered = all.filter(e => e.deletedAt == null && (!type || e.type === type));
+  if (accessibleAccountIds.length === 0) return [];
 
-    // 4) Обрезать время в date
-    return filtered.map(e => {
-      const d = new Date(e.date);
-      d.setHours(0,0,0,0);
-      e.date = d;
-      return e;
-    });
+  /* 2. Забираем все транзакции по доступным счётам */
+  let txs = await this.repo.findByAccountIds(accessibleAccountIds);
+
+  /* 3. Базовый фильтр: не удалённые + по type (если задан) */
+  txs = txs.filter(t => !t.deletedAt && (!type || t.type === type));
+
+  /* 4. Дополнительные фильтры из query-параметров */
+  if (accountIdsFilter.length) {
+    txs = txs.filter(t => accountIdsFilter.includes(t.accountId));
   }
+
+  if (userIdsFilter.length) {
+    txs = txs.filter(t => userIdsFilter.includes(t.userId));
+  }
+
+  if (categoryIdsFilter.length) {
+    txs = txs.filter(t => categoryIdsFilter.includes(t.categoryId));
+  }
+
+  /* 5. Нормализуем дату (оставляем только дату без времени) */
+  return txs.map(t => {
+    const d = new Date(t.date);
+    d.setHours(0, 0, 0, 0);
+    t.date = d;
+    return t;
+  });
+}
 
 
   /** Получение транзакции по ID */

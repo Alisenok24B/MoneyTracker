@@ -1067,6 +1067,24 @@ var TransactionList;
     ], Request.prototype, "peers", void 0);
     tslib_1.__decorate([
         (0, class_validator_1.IsOptional)(),
+        (0, class_validator_1.IsArray)(),
+        (0, class_validator_1.IsString)({ each: true }),
+        tslib_1.__metadata("design:type", Array)
+    ], Request.prototype, "accountIds", void 0);
+    tslib_1.__decorate([
+        (0, class_validator_1.IsOptional)(),
+        (0, class_validator_1.IsArray)(),
+        (0, class_validator_1.IsString)({ each: true }),
+        tslib_1.__metadata("design:type", Array)
+    ], Request.prototype, "userIds", void 0);
+    tslib_1.__decorate([
+        (0, class_validator_1.IsOptional)(),
+        (0, class_validator_1.IsArray)(),
+        (0, class_validator_1.IsString)({ each: true }),
+        tslib_1.__metadata("design:type", Array)
+    ], Request.prototype, "categoryIds", void 0);
+    tslib_1.__decorate([
+        (0, class_validator_1.IsOptional)(),
         (0, class_validator_1.IsIn)(Object.values(interfaces_1.FlowType)),
         tslib_1.__metadata("design:type", typeof (_a = typeof interfaces_1.FlowType !== "undefined" && interfaces_1.FlowType) === "function" ? _a : Object)
     ], Request.prototype, "type", void 0);
@@ -1913,6 +1931,9 @@ let TransactionController = class TransactionController {
         const { transactions: flat } = await this.rmq.send(contracts_1.TransactionList.topic, {
             userId,
             peers: dto.peers || [],
+            accountIds: dto.accountIds,
+            userIds: dto.userIds,
+            categoryIds: dto.categoryIds,
             type: dto.type,
         });
         const enriched = await Promise.all(flat.map(async (tx) => {
@@ -2170,6 +2191,24 @@ tslib_1.__decorate([
     (0, class_validator_1.IsString)({ each: true }),
     tslib_1.__metadata("design:type", Array)
 ], ListTransactionsDto.prototype, "peers", void 0);
+tslib_1.__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsArray)(),
+    (0, class_validator_1.IsString)({ each: true }),
+    tslib_1.__metadata("design:type", Array)
+], ListTransactionsDto.prototype, "accountIds", void 0);
+tslib_1.__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsArray)(),
+    (0, class_validator_1.IsString)({ each: true }),
+    tslib_1.__metadata("design:type", Array)
+], ListTransactionsDto.prototype, "userIds", void 0);
+tslib_1.__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsArray)(),
+    (0, class_validator_1.IsString)({ each: true }),
+    tslib_1.__metadata("design:type", Array)
+], ListTransactionsDto.prototype, "categoryIds", void 0);
 tslib_1.__decorate([
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsIn)(Object.values(interfaces_1.FlowType)),

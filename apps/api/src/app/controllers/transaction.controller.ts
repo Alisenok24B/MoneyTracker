@@ -66,6 +66,9 @@ import {
       >(TransactionList.topic, {
         userId,
         peers: dto.peers || [],
+        accountIds: dto.accountIds,
+        userIds: dto.userIds,
+        categoryIds: dto.categoryIds,
         type: dto.type,
       });
 

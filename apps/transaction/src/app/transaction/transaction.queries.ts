@@ -14,7 +14,11 @@ export class TransactionQueries {
     const txs = await this.svc.list(
       dto.userId,
       dto.peers || [],
-      dto.type,    );
+      dto.type,
+      dto.accountIds,
+      dto.userIds,
+      dto.categoryIds,
+    );
     return { transactions: txs };
   }
 

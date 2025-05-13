@@ -13,6 +13,16 @@ export namespace TransactionList {
     @IsString({ each: true })
     peers?: string[];
 
+    /** --- новые фильтры --- */
+    @IsOptional() @IsArray() @IsString({ each: true })
+    accountIds?: string[];
+
+    @IsOptional() @IsArray() @IsString({ each: true })
+    userIds?: string[];
+
+    @IsOptional() @IsArray() @IsString({ each: true })
+    categoryIds?: string[];
+
     @IsOptional()
     @IsIn(Object.values(FlowType))
     type?: FlowType;
