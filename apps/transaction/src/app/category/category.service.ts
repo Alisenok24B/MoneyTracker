@@ -2,7 +2,7 @@
 import { Injectable, ForbiddenException, NotFoundException } from '@nestjs/common';
 import { CategoryRepository } from './repositories/category.repository';
 import { CategoryEntity } from './entities/category.entity';
-import { ICategory } from '@moneytracker/interfaces';
+import { ICategory, CategoryType } from '@moneytracker/interfaces';
 import { CategoryEventEmitter } from './category.event-immiter';
 
 @Injectable()
@@ -38,7 +38,7 @@ export class CategoryService {
   /** Список активных (не удалённых) категорий */
   async list(
     userId: string,
-    type?: 'income' | 'expense',
+    type?: CategoryType,
   ): Promise<CategoryEntity[]> {
     const defs   = await this.repo.findDefaults(type);
     const customs = await this.repo.findByUser(userId, type);

@@ -4,12 +4,14 @@ export enum CategoryIcon {
   SHOPPING = 'shopping',
   SALARY = 'salary',
   RENT = 'rent',
+  TRANSFER = 'transfer'
   // Добавьте остальные иконки здесь
 }
 
 export enum CategoryType {
   Income  = 'income',
   Expense = 'expense',
+  Transfer = 'transfer'
 }
 
 export interface ICategory {

@@ -3,18 +3,19 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Category } from '../models/category.model';
 import { CategoryEntity } from '../entities/category.entity';
+import { CategoryType } from '@moneytracker/interfaces';
 
 @Injectable()
 export class CategoryRepository {
   constructor(@InjectModel(Category.name) private readonly model: Model<Category>) {}
 
-  async findDefaults(type?: 'income' | 'expense') {
+  async findDefaults(type?: CategoryType) {
     const filter: any = { isDefault: true, deletedAt: null };
     if (type) filter.type = type;
     return this.model.find(filter).lean().exec();
   }
 
-  async findByUser(userId: string, type?: 'income' | 'expense') {
+  async findByUser(userId: string, type?: CategoryType) {
     const filter: any = { userId, deletedAt: null };
     if (type) filter.type = type;
     return this.model.find(filter).lean().exec();
