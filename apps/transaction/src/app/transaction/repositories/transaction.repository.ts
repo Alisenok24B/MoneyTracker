@@ -49,4 +49,8 @@ export class TransactionRepository {
       .updateOne({ _id: entity._id }, { $set: { deletedAt: entity.deletedAt } })
       .exec();
   }
+
+  async hardDelete(id: string): Promise<void> {
+    await this.transactionModel.deleteOne({ _id: id }).exec();
+  }
 }

@@ -1,5 +1,5 @@
 import { IsString, IsOptional, IsEnum } from 'class-validator';
-import { CategoryType, ICategory } from '@moneytracker/interfaces';
+import { FlowType, ICategory } from '@moneytracker/interfaces';
 
 export namespace CategoryList {
   export const topic = 'category.list.query';
@@ -9,8 +9,8 @@ export namespace CategoryList {
     userId: string;
 
     @IsOptional()
-    @IsEnum(CategoryType, { message: 'type must be income or expense' })
-    type?: CategoryType;
+    @IsEnum(FlowType, { message: 'type must be income or expense' })
+    type?: FlowType;
   }
 
   export class Response {

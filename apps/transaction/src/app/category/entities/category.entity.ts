@@ -1,10 +1,10 @@
 // apps/transactions/src/app/categories/entities/category.entity.ts
-import { IDomainEvent, ICategory, CategoryIcon, CategoryType } from '@moneytracker/interfaces';
+import { IDomainEvent, ICategory, CategoryIcon, FlowType } from '@moneytracker/interfaces';
 
 export class CategoryEntity implements ICategory {
   _id?: string;
   name: string;
-  type: CategoryType;
+  type: FlowType;
   icon: CategoryIcon;
   isDefault: boolean;
   userId?: string | null;

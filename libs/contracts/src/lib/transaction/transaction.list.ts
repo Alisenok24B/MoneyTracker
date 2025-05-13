@@ -1,5 +1,5 @@
 import { IsString, IsOptional, IsArray, IsIn } from 'class-validator';
-import { ITransaction, TransactionType } from '@moneytracker/interfaces';
+import { ITransaction, FlowType } from '@moneytracker/interfaces';
 
 export namespace TransactionList {
   export const topic = 'transaction.list.query';
@@ -14,8 +14,8 @@ export namespace TransactionList {
     peers?: string[];
 
     @IsOptional()
-    @IsIn(Object.values(TransactionType))
-    type?: TransactionType;
+    @IsIn(Object.values(FlowType))
+    type?: FlowType;
   }
 
   export class Response {

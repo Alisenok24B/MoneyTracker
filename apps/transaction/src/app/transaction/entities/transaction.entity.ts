@@ -1,12 +1,12 @@
-import { IDomainEvent, ITransaction, TransactionType } from '@moneytracker/interfaces';
+import { IDomainEvent, ITransaction, FlowType } from '@moneytracker/interfaces';
 
 export class TransactionEntity implements ITransaction {
   _id?: string;
   userId: string;
   accountId: string;
-  toAccountId?: string;
-  categoryId?: string;
-  type: TransactionType;
+  toAccountId?: string; // только для transfer
+  categoryId: string;
+  type: FlowType;
   amount: number;
   date: Date;
   description?: string;

@@ -2,9 +2,9 @@
 import { Injectable, ForbiddenException, NotFoundException, BadRequestException } from '@nestjs/common';
 import { TransactionRepository } from './repositories/transaction.repository';
 import { TransactionEntity } from './entities/transaction.entity';
-import { ITransaction, TransactionType } from '@moneytracker/interfaces';
+import { ITransaction, FlowType } from '@moneytracker/interfaces';
 import { TransactionEventEmitter } from './transaction.event-emitter';
-import { AccountGet, AccountList, CategoryGet } from '@moneytracker/contracts';
+import { AccountGet, AccountList, CategoryGet, TransactionCreate, TransactionUpdate } from '@moneytracker/contracts';
 import { RMQService } from 'nestjs-rmq';
 
 @Injectable()
@@ -16,56 +16,53 @@ export class TransactionService {
   ) {}
 
   /** Создание транзакции */
-  async create(
-    userId: string,
-    dto: Omit<ITransaction, '_id' | 'deletedAt'>,
-  ): Promise<TransactionEntity> {
-    // --- общие валидации ---
-    if (dto.type === 'transfer') {
-      // 1) Обязательно toAccountId, и оно не должно совпадать с accountId
+  async create(userId: string, dto: TransactionCreate.Request): Promise<TransactionCreate.Response> {
+    // 1. Проверяем счёт
+    await this.rmq.send(AccountGet.topic, { userId, id: dto.accountId });
+  
+    // 2. Получаем категорию и её тип
+    const { category } = await this.rmq.send<CategoryGet.Request, CategoryGet.Response>(
+      CategoryGet.topic, { userId, id: dto.categoryId },
+    );
+    const catType = category.type as FlowType;   // income | expense | transfer
+  
+    // 3. Валидации transfer-категории
+    if (catType === FlowType.Transfer) {
       if (!dto.toAccountId) {
-        throw new BadRequestException('toAccountId required for transfer');
+        throw new BadRequestException('toAccountId required for transfer category');
       }
       if (dto.toAccountId === dto.accountId) {
         throw new BadRequestException('toAccountId must differ from accountId');
       }
-      // 2) Категория при переводе недопустима
-      if (dto.categoryId) {
-        throw new BadRequestException('categoryId must not be provided for transfer');
-      }
-      // 3) Проверяем оба счета
-      await this.rmq.send(AccountGet.topic, { userId, id: dto.accountId });
+      // проверяем целевой счёт
       await this.rmq.send(AccountGet.topic, { userId, id: dto.toAccountId });
-      // По договорённости присваиваем фиктивную категорию
-      dto.categoryId = 'transfer';
     } else {
-      // income/expense
-      // 1) accountId + categoryId обязательны
-      if (!dto.categoryId) {
-        throw new BadRequestException('categoryId required for income/expense');
-      }
-      // 2) Проверяем счёт и категорию
-      await this.rmq.send(AccountGet.topic, { userId, id: dto.accountId });
-      await this.rmq.send(CategoryGet.topic, { userId, id: dto.categoryId });
-      // 3) toAccountId недопустима
+      // non-transfer: toAccountId недопустим
       if (dto.toAccountId) {
-        throw new BadRequestException('toAccountId must not be provided for income/expense');
+        throw new BadRequestException('toAccountId allowed only for transfer category');
       }
+      // проверяем категорию
+      await this.rmq.send(CategoryGet.topic, { userId, id: dto.categoryId });
     }
 
-    // Нормализуем дату (без времени)
-    const d = new Date(dto.date);
-    d.setHours(0, 0, 0, 0);
-
-    // Собираем сущность и сохраняем
-    const entity = new TransactionEntity({ ...dto, userId, date: d }).markCreated();
+    //проверяем счет списания
+    await this.rmq.send(AccountGet.topic, { userId, id: dto.accountId });
+  
+    // 4. Нормализуем дату
+    const dateOnly = new Date(dto.date); dateOnly.setHours(0,0,0,0);
+  
+    // 5. Собираем сущность
+    const entity = new TransactionEntity({
+      ...dto,
+      userId,
+      type: catType,
+      date: dateOnly,
+    }).markCreated();
+  
     const saved = await this.repo.create(entity);
-
-    // Подставляем сгенерированные поля
     entity._id = saved._id;
-
     await this.events.emit(entity.events);
-    return entity;
+    return {};
   }
 
 
@@ -74,7 +71,7 @@ export class TransactionService {
   async list(
     userId: string,
     peers: string[] = [],
-    type?: TransactionType,
+    type?: FlowType,
   ): Promise<TransactionEntity[]> {
     // 1) Запросить все счета (ваши + peers) у Wallet-микросервиса
     const { accounts } = await this.rmq.send<
@@ -124,78 +121,60 @@ export class TransactionService {
   }
 
   /** Обновление транзакции */
-  async update(
-    userId: string,
-    id: string,
-    dto: Partial<Omit<ITransaction, '_id' | 'deletedAt'>>,
-  ): Promise<TransactionEntity> {
+  async update(userId: string, id: string, dto: TransactionUpdate.Request): Promise<TransactionUpdate.Response> {
     const existing = await this.repo.findById(id);
-    if (!existing || existing.deletedAt) {
-      throw new NotFoundException('Transaction not found or deleted');
-    }
-    if (existing.userId !== userId) {
-      throw new ForbiddenException('Access denied');
-    }
-
-    // Определяем новые значения полей для проверки
-    const newType = dto.type ?? existing.type;
-    const newAccountId = dto.accountId ?? existing.accountId;
-    const newToAccountId = dto.toAccountId ?? existing.toAccountId;
+    if (!existing || existing.deletedAt) throw new NotFoundException('Transaction not found or deleted');
+    if (existing.userId !== userId) throw new ForbiddenException('Access denied');
+  
+    // итоговые поля
     const newCategoryId = dto.categoryId ?? existing.categoryId;
-
-    if (newType === 'transfer') {
-      // Обязательно два разных счёта
-      if (!newToAccountId) {
-        throw new BadRequestException('toAccountId required for transfer');
+    const newToAccId    = dto.toAccountId ?? existing.toAccountId;
+    const newAccountId  = dto.accountId  ?? existing.accountId;
+  
+    // Проверяем счёт, если он изменяется
+    if (dto.accountId) await this.rmq.send(AccountGet.topic, { userId, id: newAccountId });
+  
+    // Всегда проверяем (новую) категорию, чтобы знать её тип
+    const { category } = await this.rmq.send<CategoryGet.Request, CategoryGet.Response>(
+      CategoryGet.topic, { userId, id: newCategoryId },
+    );
+    const catType = category.type as FlowType;
+  
+    if (catType === FlowType.Transfer) {
+      if (!newToAccId) {
+        throw new BadRequestException('toAccountId required for transfer category');
       }
-      if (newAccountId === newToAccountId) {
+      if (newToAccId === newAccountId) {
         throw new BadRequestException('toAccountId must differ from accountId');
       }
-      // Недопустима категория
-      if (dto.categoryId) {
-        throw new BadRequestException('categoryId must not be provided for transfer');
-      }
-      // Проверяем счёта, если они менялись
-      if (dto.accountId) {
-        await this.rmq.send(AccountGet.topic, { userId, id: newAccountId });
-      }
+      // проверяем toAccountId (если изменился)
       if (dto.toAccountId) {
-        await this.rmq.send(AccountGet.topic, { userId, id: newToAccountId! });
+        await this.rmq.send(AccountGet.topic, { userId, id: newToAccId });
       }
-      // Устанавливаем дефолтную категорию
-      dto.categoryId = 'transfer';
     } else {
-      // income/expense
-      // Если тип не transfer, обязателен categoryId
-      if (!newCategoryId) {
-        throw new BadRequestException('categoryId required for income/expense');
-      }
-      // Недопустим toAccountId
-      if (dto.toAccountId) {
-        throw new BadRequestException('toAccountId must not be provided for income/expense');
-      }
-      // Проверяем счёт и категорию при изменении
-      if (dto.accountId) {
-        await this.rmq.send(AccountGet.topic, { userId, id: newAccountId });
-      }
-      if (dto.categoryId) {
-        await this.rmq.send(CategoryGet.topic, { userId, id: newCategoryId! });
+      if (newToAccId) {
+        throw new BadRequestException('toAccountId allowed only for transfer category');
       }
     }
-
-    // Нормализуем дату, если её передавали
+  
+    // нормализуем дату
     if (dto.date) {
-      const dd = new Date(dto.date);
-      dd.setHours(0, 0, 0, 0);
-      dto.date = dd as any;
+      const d = new Date(dto.date); d.setHours(0,0,0,0);
+      dto.date = d as any;
     }
-
-    // Собираем и сохраняем
-    const updated = new TransactionEntity({ ...existing, ...dto }).markUpdated();
-    const saved = await this.repo.update(updated);
-
-    await this.events.emit(updated.events);
-    return updated;
+  
+    // собираем сущность и сохраняем
+    const updatedEntity = new TransactionEntity({
+      ...existing,
+      ...dto,
+      categoryId: newCategoryId,
+      toAccountId: newToAccId,
+      type: catType,
+    }).markUpdated();
+  
+    await this.repo.update(updatedEntity);
+    await this.events.emit(updatedEntity.events);
+    return {};
   }
 
   /** Мягкое удаление транзакции */
@@ -207,5 +186,17 @@ export class TransactionService {
     const entity = existing.markDeleted();
     await this.repo.softDelete(entity);
     await this.events.emit(entity.events);
+  }
+
+  async purge(userId: string, id: string): Promise<void> {
+    const existing = await this.repo.findById(id);
+    if (!existing) throw new NotFoundException('Transaction not found');
+    if (existing.userId !== userId)
+      throw new ForbiddenException('Access denied');
+
+    // генерируем событие «удалено навсегда», если нужно
+    const entity = existing.markDeleted(); // используем то же событие
+    await this.repo.hardDelete(id);        // ⟵ непосредственно удаляем
+    await this.events.emit(entity.events); // нотификация
   }
 }

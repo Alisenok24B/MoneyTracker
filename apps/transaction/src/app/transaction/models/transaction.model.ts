@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
-import { ITransaction, TransactionType } from '@moneytracker/interfaces';
+import { ITransaction, FlowType } from '@moneytracker/interfaces';
 
 @Schema({ timestamps: true })
 export class Transaction extends Document implements ITransaction {
@@ -17,11 +17,11 @@ export class Transaction extends Document implements ITransaction {
   toAccountId?: string;
 
   // только для income/expense
-  @Prop({ type: Types.ObjectId, ref: 'Category' })
-  categoryId?: string;
+  @Prop({ type: Types.ObjectId, ref: 'Category', required: true })
+  categoryId: string;
 
-  @Prop({ required: true, type: String, enum: Object.values(TransactionType) as string[] })
-  type: TransactionType;
+  @Prop({ required: true, type: String, enum: Object.values(FlowType) as string[] })
+  type: FlowType;
 
   @Prop({ required: true })
   amount: number;

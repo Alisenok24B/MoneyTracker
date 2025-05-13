@@ -4,6 +4,7 @@ import {
   TransactionCreate,
   TransactionUpdate,
   TransactionDelete,
+  TransactionPurge,
 } from '@moneytracker/contracts';
 import { TransactionService } from './transaction.service';
 
@@ -29,6 +30,13 @@ export class TransactionCommands {
   @RMQRoute(TransactionDelete.topic)
   async delete(@Body() dto: TransactionDelete.Request): Promise<TransactionDelete.Response> {
     await this.svc.delete(dto.userId, dto.id);
+    return {};
+  }
+
+  @RMQValidate()
+  @RMQRoute(TransactionPurge.topic)
+  async purge(@Body() dto: TransactionPurge.Request): Promise<TransactionPurge.Response> {
+    await this.svc.purge(dto.userId, dto.id);
     return {};
   }
 }

@@ -1,5 +1,5 @@
 import { IsString, IsEnum } from 'class-validator';
-import { ICategory, CategoryIcon, CategoryType } from '@moneytracker/interfaces';
+import { ICategory, CategoryIcon, FlowType } from '@moneytracker/interfaces';
 
 export namespace CategoryCreate {
   export const topic = 'category.create.command';
@@ -11,8 +11,8 @@ export namespace CategoryCreate {
     @IsString()
     name: string;
 
-    @IsEnum(CategoryType, { message: 'type must be income or expense' })
-    type: CategoryType;
+    @IsEnum(FlowType, { message: 'type must be income or expense' })
+    type: FlowType;
 
     @IsEnum(CategoryIcon)
     icon: CategoryIcon;

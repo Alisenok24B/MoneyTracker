@@ -23,6 +23,7 @@ import {
     AccountUserInfo,
     AccountGet,
     CategoryGet,
+    TransactionPurge,
   } from '@moneytracker/contracts';
   import { CreateTransactionDto } from '../dtos/create-transaction.dto';
   import { ListTransactionsDto } from '../dtos/list-transactions.dto';
@@ -268,17 +269,36 @@ import {
       return {};
     }
   
+    // @UseGuards(JWTAuthGuard)
+    // @Delete(':id')
+    // async delete(
+    //   @UserId() userId: string,
+    //   @Param() params: TransactionIdDto,
+    // ) {
+    //   await this.rmq.send<
+    //     TransactionDelete.Request,
+    //     TransactionDelete.Response
+    //   >(
+    //     TransactionDelete.topic,
+    //     {
+    //       userId,
+    //       id: params.id,
+    //     },
+    //   );
+    //   return {};
+    // }
+
     @UseGuards(JWTAuthGuard)
     @Delete(':id')
-    async delete(
+    async purge(
       @UserId() userId: string,
       @Param() params: TransactionIdDto,
     ) {
       await this.rmq.send<
-        TransactionDelete.Request,
-        TransactionDelete.Response
+        TransactionPurge.Request,
+        TransactionPurge.Response
       >(
-        TransactionDelete.topic,
+        TransactionPurge.topic,
         {
           userId,
           id: params.id,

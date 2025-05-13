@@ -1,3 +1,5 @@
+import { FlowType } from "./common.types";
+
 export enum CategoryIcon {
   FOOD = 'food',
   TRANSPORT = 'transport',
@@ -8,16 +10,10 @@ export enum CategoryIcon {
   // Добавьте остальные иконки здесь
 }
 
-export enum CategoryType {
-  Income  = 'income',
-  Expense = 'expense',
-  Transfer = 'transfer'
-}
-
 export interface ICategory {
   _id?: string;
   name: string;
-  type: CategoryType;
+  type: FlowType;
   icon: CategoryIcon;
   isDefault: boolean;
   userId?: string | null;

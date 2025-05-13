@@ -1,5 +1,5 @@
 import { IsOptional, IsArray, IsString, IsIn } from 'class-validator';
-import { TransactionType } from '@moneytracker/interfaces';
+import { FlowType } from '@moneytracker/interfaces';
 
 export class ListTransactionsDto {
   @IsOptional()
@@ -8,6 +8,6 @@ export class ListTransactionsDto {
   peers?: string[];
 
   @IsOptional()
-  @IsIn(Object.values(TransactionType))
-  type?: TransactionType;
+  @IsIn(Object.values(FlowType))
+  type?: FlowType;
 }

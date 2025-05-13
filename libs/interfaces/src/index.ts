@@ -4,3 +4,4 @@ export * from './lib/events.interface';
 export * from './lib/account.interface';
 export * from './lib/category.interface';
 export * from './lib/transaction.interface';
+export * from './lib/common.types';
