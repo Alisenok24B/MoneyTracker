@@ -1930,14 +1930,36 @@ let TransactionController = class TransactionController {
     async list(userId, dto) {
         const { transactions: flat } = await this.rmq.send(contracts_1.TransactionList.topic, {
             userId,
-            peers: dto.peers || [],
+            peers: dto.peers ?? [],
             accountIds: dto.accountIds,
             userIds: dto.userIds,
             categoryIds: dto.categoryIds,
             type: dto.type,
         });
         const enriched = await Promise.all(flat.map(async (tx) => {
+            // --- общие данные: пользователь и категория -----------------
+            const [userRes, catRes] = await Promise.all([
+                this.rmq.send(contracts_1.AccountUserInfo.topic, { id: tx.userId }),
+                this.rmq.send(contracts_1.CategoryGet.topic, { userId, id: tx.categoryId }),
+            ]);
+            const baseFields = {
+                _id: tx._id,
+                amount: tx.amount,
+                date: tx.date,
+                type: tx.type,
+                description: tx.description,
+                user: {
+                    id: tx.userId,
+                    name: userRes?.profile?.displayName ?? null,
+                },
+                category: {
+                    id: catRes.category._id,
+                    name: catRes.category.name,
+                },
+            };
+            //----------------------------------------------------------------
             if (tx.type === 'transfer') {
+                /* данные счетов */
                 const [fromAccRes, toAccRes] = await Promise.all([
                     this.rmq.send(contracts_1.AccountGet.topic, { userId, id: tx.accountId }),
                     this.rmq.send(contracts_1.AccountGet.topic, { userId, id: tx.toAccountId }),
@@ -1949,11 +1971,7 @@ let TransactionController = class TransactionController {
                     toOwner = { name: ownerRes.profile.displayName };
                 }
                 return {
-                    _id: tx._id,
-                    type: tx.type,
-                    amount: tx.amount,
-                    date: tx.date,
-                    description: tx.description,
+                    ...baseFields,
                     fromAccount: (0, lodash_1.pick)(fromAccRes.account, ['name', 'type', 'balance', 'currency', 'creditDetails']),
                     toAccount: {
                         ...(0, lodash_1.pick)(toAccRes.account, ['name', 'type', 'balance', 'currency', 'creditDetails']),
@@ -1961,23 +1979,13 @@ let TransactionController = class TransactionController {
                     },
                 };
             }
-            else {
-                const [userRes, accRes, catRes] = await Promise.all([
-                    this.rmq.send(contracts_1.AccountUserInfo.topic, { id: tx.userId }),
-                    this.rmq.send(contracts_1.AccountGet.topic, { userId, id: tx.accountId }),
-                    this.rmq.send(contracts_1.CategoryGet.topic, { userId, id: tx.categoryId }),
-                ]);
-                return {
-                    _id: tx._id,
-                    user: { name: userRes.profile.displayName },
-                    account: (0, lodash_1.pick)(accRes.account, ['name', 'type', 'balance', 'currency', 'creditDetails']),
-                    category: (0, lodash_1.pick)(catRes.category, ['name', 'type', 'icon']),
-                    type: tx.type,
-                    amount: tx.amount,
-                    date: tx.date,
-                    description: tx.description
-                };
-            }
+            //----------------------------------------------------------------
+            /* income | expense */
+            const accRes = await this.rmq.send(contracts_1.AccountGet.topic, { userId, id: tx.accountId });
+            return {
+                ...baseFields,
+                account: (0, lodash_1.pick)(accRes.account, ['name', 'type', 'balance', 'currency', 'creditDetails']),
+            };
         }));
         return { transactions: enriched };
     }
@@ -1985,8 +1993,30 @@ let TransactionController = class TransactionController {
         const { transaction: tx } = await this.rmq.send(contracts_1.TransactionGet.topic, {
             userId,
             id: params.id,
-            peers: params.peers || [],
+            peers: params.peers ?? [],
         });
+        /* --- общие данные пользователя и категории -------------------- */
+        const [userRes, catRes] = await Promise.all([
+            this.rmq.send(contracts_1.AccountUserInfo.topic, { id: tx.userId }),
+            this.rmq.send(contracts_1.CategoryGet.topic, { userId, id: tx.categoryId }),
+        ]);
+        const base = {
+            _id: tx._id,
+            type: tx.type,
+            amount: tx.amount,
+            date: tx.date,
+            description: tx.description,
+            deletedAt: tx.deletedAt ?? null,
+            user: {
+                id: tx.userId,
+                name: userRes?.profile?.displayName ?? null,
+            },
+            category: {
+                id: catRes.category._id,
+                name: catRes.category.name,
+            },
+        };
+        /* -------------------------------------------------------------- */
         if (tx.type === 'transfer') {
             const [fromAccRes, toAccRes] = await Promise.all([
                 this.rmq.send(contracts_1.AccountGet.topic, { userId, id: tx.accountId }),
@@ -2000,12 +2030,7 @@ let TransactionController = class TransactionController {
             }
             return {
                 transaction: {
-                    _id: tx._id,
-                    type: tx.type,
-                    amount: tx.amount,
-                    date: tx.date,
-                    description: tx.description,
-                    deletedAt: tx.deletedAt ?? null,
+                    ...base,
                     fromAccount: (0, lodash_1.pick)(fromAccRes.account, ['name', 'type', 'balance', 'currency', 'creditDetails']),
                     toAccount: {
                         ...(0, lodash_1.pick)(toAccRes.account, ['name', 'type', 'balance', 'currency', 'creditDetails']),
@@ -2014,26 +2039,14 @@ let TransactionController = class TransactionController {
                 },
             };
         }
-        else {
-            const [userRes, accRes, catRes] = await Promise.all([
-                this.rmq.send(contracts_1.AccountUserInfo.topic, { id: tx.userId }),
-                this.rmq.send(contracts_1.AccountGet.topic, { userId, id: tx.accountId }),
-                this.rmq.send(contracts_1.CategoryGet.topic, { userId, id: tx.categoryId }),
-            ]);
-            return {
-                transaction: {
-                    _id: tx._id,
-                    user: { name: userRes.profile.displayName },
-                    account: (0, lodash_1.pick)(accRes.account, ['name', 'type', 'balance', 'currency', 'creditDetails']),
-                    category: (0, lodash_1.pick)(catRes.category, ['name', 'type', 'icon']),
-                    type: tx.type,
-                    amount: tx.amount,
-                    date: tx.date,
-                    description: tx.description,
-                    deletedAt: tx.deletedAt ?? null,
-                },
-            };
-        }
+        /* -------------------------------------------------------------- */
+        const accRes = await this.rmq.send(contracts_1.AccountGet.topic, { userId, id: tx.accountId });
+        return {
+            transaction: {
+                ...base,
+                account: (0, lodash_1.pick)(accRes.account, ['name', 'type', 'balance', 'currency', 'creditDetails']),
+            },
+        };
     }
     async update(userId, params, dto) {
         const { date, ...rest } = dto;
