@@ -49,7 +49,8 @@ export class TransactionService {
     await this.rmq.send(AccountGet.topic, { userId, id: dto.accountId });
   
     // 4. Нормализуем дату
-    const dateOnly = new Date(dto.date); dateOnly.setHours(0,0,0,0);
+    const dateOnly = new Date(dto.date);
+    dateOnly.setUTCHours(0,0,0,0);
   
     // 5. Собираем сущность
     const entity = new TransactionEntity({
@@ -111,7 +112,7 @@ async list(
   /* 5. Нормализуем дату (оставляем только дату без времени) */
   return txs.map(t => {
     const d = new Date(t.date);
-    d.setHours(0, 0, 0, 0);
+    d.setUTCHours(0, 0, 0, 0);
     t.date = d;
     return t;
   });
@@ -136,7 +137,7 @@ async list(
 
     // нормализуем дату
     const d = new Date(ent.date);
-    d.setHours(0,0,0,0);
+    d.setUTCHours(0,0,0,0);
     ent.date = d;
     return ent;
   }
@@ -180,7 +181,7 @@ async list(
   
     // нормализуем дату
     if (dto.date) {
-      const d = new Date(dto.date); d.setHours(0,0,0,0);
+      const d = new Date(dto.date); d.setUTCHours(0,0,0,0);
       dto.date = d as any;
     }
   
