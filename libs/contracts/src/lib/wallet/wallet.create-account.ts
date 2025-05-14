@@ -1,4 +1,4 @@
-import { IsString, IsIn, IsOptional, IsNumber, ValidateNested, IsArray } from 'class-validator';
+import { IsString, IsIn, IsOptional, IsNumber, ValidateNested, IsArray, ValidateIf, IsEmpty } from 'class-validator';
 import { BillingCycleType, ICreditCardDetails } from '@moneytracker/interfaces';
 import { Type } from 'class-transformer';
 
@@ -24,7 +24,10 @@ export namespace AccountCreate {
     @IsString() name: string;
     @IsIn(['savings', 'debit', 'creditCard']) type: string;
     @IsOptional() @IsString() currency?: string;
-
+    // initial balance обязателен, если не кредитная карта
+    @ValidateIf(o => o.type !== 'creditCard')
+    @IsNumber()
+    balance: number;
     // Если credit
     @IsOptional()
     @ValidateNested()

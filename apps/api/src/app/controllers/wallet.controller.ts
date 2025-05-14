@@ -62,6 +62,10 @@ export class WalletController {
     @UserId() userId: string,
     @Body() dto: CreateAccountDto,
   ) {
+    // balance обязателен для не-кредитных
+    if (dto.type !== AccountType.CreditCard && dto.balance === undefined) {
+      throw new BadRequestException('balance is required for non-credit accounts');
+    }
     // creditDetails обязательны для creditCard и запрещены для остальных
     if (dto.type === AccountType.CreditCard && !dto.creditDetails) {
       throw new BadRequestException('For creditCard must to write creditDetails');

@@ -358,6 +358,11 @@ var AccountCreate;
         tslib_1.__metadata("design:type", String)
     ], Request.prototype, "currency", void 0);
     tslib_1.__decorate([
+        (0, class_validator_1.ValidateIf)(o => o.type !== 'creditCard'),
+        (0, class_validator_1.IsNumber)(),
+        tslib_1.__metadata("design:type", Number)
+    ], Request.prototype, "balance", void 0);
+    tslib_1.__decorate([
         (0, class_validator_1.IsOptional)(),
         (0, class_validator_1.ValidateNested)(),
         (0, class_transformer_1.Type)(() => CreditDto),
@@ -1408,6 +1413,10 @@ let WalletController = class WalletController {
     }
     // 2) Создать новый счет
     async create(userId, dto) {
+        // balance обязателен для не-кредитных
+        if (dto.type !== interfaces_1.AccountType.CreditCard && dto.balance === undefined) {
+            throw new common_1.BadRequestException('balance is required for non-credit accounts');
+        }
         // creditDetails обязательны для creditCard и запрещены для остальных
         if (dto.type === interfaces_1.AccountType.CreditCard && !dto.creditDetails) {
             throw new common_1.BadRequestException('For creditCard must to write creditDetails');
@@ -1571,6 +1580,12 @@ tslib_1.__decorate([
     (0, class_validator_1.IsIn)(Object.values(interfaces_1.AccountType)),
     tslib_1.__metadata("design:type", typeof (_b = typeof interfaces_1.AccountType !== "undefined" && interfaces_1.AccountType) === "function" ? _b : Object)
 ], CreateAccountDto.prototype, "type", void 0);
+tslib_1.__decorate([
+    (0, class_validator_1.ValidateIf)(o => o.type !== interfaces_1.AccountType.CreditCard),
+    (0, class_validator_1.IsNumber)(),
+    (0, class_transformer_1.Type)(() => Number),
+    tslib_1.__metadata("design:type", Number)
+], CreateAccountDto.prototype, "balance", void 0);
 tslib_1.__decorate([
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsString)(),

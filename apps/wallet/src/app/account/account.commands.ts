@@ -21,11 +21,12 @@ export class AccountCommands {
   async create(
     payload: AccountCreate.Request,
   ): Promise<AccountCreate.Response> {
-    const { userId, name, type, currency, creditDetails } = payload;
+    const { userId, name, type, balance, currency, creditDetails } = payload;
     const account = await this.service.createAccount({
       userId,
       name,
       type: type as AccountType,
+      balance,
       currency,
       creditDetails,
     });

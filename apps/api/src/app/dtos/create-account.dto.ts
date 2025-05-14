@@ -1,4 +1,4 @@
-import { IsString, IsIn, IsOptional, ValidateNested, IsNumber, IsArray } from 'class-validator';
+import { IsString, IsIn, IsOptional, ValidateNested, IsNumber, IsArray, ValidateIf } from 'class-validator';
 import { Type } from 'class-transformer';
 import { AccountType, BillingCycleType, ICreditCardDetails } from '@moneytracker/interfaces';
 
@@ -49,6 +49,11 @@ export class CreateAccountDto {
 
   @IsIn(Object.values(AccountType))
   type: AccountType;
+
+  @ValidateIf(o => o.type !== AccountType.CreditCard)
+  @IsNumber()
+  @Type(() => Number)
+  balance: number;
 
   @IsOptional()
   @IsString()

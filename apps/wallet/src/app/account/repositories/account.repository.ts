@@ -23,6 +23,11 @@ export class AccountRepository {
     return this.accountModel.findOne({ _id: id, deletedAt: null }).exec();
   }
 
+  /** Поиск по ID без учёта deletedAt */
+  async findByIdIncludeDeleted(id: string): Promise<AccountDocument | null> {
+    return this.accountModel.findById(id).exec();
+  }
+
   async update(id: string, update: Partial<AccountEntity>): Promise<any> {
     return this.accountModel.updateOne({ _id: id }, { $set: update }).exec();
   }
