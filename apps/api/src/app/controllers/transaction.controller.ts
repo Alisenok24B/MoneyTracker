@@ -128,12 +128,12 @@ export class TransactionController {
             ...baseFields,
             fromAccount: pick(
               fromAccRes.account,
-              ['name', 'type', 'balance', 'currency', 'creditDetails'],
+              ['name', 'type', 'currency'],
             ),
             toAccount: {
               ...pick(
                 toAccRes.account,
-                ['name', 'type', 'balance', 'currency', 'creditDetails'],
+                ['name', 'type', 'currency'],
               ),
               owner: toOwner,
             },
@@ -151,7 +151,7 @@ export class TransactionController {
           ...baseFields,
           account: pick(
             accRes.account,
-            ['name', 'type', 'balance', 'currency', 'creditDetails'],
+            ['name', 'type', 'currency'],
           ),
         };
       }),
@@ -225,12 +225,12 @@ export class TransactionController {
           ...base,
           fromAccount: pick(
             fromAccRes.account,
-            ['name', 'type', 'balance', 'currency', 'creditDetails'],
+            ['name', 'type', 'currency'],
           ),
           toAccount: {
             ...pick(
               toAccRes.account,
-              ['name', 'type', 'balance', 'currency', 'creditDetails'],
+              ['name', 'type', 'currency'],
             ),
             owner: toOwner,
           },
@@ -247,7 +247,7 @@ export class TransactionController {
         ...base,
         account: pick(
           accRes.account,
-          ['name', 'type', 'balance', 'currency', 'creditDetails'],
+          ['name', 'type', 'currency'],
         ),
       },
     };

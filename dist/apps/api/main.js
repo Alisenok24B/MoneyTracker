@@ -1974,9 +1974,9 @@ let TransactionController = class TransactionController {
                 }
                 return {
                     ...baseFields,
-                    fromAccount: (0, lodash_1.pick)(fromAccRes.account, ['name', 'type', 'balance', 'currency', 'creditDetails']),
+                    fromAccount: (0, lodash_1.pick)(fromAccRes.account, ['name', 'type', 'currency']),
                     toAccount: {
-                        ...(0, lodash_1.pick)(toAccRes.account, ['name', 'type', 'balance', 'currency', 'creditDetails']),
+                        ...(0, lodash_1.pick)(toAccRes.account, ['name', 'type', 'currency']),
                         owner: toOwner,
                     },
                 };
@@ -1986,7 +1986,7 @@ let TransactionController = class TransactionController {
             const accRes = await this.rmq.send(contracts_1.AccountGet.topic, { userId, id: tx.accountId });
             return {
                 ...baseFields,
-                account: (0, lodash_1.pick)(accRes.account, ['name', 'type', 'balance', 'currency', 'creditDetails']),
+                account: (0, lodash_1.pick)(accRes.account, ['name', 'type', 'currency']),
             };
         }));
         return { transactions: enriched };
@@ -2033,9 +2033,9 @@ let TransactionController = class TransactionController {
             return {
                 transaction: {
                     ...base,
-                    fromAccount: (0, lodash_1.pick)(fromAccRes.account, ['name', 'type', 'balance', 'currency', 'creditDetails']),
+                    fromAccount: (0, lodash_1.pick)(fromAccRes.account, ['name', 'type', 'currency']),
                     toAccount: {
-                        ...(0, lodash_1.pick)(toAccRes.account, ['name', 'type', 'balance', 'currency', 'creditDetails']),
+                        ...(0, lodash_1.pick)(toAccRes.account, ['name', 'type', 'currency']),
                         owner: toOwner,
                     },
                 },
@@ -2046,7 +2046,7 @@ let TransactionController = class TransactionController {
         return {
             transaction: {
                 ...base,
-                account: (0, lodash_1.pick)(accRes.account, ['name', 'type', 'balance', 'currency', 'creditDetails']),
+                account: (0, lodash_1.pick)(accRes.account, ['name', 'type', 'currency']),
             },
         };
     }
