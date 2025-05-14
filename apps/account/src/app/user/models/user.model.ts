@@ -6,8 +6,8 @@ import { IUser } from '@moneytracker/interfaces';
 export class User extends Document implements IUser {
   override _id: string; // Переопределение _id как string
 
-  @Prop()
-  displayName?: string;
+  @Prop({required: true})
+  displayName: string;
 
   @Prop({ required: true })
   email: string;

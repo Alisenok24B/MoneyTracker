@@ -10,9 +10,8 @@ export namespace AccountRegister {
         @IsString()
         password: string;
 
-        @IsOptional()
         @IsString()
-        displayName?: string;
+        displayName: string;
     }
 
     export class Response {

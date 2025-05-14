@@ -3,7 +3,7 @@ import { compare, genSalt, hash } from "bcryptjs";
 
 export class UserEntity implements IUser {
     _id?: string;
-    displayName?: string;
+    displayName: string;
     email: string;
     passwordHash: string;
     events: IDomainEvent[] = [];

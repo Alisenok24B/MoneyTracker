@@ -206,7 +206,6 @@ var AccountRegister;
         tslib_1.__metadata("design:type", String)
     ], Request.prototype, "password", void 0);
     tslib_1.__decorate([
-        (0, class_validator_1.IsOptional)(),
         (0, class_validator_1.IsString)(),
         tslib_1.__metadata("design:type", String)
     ], Request.prototype, "displayName", void 0);
@@ -1169,7 +1168,6 @@ tslib_1.__decorate([
     tslib_1.__metadata("design:type", String)
 ], RegisterDto.prototype, "password", void 0);
 tslib_1.__decorate([
-    (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsString)(),
     tslib_1.__metadata("design:type", String)
 ], RegisterDto.prototype, "displayName", void 0);
