@@ -1,4 +1,4 @@
-import { IsString, IsIn, IsOptional, ValidateNested, IsNumber, IsArray, ValidateIf } from 'class-validator';
+import { IsString, IsIn, IsOptional, ValidateNested, IsNumber, ValidateIf } from 'class-validator';
 import { Type } from 'class-transformer';
 import { AccountType, BillingCycleType, ICreditCardDetails } from '@moneytracker/interfaces';
 
@@ -12,13 +12,13 @@ class CreditDetailsDto implements ICreditCardDetails {
   @IsIn(['fixed','calendar','perPurchase'])
   billingCycleType: BillingCycleType;
 
-  @IsOptional()
+  @ValidateIf(o => o.billingCycleType === 'fixed')
   @IsNumber()
-  billingCycleLengthDays?: number;
+  billingCycleLengthDays: number;
 
-  @IsOptional()
+  @ValidateIf(o => o.billingCycleType === 'calendar')
   @IsNumber()
-  billingCycleStartDayOfMonth?: number;
+  billingCycleStartDayOfMonth: number;
 
   @IsNumber()
   paymentPeriodDays: number;

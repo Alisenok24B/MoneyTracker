@@ -16,6 +16,31 @@ export class AccountService {
     if (dto.type === AccountType.CreditCard && !dto.creditDetails) {
       throw new BadRequestException('For creditCard must to write creditDetails');
     }
+    if (dto.creditDetails) {
+      const cd = dto.creditDetails;
+      switch (cd.billingCycleType) {
+        case 'fixed':
+          if (cd.billingCycleLengthDays == null) {
+            throw new BadRequestException('billingCycleLengthDays required for fixed cycle');
+          }
+          if (cd.billingCycleStartDayOfMonth != null) {
+            throw new BadRequestException('billingCycleStartDayOfMonth not allowed for fixed cycle');
+          }
+          break;
+        case 'calendar':
+          if (cd.billingCycleStartDayOfMonth == null) {
+            throw new BadRequestException('billingCycleStartDayOfMonth required for calendar cycle');
+          }
+          if (cd.billingCycleLengthDays != null) {
+            throw new BadRequestException('billingCycleLengthDays not allowed for calendar cycle');
+          }
+          break;
+        default: // perPurchase
+          if (cd.billingCycleLengthDays != null || cd.billingCycleStartDayOfMonth != null) {
+            throw new BadRequestException('No cycle-length fields allowed for perPurchase');
+          }
+      }
+    }
     // баланс уже в dto для non-credit, для creditCard dto.balance может быть undefined → default 0
     // определяем initialBalance
     let initialBalance: number;
@@ -54,6 +79,7 @@ export class AccountService {
     if (update.creditDetails && doc.type !== AccountType.CreditCard) {
       throw new BadRequestException('creditDetails can only be updated for CreditCard accounts');
     }
+    
     const entity = new AccountEntity(doc.toObject());
     entity.markUpdated();                          // ← генерируем событие обновления
     Object.assign(entity, update);

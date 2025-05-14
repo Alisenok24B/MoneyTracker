@@ -301,12 +301,12 @@ var AccountCreate;
         tslib_1.__metadata("design:type", typeof (_a = typeof interfaces_1.BillingCycleType !== "undefined" && interfaces_1.BillingCycleType) === "function" ? _a : Object)
     ], CreditDto.prototype, "billingCycleType", void 0);
     tslib_1.__decorate([
-        (0, class_validator_1.IsOptional)(),
+        (0, class_validator_1.ValidateIf)(o => o.billingCycleType === 'fixed'),
         (0, class_validator_1.IsNumber)(),
         tslib_1.__metadata("design:type", Number)
     ], CreditDto.prototype, "billingCycleLengthDays", void 0);
     tslib_1.__decorate([
-        (0, class_validator_1.IsOptional)(),
+        (0, class_validator_1.ValidateIf)(o => o.billingCycleType === 'calendar'),
         (0, class_validator_1.IsNumber)(),
         tslib_1.__metadata("design:type", Number)
     ], CreditDto.prototype, "billingCycleStartDayOfMonth", void 0);
@@ -1532,12 +1532,12 @@ tslib_1.__decorate([
     tslib_1.__metadata("design:type", typeof (_a = typeof interfaces_1.BillingCycleType !== "undefined" && interfaces_1.BillingCycleType) === "function" ? _a : Object)
 ], CreditDetailsDto.prototype, "billingCycleType", void 0);
 tslib_1.__decorate([
-    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.ValidateIf)(o => o.billingCycleType === 'fixed'),
     (0, class_validator_1.IsNumber)(),
     tslib_1.__metadata("design:type", Number)
 ], CreditDetailsDto.prototype, "billingCycleLengthDays", void 0);
 tslib_1.__decorate([
-    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.ValidateIf)(o => o.billingCycleType === 'calendar'),
     (0, class_validator_1.IsNumber)(),
     tslib_1.__metadata("design:type", Number)
 ], CreditDetailsDto.prototype, "billingCycleStartDayOfMonth", void 0);

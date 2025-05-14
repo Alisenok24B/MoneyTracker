@@ -9,8 +9,14 @@ export namespace AccountCreate {
     @IsNumber() creditLimit: number;
     @IsNumber() gracePeriodDays: number;
     @IsIn(['fixed','calendar','perPurchase'] as BillingCycleType[]) billingCycleType: BillingCycleType;
-    @IsOptional() @IsNumber() billingCycleLengthDays?: number;
-    @IsOptional() @IsNumber() billingCycleStartDayOfMonth?: number;
+    // обязательно для fixed
+    @ValidateIf(o => o.billingCycleType === 'fixed')
+    @IsNumber()
+    billingCycleLengthDays: number;
+    // обязательно для calendar
+    @ValidateIf(o => o.billingCycleType === 'calendar')
+    @IsNumber()
+    billingCycleStartDayOfMonth: number;
     @IsNumber() paymentPeriodDays: number;
     @IsNumber() interestRate: number;
     @IsOptional() @IsNumber() annualFee?: number;
