@@ -18,6 +18,11 @@ export class TransactionQueries {
       dto.accountIds,
       dto.userIds,
       dto.categoryIds,
+      dto.date,
+      dto.month,
+      dto.year,
+      dto.from,
+      dto.to,
     );
     return { transactions: txs };
   }

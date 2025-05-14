@@ -70,6 +70,11 @@ export class TransactionController {
       userIds: dto.userIds,
       categoryIds: dto.categoryIds,
       type: dto.type,
+      date: dto.date ? new Date(dto.date) : undefined,
+      month: dto.month,
+      year: dto.year,
+      from: dto.from ? new Date(dto.from) : undefined,
+      to: dto.to ? new Date(dto.to) : undefined,
     });
 
     const enriched = await Promise.all(

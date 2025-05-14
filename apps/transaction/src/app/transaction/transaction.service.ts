@@ -76,6 +76,11 @@ async list(
   accountIdsFilter: string[] = [],
   userIdsFilter: string[] = [],
   categoryIdsFilter: string[] = [],
+  dateFilter?: Date,
+  monthFilter?: number,
+  yearFilter?: number,
+  fromFilter?: Date,
+  toFilter?: Date,
 ): Promise<TransactionEntity[]> {
 
   /* 1. Получаем доступные счёта (ваши + peers) */
@@ -107,6 +112,32 @@ async list(
 
   if (categoryIdsFilter.length) {
     txs = txs.filter(t => categoryIdsFilter.includes(t.categoryId));
+  }
+
+  if (dateFilter) {
+    const d0 = new Date(dateFilter); d0.setUTCHours(0,0,0,0);
+    txs = txs.filter(t => {
+      const td = new Date(t.date); td.setUTCHours(0,0,0,0);
+      return td.getTime() === d0.getTime();
+    });
+  }
+
+  if (monthFilter || yearFilter) {
+    txs = txs.filter(t => {
+      const td = new Date(t.date);
+      const m = td.getUTCMonth()+1, y = td.getUTCFullYear();
+      return (monthFilter  ? m === monthFilter  : true)
+          && (yearFilter   ? y === yearFilter   : true);
+    });
+  }
+
+  if (fromFilter) {
+    const f = new Date(fromFilter); f.setUTCHours(0,0,0,0);
+    txs = txs.filter(t => new Date(t.date) >= f);
+  }
+  if (toFilter) {
+    const tEnd = new Date(toFilter); tEnd.setUTCHours(23,59,59,999);
+    txs = txs.filter(t => new Date(t.date) <= tEnd);
   }
 
   /* 5. Нормализуем дату (оставляем только дату без времени) */

@@ -1,4 +1,4 @@
-import { IsString, IsOptional, IsArray, IsIn } from 'class-validator';
+import { IsString, IsOptional, IsArray, IsIn, IsDateString, IsNumber } from 'class-validator';
 import { ITransaction, FlowType } from '@moneytracker/interfaces';
 
 export namespace TransactionList {
@@ -13,7 +13,6 @@ export namespace TransactionList {
     @IsString({ each: true })
     peers?: string[];
 
-    /** --- новые фильтры --- */
     @IsOptional() @IsArray() @IsString({ each: true })
     accountIds?: string[];
 
@@ -26,6 +25,21 @@ export namespace TransactionList {
     @IsOptional()
     @IsIn(Object.values(FlowType))
     type?: FlowType;
+
+    @IsOptional() @IsDateString()
+    date?: Date;          // ровно эту дату
+
+    @IsOptional() @IsNumber()
+    month?: number;       // 1–12
+
+    @IsOptional() @IsNumber()
+    year?: number;        // например, 2025
+
+    @IsOptional() @IsDateString()
+    from?: Date;          // начало диапазона (включительно)
+
+    @IsOptional() @IsDateString()
+    to?: Date;            // конец диапазона (включительно)
   }
 
   export class Response {

@@ -1051,7 +1051,7 @@ const class_validator_1 = __webpack_require__(8);
 const interfaces_1 = __webpack_require__(13);
 var TransactionList;
 (function (TransactionList) {
-    var _a;
+    var _a, _b, _c, _d;
     TransactionList.topic = 'transaction.list.query';
     class Request {
     }
@@ -1088,6 +1088,31 @@ var TransactionList;
         (0, class_validator_1.IsIn)(Object.values(interfaces_1.FlowType)),
         tslib_1.__metadata("design:type", typeof (_a = typeof interfaces_1.FlowType !== "undefined" && interfaces_1.FlowType) === "function" ? _a : Object)
     ], Request.prototype, "type", void 0);
+    tslib_1.__decorate([
+        (0, class_validator_1.IsOptional)(),
+        (0, class_validator_1.IsDateString)(),
+        tslib_1.__metadata("design:type", typeof (_b = typeof Date !== "undefined" && Date) === "function" ? _b : Object)
+    ], Request.prototype, "date", void 0);
+    tslib_1.__decorate([
+        (0, class_validator_1.IsOptional)(),
+        (0, class_validator_1.IsNumber)(),
+        tslib_1.__metadata("design:type", Number)
+    ], Request.prototype, "month", void 0);
+    tslib_1.__decorate([
+        (0, class_validator_1.IsOptional)(),
+        (0, class_validator_1.IsNumber)(),
+        tslib_1.__metadata("design:type", Number)
+    ], Request.prototype, "year", void 0);
+    tslib_1.__decorate([
+        (0, class_validator_1.IsOptional)(),
+        (0, class_validator_1.IsDateString)(),
+        tslib_1.__metadata("design:type", typeof (_c = typeof Date !== "undefined" && Date) === "function" ? _c : Object)
+    ], Request.prototype, "from", void 0);
+    tslib_1.__decorate([
+        (0, class_validator_1.IsOptional)(),
+        (0, class_validator_1.IsDateString)(),
+        tslib_1.__metadata("design:type", typeof (_d = typeof Date !== "undefined" && Date) === "function" ? _d : Object)
+    ], Request.prototype, "to", void 0);
     TransactionList.Request = Request;
     class Response {
     }
@@ -1937,6 +1962,11 @@ let TransactionController = class TransactionController {
             userIds: dto.userIds,
             categoryIds: dto.categoryIds,
             type: dto.type,
+            date: dto.date ? new Date(dto.date) : undefined,
+            month: dto.month,
+            year: dto.year,
+            from: dto.from ? new Date(dto.from) : undefined,
+            to: dto.to ? new Date(dto.to) : undefined,
         });
         const enriched = await Promise.all(flat.map(async (tx) => {
             // --- общие данные: пользователь и категория -----------------
@@ -2197,6 +2227,7 @@ exports.ListTransactionsDto = void 0;
 const tslib_1 = __webpack_require__(4);
 const class_validator_1 = __webpack_require__(8);
 const interfaces_1 = __webpack_require__(13);
+const class_transformer_1 = __webpack_require__(21);
 class ListTransactionsDto {
 }
 exports.ListTransactionsDto = ListTransactionsDto;
@@ -2229,6 +2260,35 @@ tslib_1.__decorate([
     (0, class_validator_1.IsIn)(Object.values(interfaces_1.FlowType)),
     tslib_1.__metadata("design:type", typeof (_a = typeof interfaces_1.FlowType !== "undefined" && interfaces_1.FlowType) === "function" ? _a : Object)
 ], ListTransactionsDto.prototype, "type", void 0);
+tslib_1.__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsDateString)(),
+    tslib_1.__metadata("design:type", String)
+], ListTransactionsDto.prototype, "date", void 0);
+tslib_1.__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_transformer_1.Type)(() => Number),
+    (0, class_validator_1.IsNumber)(),
+    (0, class_validator_1.Min)(1),
+    (0, class_validator_1.Max)(12),
+    tslib_1.__metadata("design:type", Number)
+], ListTransactionsDto.prototype, "month", void 0);
+tslib_1.__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_transformer_1.Type)(() => Number),
+    (0, class_validator_1.IsNumber)(),
+    tslib_1.__metadata("design:type", Number)
+], ListTransactionsDto.prototype, "year", void 0);
+tslib_1.__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsDateString)(),
+    tslib_1.__metadata("design:type", String)
+], ListTransactionsDto.prototype, "from", void 0);
+tslib_1.__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsDateString)(),
+    tslib_1.__metadata("design:type", String)
+], ListTransactionsDto.prototype, "to", void 0);
 
 
 /***/ }),
@@ -2344,6 +2404,10 @@ async function bootstrap() {
     const app = await core_1.NestFactory.create(app_module_1.AppModule);
     const globalPrefix = 'api';
     app.setGlobalPrefix(globalPrefix);
+    app.useGlobalPipes(new common_1.ValidationPipe({
+        whitelist: true,
+        transform: true,
+    }));
     const port = process.env.PORT || 3333;
     await app.listen(port);
     common_1.Logger.log(`🚀 API is running on: http://localhost:${port}/${globalPrefix}`);
