@@ -1904,7 +1904,6 @@ var _a, _b, _c, _d, _e, _f, _g;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.TransactionController = void 0;
 const tslib_1 = __webpack_require__(4);
-// apps/api/src/app/controllers/transaction.controller.ts
 const common_1 = __webpack_require__(1);
 const nestjs_rmq_1 = __webpack_require__(37);
 const jwt_guard_1 = __webpack_require__(46);
@@ -1915,6 +1914,9 @@ const create_transaction_dto_1 = __webpack_require__(63);
 const list_transactions_dto_1 = __webpack_require__(64);
 const transaction_id_dto_1 = __webpack_require__(65);
 const update_transaction_dto_1 = __webpack_require__(66);
+function isoDateOnly(d) {
+    return new Date(d).toISOString().split('T')[0];
+}
 let TransactionController = class TransactionController {
     constructor(rmq) {
         this.rmq = rmq;
@@ -1945,7 +1947,7 @@ let TransactionController = class TransactionController {
             const baseFields = {
                 _id: tx._id,
                 amount: tx.amount,
-                date: tx.date,
+                date: isoDateOnly(tx.date),
                 type: tx.type,
                 description: tx.description,
                 user: {
@@ -2004,7 +2006,7 @@ let TransactionController = class TransactionController {
             _id: tx._id,
             type: tx.type,
             amount: tx.amount,
-            date: tx.date,
+            date: isoDateOnly(tx.date),
             description: tx.description,
             deletedAt: tx.deletedAt ?? null,
             user: {
