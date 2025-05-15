@@ -43,10 +43,9 @@ export class AccountCommands {
   async update(
     payload: AccountUpdate.Request,
   ): Promise<AccountUpdate.Response> {
-    const { userId, id, name, currency, creditDetails } = payload;
+    const { userId, id, name, creditDetails } = payload;
     const updateData: Partial<IAccount> = {};
     if (name !== undefined) updateData.name = name;
-    if (currency !== undefined) updateData.currency = currency;
     if (creditDetails !== undefined) updateData.creditDetails = creditDetails as ICreditCardDetails;
 
     await this.service.updateAccount(userId, id, updateData);

@@ -488,10 +488,8 @@ exports.AccountUpdate = void 0;
 const tslib_1 = __webpack_require__(4);
 const class_validator_1 = __webpack_require__(8);
 const class_transformer_1 = __webpack_require__(21);
-const interfaces_1 = __webpack_require__(13);
 var AccountUpdate;
 (function (AccountUpdate) {
-    var _a;
     AccountUpdate.topic = 'wallet.update-account.command';
     class CreditDto {
     }
@@ -500,56 +498,6 @@ var AccountUpdate;
         (0, class_validator_1.IsNumber)(),
         tslib_1.__metadata("design:type", Number)
     ], CreditDto.prototype, "creditLimit", void 0);
-    tslib_1.__decorate([
-        (0, class_validator_1.IsOptional)(),
-        (0, class_validator_1.IsNumber)(),
-        tslib_1.__metadata("design:type", Number)
-    ], CreditDto.prototype, "gracePeriodDays", void 0);
-    tslib_1.__decorate([
-        (0, class_validator_1.IsOptional)(),
-        (0, class_validator_1.IsIn)(Object.values(['fixed', 'calendar', 'perPurchase'])),
-        tslib_1.__metadata("design:type", typeof (_a = typeof interfaces_1.BillingCycleType !== "undefined" && interfaces_1.BillingCycleType) === "function" ? _a : Object)
-    ], CreditDto.prototype, "billingCycleType", void 0);
-    tslib_1.__decorate([
-        (0, class_validator_1.IsOptional)(),
-        (0, class_validator_1.IsNumber)(),
-        tslib_1.__metadata("design:type", Number)
-    ], CreditDto.prototype, "billingCycleLengthDays", void 0);
-    tslib_1.__decorate([
-        (0, class_validator_1.IsOptional)(),
-        (0, class_validator_1.IsNumber)(),
-        tslib_1.__metadata("design:type", Number)
-    ], CreditDto.prototype, "billingCycleStartDayOfMonth", void 0);
-    tslib_1.__decorate([
-        (0, class_validator_1.IsOptional)(),
-        (0, class_validator_1.IsNumber)(),
-        tslib_1.__metadata("design:type", Number)
-    ], CreditDto.prototype, "paymentPeriodDays", void 0);
-    tslib_1.__decorate([
-        (0, class_validator_1.IsOptional)(),
-        (0, class_validator_1.IsNumber)(),
-        tslib_1.__metadata("design:type", Number)
-    ], CreditDto.prototype, "interestRate", void 0);
-    tslib_1.__decorate([
-        (0, class_validator_1.IsOptional)(),
-        (0, class_validator_1.IsNumber)(),
-        tslib_1.__metadata("design:type", Number)
-    ], CreditDto.prototype, "annualFee", void 0);
-    tslib_1.__decorate([
-        (0, class_validator_1.IsOptional)(),
-        (0, class_validator_1.IsNumber)(),
-        tslib_1.__metadata("design:type", Number)
-    ], CreditDto.prototype, "cashWithdrawalFeePercent", void 0);
-    tslib_1.__decorate([
-        (0, class_validator_1.IsOptional)(),
-        (0, class_validator_1.IsNumber)(),
-        tslib_1.__metadata("design:type", Number)
-    ], CreditDto.prototype, "cashWithdrawalFeeFixed", void 0);
-    tslib_1.__decorate([
-        (0, class_validator_1.IsOptional)(),
-        (0, class_validator_1.IsNumber)(),
-        tslib_1.__metadata("design:type", Number)
-    ], CreditDto.prototype, "cashWithdrawalLimitPerMonth", void 0);
     class Request {
     }
     tslib_1.__decorate([
@@ -565,11 +513,6 @@ var AccountUpdate;
         (0, class_validator_1.IsString)(),
         tslib_1.__metadata("design:type", String)
     ], Request.prototype, "name", void 0);
-    tslib_1.__decorate([
-        (0, class_validator_1.IsOptional)(),
-        (0, class_validator_1.IsString)(),
-        tslib_1.__metadata("design:type", String)
-    ], Request.prototype, "currency", void 0);
     tslib_1.__decorate([
         (0, class_validator_1.IsOptional)(),
         (0, class_validator_1.ValidateNested)(),
@@ -1604,13 +1547,11 @@ tslib_1.__decorate([
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
-var _a;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.UpdateAccountDto = void 0;
 const tslib_1 = __webpack_require__(4);
 const class_validator_1 = __webpack_require__(8);
 const class_transformer_1 = __webpack_require__(21);
-const interfaces_1 = __webpack_require__(13);
 class CreditDetailsUpdateDto {
 }
 tslib_1.__decorate([
@@ -1618,56 +1559,6 @@ tslib_1.__decorate([
     (0, class_validator_1.IsNumber)(),
     tslib_1.__metadata("design:type", Number)
 ], CreditDetailsUpdateDto.prototype, "creditLimit", void 0);
-tslib_1.__decorate([
-    (0, class_validator_1.IsOptional)(),
-    (0, class_validator_1.IsNumber)(),
-    tslib_1.__metadata("design:type", Number)
-], CreditDetailsUpdateDto.prototype, "gracePeriodDays", void 0);
-tslib_1.__decorate([
-    (0, class_validator_1.IsOptional)(),
-    (0, class_validator_1.IsIn)(['fixed', 'calendar', 'perPurchase']),
-    tslib_1.__metadata("design:type", typeof (_a = typeof interfaces_1.BillingCycleType !== "undefined" && interfaces_1.BillingCycleType) === "function" ? _a : Object)
-], CreditDetailsUpdateDto.prototype, "billingCycleType", void 0);
-tslib_1.__decorate([
-    (0, class_validator_1.IsOptional)(),
-    (0, class_validator_1.IsNumber)(),
-    tslib_1.__metadata("design:type", Number)
-], CreditDetailsUpdateDto.prototype, "billingCycleLengthDays", void 0);
-tslib_1.__decorate([
-    (0, class_validator_1.IsOptional)(),
-    (0, class_validator_1.IsNumber)(),
-    tslib_1.__metadata("design:type", Number)
-], CreditDetailsUpdateDto.prototype, "billingCycleStartDayOfMonth", void 0);
-tslib_1.__decorate([
-    (0, class_validator_1.IsOptional)(),
-    (0, class_validator_1.IsNumber)(),
-    tslib_1.__metadata("design:type", Number)
-], CreditDetailsUpdateDto.prototype, "paymentPeriodDays", void 0);
-tslib_1.__decorate([
-    (0, class_validator_1.IsOptional)(),
-    (0, class_validator_1.IsNumber)(),
-    tslib_1.__metadata("design:type", Number)
-], CreditDetailsUpdateDto.prototype, "interestRate", void 0);
-tslib_1.__decorate([
-    (0, class_validator_1.IsOptional)(),
-    (0, class_validator_1.IsNumber)(),
-    tslib_1.__metadata("design:type", Number)
-], CreditDetailsUpdateDto.prototype, "annualFee", void 0);
-tslib_1.__decorate([
-    (0, class_validator_1.IsOptional)(),
-    (0, class_validator_1.IsNumber)(),
-    tslib_1.__metadata("design:type", Number)
-], CreditDetailsUpdateDto.prototype, "cashWithdrawalFeePercent", void 0);
-tslib_1.__decorate([
-    (0, class_validator_1.IsOptional)(),
-    (0, class_validator_1.IsNumber)(),
-    tslib_1.__metadata("design:type", Number)
-], CreditDetailsUpdateDto.prototype, "cashWithdrawalFeeFixed", void 0);
-tslib_1.__decorate([
-    (0, class_validator_1.IsOptional)(),
-    (0, class_validator_1.IsNumber)(),
-    tslib_1.__metadata("design:type", Number)
-], CreditDetailsUpdateDto.prototype, "cashWithdrawalLimitPerMonth", void 0);
 class UpdateAccountDto {
 }
 exports.UpdateAccountDto = UpdateAccountDto;
@@ -1676,11 +1567,6 @@ tslib_1.__decorate([
     (0, class_validator_1.IsString)(),
     tslib_1.__metadata("design:type", String)
 ], UpdateAccountDto.prototype, "name", void 0);
-tslib_1.__decorate([
-    (0, class_validator_1.IsOptional)(),
-    (0, class_validator_1.IsString)(),
-    tslib_1.__metadata("design:type", String)
-], UpdateAccountDto.prototype, "currency", void 0);
 tslib_1.__decorate([
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.ValidateNested)(),

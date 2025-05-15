@@ -14,18 +14,6 @@ export namespace AccountUpdate {
 
   class CreditDto implements Partial<ICreditCardDetails> {
     @IsOptional() @IsNumber() creditLimit?: number;
-    @IsOptional() @IsNumber() gracePeriodDays?: number;
-    @IsOptional()
-    @IsIn(Object.values(['fixed','calendar','perPurchase']) as BillingCycleType[])
-    billingCycleType?: BillingCycleType;
-    @IsOptional() @IsNumber() billingCycleLengthDays?: number;
-    @IsOptional() @IsNumber() billingCycleStartDayOfMonth?: number;
-    @IsOptional() @IsNumber() paymentPeriodDays?: number;
-    @IsOptional() @IsNumber() interestRate?: number;
-    @IsOptional() @IsNumber() annualFee?: number;
-    @IsOptional() @IsNumber() cashWithdrawalFeePercent?: number;
-    @IsOptional() @IsNumber() cashWithdrawalFeeFixed?: number;
-    @IsOptional() @IsNumber() cashWithdrawalLimitPerMonth?: number;
   }
 
   export class Request {
@@ -38,10 +26,6 @@ export namespace AccountUpdate {
     @IsOptional()
     @IsString()
     name?: string;
-
-    @IsOptional()
-    @IsString()
-    currency?: string;
 
     @IsOptional()
     @ValidateNested()
