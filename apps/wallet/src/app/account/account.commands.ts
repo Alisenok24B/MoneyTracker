@@ -44,9 +44,18 @@ export class AccountCommands {
     payload: AccountUpdate.Request,
   ): Promise<AccountUpdate.Response> {
     const { userId, id, name, creditDetails } = payload;
+
     const updateData: Partial<IAccount> = {};
-    if (name !== undefined) updateData.name = name;
-    if (creditDetails !== undefined) updateData.creditDetails = creditDetails as ICreditCardDetails;
+    if (name !== undefined) {
+      updateData.name = name;
+    }
+
+    // если пришёл объект creditDetails с полем creditLimit
+    if (creditDetails?.creditLimit !== undefined) {
+      updateData.creditDetails = {
+        creditLimit: creditDetails.creditLimit,
+      } as IAccount['creditDetails'];
+    }
 
     await this.service.updateAccount(userId, id, updateData);
     return {};

@@ -6,10 +6,12 @@ import { AccountRepository } from './repositories/account.repository';
 import { AccountCommands } from './account.commands';
 import { AccountQueries } from './account.queries';
 import { AccountEventEmitter } from './account.event-emitter';
+import { CreditCardModule } from '../credit-card/credit-card.module';
 
 @Module({
   imports: [
-    MongooseModule.forFeature([ { name: Account.name, schema: AccountSchema } ])
+    MongooseModule.forFeature([ { name: Account.name, schema: AccountSchema } ]),
+    CreditCardModule
   ],
   providers: [ AccountService, AccountRepository, AccountEventEmitter ],
   controllers: [ AccountCommands, AccountQueries ],

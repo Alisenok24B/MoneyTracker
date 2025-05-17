@@ -23,17 +23,17 @@ exports.AppModule = void 0;
 const tslib_1 = __webpack_require__(4);
 const common_1 = __webpack_require__(1);
 const auth_controller_1 = __webpack_require__(5);
-const config_1 = __webpack_require__(40);
-const nestjs_rmq_1 = __webpack_require__(37);
-const rmq_config_1 = __webpack_require__(41);
-const jwt_1 = __webpack_require__(42);
-const jwt_config_1 = __webpack_require__(43);
-const passport_1 = __webpack_require__(44);
-const user_controller_1 = __webpack_require__(45);
-const jwt_strategy_1 = __webpack_require__(49);
-const wallet_controller_1 = __webpack_require__(51);
-const category_controller_1 = __webpack_require__(56);
-const transaction_controller_1 = __webpack_require__(61);
+const config_1 = __webpack_require__(42);
+const nestjs_rmq_1 = __webpack_require__(39);
+const rmq_config_1 = __webpack_require__(43);
+const jwt_1 = __webpack_require__(44);
+const jwt_config_1 = __webpack_require__(45);
+const passport_1 = __webpack_require__(46);
+const user_controller_1 = __webpack_require__(47);
+const jwt_strategy_1 = __webpack_require__(51);
+const wallet_controller_1 = __webpack_require__(53);
+const category_controller_1 = __webpack_require__(58);
+const transaction_controller_1 = __webpack_require__(63);
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -70,9 +70,9 @@ exports.AuthController = void 0;
 const tslib_1 = __webpack_require__(4);
 const common_1 = __webpack_require__(1);
 const contracts_1 = __webpack_require__(6);
-const nestjs_rmq_1 = __webpack_require__(37);
-const login_dto_1 = __webpack_require__(38);
-const register_dto_1 = __webpack_require__(39);
+const nestjs_rmq_1 = __webpack_require__(39);
+const login_dto_1 = __webpack_require__(40);
+const register_dto_1 = __webpack_require__(41);
 let AuthController = class AuthController {
     constructor(rmqService) {
         this.rmqService = rmqService;
@@ -146,6 +146,8 @@ tslib_1.__exportStar(__webpack_require__(33), exports);
 tslib_1.__exportStar(__webpack_require__(34), exports);
 tslib_1.__exportStar(__webpack_require__(35), exports);
 tslib_1.__exportStar(__webpack_require__(36), exports);
+tslib_1.__exportStar(__webpack_require__(37), exports);
+tslib_1.__exportStar(__webpack_require__(38), exports);
 
 
 /***/ }),
@@ -1069,12 +1071,50 @@ var TransactionList;
 
 /***/ }),
 /* 37 */
+/***/ ((__unused_webpack_module, exports) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.CreditCreate = void 0;
+var CreditCreate;
+(function (CreditCreate) {
+    CreditCreate.topic = 'credit.create.command';
+    class Request {
+    }
+    CreditCreate.Request = Request;
+    class Response {
+    }
+    CreditCreate.Response = Response;
+})(CreditCreate || (exports.CreditCreate = CreditCreate = {}));
+
+
+/***/ }),
+/* 38 */
+/***/ ((__unused_webpack_module, exports) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.CreditUpdateLimit = void 0;
+var CreditUpdateLimit;
+(function (CreditUpdateLimit) {
+    CreditUpdateLimit.topic = 'credit.update-limit.command';
+    class Request {
+    }
+    CreditUpdateLimit.Request = Request;
+    class Response {
+    }
+    CreditUpdateLimit.Response = Response;
+})(CreditUpdateLimit || (exports.CreditUpdateLimit = CreditUpdateLimit = {}));
+
+
+/***/ }),
+/* 39 */
 /***/ ((module) => {
 
 module.exports = require("nestjs-rmq");
 
 /***/ }),
-/* 38 */
+/* 40 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -1096,7 +1136,7 @@ tslib_1.__decorate([
 
 
 /***/ }),
-/* 39 */
+/* 41 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -1122,19 +1162,19 @@ tslib_1.__decorate([
 
 
 /***/ }),
-/* 40 */
+/* 42 */
 /***/ ((module) => {
 
 module.exports = require("@nestjs/config");
 
 /***/ }),
-/* 41 */
+/* 43 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.getRMQConfig = void 0;
-const config_1 = __webpack_require__(40);
+const config_1 = __webpack_require__(42);
 const getRMQConfig = () => ({
     inject: [config_1.ConfigService],
     imports: [config_1.ConfigModule],
@@ -1155,19 +1195,19 @@ exports.getRMQConfig = getRMQConfig;
 
 
 /***/ }),
-/* 42 */
+/* 44 */
 /***/ ((module) => {
 
 module.exports = require("@nestjs/jwt");
 
 /***/ }),
-/* 43 */
+/* 45 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.getJWTConfig = void 0;
-const config_1 = __webpack_require__(40);
+const config_1 = __webpack_require__(42);
 const getJWTConfig = () => ({
     imports: [config_1.ConfigModule],
     inject: [config_1.ConfigService],
@@ -1179,13 +1219,13 @@ exports.getJWTConfig = getJWTConfig;
 
 
 /***/ }),
-/* 44 */
+/* 46 */
 /***/ ((module) => {
 
 module.exports = require("@nestjs/passport");
 
 /***/ }),
-/* 45 */
+/* 47 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -1194,11 +1234,11 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.UserController = void 0;
 const tslib_1 = __webpack_require__(4);
 const common_1 = __webpack_require__(1);
-const jwt_guard_1 = __webpack_require__(46);
-const user_decorator_1 = __webpack_require__(47);
-const nestjs_rmq_1 = __webpack_require__(37);
+const jwt_guard_1 = __webpack_require__(48);
+const user_decorator_1 = __webpack_require__(49);
+const nestjs_rmq_1 = __webpack_require__(39);
 const contracts_1 = __webpack_require__(6);
-const change_profile_dto_1 = __webpack_require__(48);
+const change_profile_dto_1 = __webpack_require__(50);
 let UserController = class UserController {
     constructor(rmqService) {
         this.rmqService = rmqService;
@@ -1238,20 +1278,20 @@ exports.UserController = UserController = tslib_1.__decorate([
 
 
 /***/ }),
-/* 46 */
+/* 48 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.JWTAuthGuard = void 0;
-const passport_1 = __webpack_require__(44);
+const passport_1 = __webpack_require__(46);
 class JWTAuthGuard extends (0, passport_1.AuthGuard)('jwt') {
 }
 exports.JWTAuthGuard = JWTAuthGuard;
 
 
 /***/ }),
-/* 47 */
+/* 49 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -1264,7 +1304,7 @@ exports.UserId = (0, common_1.createParamDecorator)((data, ctx) => {
 
 
 /***/ }),
-/* 48 */
+/* 50 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -1282,7 +1322,7 @@ tslib_1.__decorate([
 
 
 /***/ }),
-/* 49 */
+/* 51 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -1291,9 +1331,9 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.JwtStrategy = void 0;
 const tslib_1 = __webpack_require__(4);
 const common_1 = __webpack_require__(1);
-const config_1 = __webpack_require__(40);
-const passport_1 = __webpack_require__(44);
-const passport_jwt_1 = __webpack_require__(50);
+const config_1 = __webpack_require__(42);
+const passport_1 = __webpack_require__(46);
+const passport_jwt_1 = __webpack_require__(52);
 let JwtStrategy = class JwtStrategy extends (0, passport_1.PassportStrategy)(passport_jwt_1.Strategy) {
     constructor(configService) {
         super({
@@ -1314,13 +1354,13 @@ exports.JwtStrategy = JwtStrategy = tslib_1.__decorate([
 
 
 /***/ }),
-/* 50 */
+/* 52 */
 /***/ ((module) => {
 
 module.exports = require("passport-jwt");
 
 /***/ }),
-/* 51 */
+/* 53 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -1329,14 +1369,14 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.WalletController = void 0;
 const tslib_1 = __webpack_require__(4);
 const common_1 = __webpack_require__(1);
-const nestjs_rmq_1 = __webpack_require__(37);
-const jwt_guard_1 = __webpack_require__(46);
-const user_decorator_1 = __webpack_require__(47);
+const nestjs_rmq_1 = __webpack_require__(39);
+const jwt_guard_1 = __webpack_require__(48);
+const user_decorator_1 = __webpack_require__(49);
 const contracts_1 = __webpack_require__(6);
-const create_account_dto_1 = __webpack_require__(52);
-const update_account_dto_1 = __webpack_require__(53);
-const list_accounts_dto_1 = __webpack_require__(54);
-const account_id_dto_1 = __webpack_require__(55);
+const create_account_dto_1 = __webpack_require__(54);
+const update_account_dto_1 = __webpack_require__(55);
+const list_accounts_dto_1 = __webpack_require__(56);
+const account_id_dto_1 = __webpack_require__(57);
 const interfaces_1 = __webpack_require__(13);
 let WalletController = class WalletController {
     constructor(rmqService) {
@@ -1449,7 +1489,7 @@ exports.WalletController = WalletController = tslib_1.__decorate([
 
 
 /***/ }),
-/* 52 */
+/* 54 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -1543,7 +1583,7 @@ tslib_1.__decorate([
 
 
 /***/ }),
-/* 53 */
+/* 55 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -1576,7 +1616,7 @@ tslib_1.__decorate([
 
 
 /***/ }),
-/* 54 */
+/* 56 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -1596,7 +1636,7 @@ tslib_1.__decorate([
 
 
 /***/ }),
-/* 55 */
+/* 57 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -1614,7 +1654,7 @@ tslib_1.__decorate([
 
 
 /***/ }),
-/* 56 */
+/* 58 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -1623,14 +1663,14 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.CategoryController = void 0;
 const tslib_1 = __webpack_require__(4);
 const common_1 = __webpack_require__(1);
-const nestjs_rmq_1 = __webpack_require__(37);
-const jwt_guard_1 = __webpack_require__(46);
-const user_decorator_1 = __webpack_require__(47);
+const nestjs_rmq_1 = __webpack_require__(39);
+const jwt_guard_1 = __webpack_require__(48);
+const user_decorator_1 = __webpack_require__(49);
 const contracts_1 = __webpack_require__(6);
-const list_categories_dto_1 = __webpack_require__(57);
-const category_id_dto_1 = __webpack_require__(58);
-const create_category_dto_1 = __webpack_require__(59);
-const update_category_dto_1 = __webpack_require__(60);
+const list_categories_dto_1 = __webpack_require__(59);
+const category_id_dto_1 = __webpack_require__(60);
+const create_category_dto_1 = __webpack_require__(61);
+const update_category_dto_1 = __webpack_require__(62);
 let CategoryController = class CategoryController {
     constructor(rmqService) {
         this.rmqService = rmqService;
@@ -1727,7 +1767,7 @@ exports.CategoryController = CategoryController = tslib_1.__decorate([
 
 
 /***/ }),
-/* 57 */
+/* 59 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -1748,7 +1788,7 @@ tslib_1.__decorate([
 
 
 /***/ }),
-/* 58 */
+/* 60 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -1766,7 +1806,7 @@ tslib_1.__decorate([
 
 
 /***/ }),
-/* 59 */
+/* 61 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -1794,7 +1834,7 @@ tslib_1.__decorate([
 
 
 /***/ }),
-/* 60 */
+/* 62 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -1820,7 +1860,7 @@ tslib_1.__decorate([
 
 
 /***/ }),
-/* 61 */
+/* 63 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -1829,15 +1869,15 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.TransactionController = void 0;
 const tslib_1 = __webpack_require__(4);
 const common_1 = __webpack_require__(1);
-const nestjs_rmq_1 = __webpack_require__(37);
-const jwt_guard_1 = __webpack_require__(46);
-const user_decorator_1 = __webpack_require__(47);
-const lodash_1 = __webpack_require__(62);
+const nestjs_rmq_1 = __webpack_require__(39);
+const jwt_guard_1 = __webpack_require__(48);
+const user_decorator_1 = __webpack_require__(49);
+const lodash_1 = __webpack_require__(64);
 const contracts_1 = __webpack_require__(6);
-const create_transaction_dto_1 = __webpack_require__(63);
-const list_transactions_dto_1 = __webpack_require__(64);
-const transaction_id_dto_1 = __webpack_require__(65);
-const update_transaction_dto_1 = __webpack_require__(66);
+const create_transaction_dto_1 = __webpack_require__(65);
+const list_transactions_dto_1 = __webpack_require__(66);
+const transaction_id_dto_1 = __webpack_require__(67);
+const update_transaction_dto_1 = __webpack_require__(68);
 function isoDateOnly(d) {
     return new Date(d).toISOString().split('T')[0];
 }
@@ -2069,13 +2109,13 @@ exports.TransactionController = TransactionController = tslib_1.__decorate([
 
 
 /***/ }),
-/* 62 */
+/* 64 */
 /***/ ((module) => {
 
 module.exports = require("lodash");
 
 /***/ }),
-/* 63 */
+/* 65 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -2116,7 +2156,7 @@ tslib_1.__decorate([
 
 
 /***/ }),
-/* 64 */
+/* 66 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -2191,7 +2231,7 @@ tslib_1.__decorate([
 
 
 /***/ }),
-/* 65 */
+/* 67 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -2215,7 +2255,7 @@ tslib_1.__decorate([
 
 
 /***/ }),
-/* 66 */
+/* 68 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
