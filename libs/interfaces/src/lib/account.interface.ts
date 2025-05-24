@@ -22,6 +22,7 @@ export interface ICreditCardDetails {
   billingCycleType: BillingCycleType;
   // если fixed:
   billingCycleLengthDays?: number;
+  statementAnchor?: Date; // дата выписки (указывается ближайшая при создании кредитной карты)
   // если calendar:
   billingCycleStartDayOfMonth?: number;
   // если perPurchase — не нужно дополнительных полей

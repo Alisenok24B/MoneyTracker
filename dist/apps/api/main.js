@@ -286,7 +286,7 @@ const interfaces_1 = __webpack_require__(13);
 const class_transformer_1 = __webpack_require__(21);
 var AccountCreate;
 (function (AccountCreate) {
-    var _a;
+    var _a, _b;
     AccountCreate.topic = 'account.create.command';
     class CreditDto {
     }
@@ -307,6 +307,11 @@ var AccountCreate;
         (0, class_validator_1.IsNumber)(),
         tslib_1.__metadata("design:type", Number)
     ], CreditDto.prototype, "billingCycleLengthDays", void 0);
+    tslib_1.__decorate([
+        (0, class_validator_1.ValidateIf)(o => o.billingCycleType !== 'fixed'),
+        (0, class_validator_1.IsOptional)(),
+        tslib_1.__metadata("design:type", typeof (_b = typeof Date !== "undefined" && Date) === "function" ? _b : Object)
+    ], CreditDto.prototype, "statementAnchor", void 0);
     tslib_1.__decorate([
         (0, class_validator_1.ValidateIf)(o => o.billingCycleType === 'calendar'),
         (0, class_validator_1.IsNumber)(),
@@ -1493,7 +1498,7 @@ exports.WalletController = WalletController = tslib_1.__decorate([
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
-var _a, _b;
+var _a, _b, _c;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.CreateAccountDto = void 0;
 const tslib_1 = __webpack_require__(4);
@@ -1519,6 +1524,13 @@ tslib_1.__decorate([
     (0, class_validator_1.IsNumber)(),
     tslib_1.__metadata("design:type", Number)
 ], CreditDetailsDto.prototype, "billingCycleLengthDays", void 0);
+tslib_1.__decorate([
+    (0, class_validator_1.ValidateIf)(o => o.billingCycleType === 'fixed'),
+    (0, class_validator_1.IsDateString)(),
+    (0, class_transformer_1.Type)(() => Date) // ⇐ преобразуем строку → Date
+    ,
+    tslib_1.__metadata("design:type", typeof (_b = typeof Date !== "undefined" && Date) === "function" ? _b : Object)
+], CreditDetailsDto.prototype, "statementAnchor", void 0);
 tslib_1.__decorate([
     (0, class_validator_1.ValidateIf)(o => o.billingCycleType === 'calendar'),
     (0, class_validator_1.IsNumber)(),
@@ -1561,7 +1573,7 @@ tslib_1.__decorate([
 ], CreateAccountDto.prototype, "name", void 0);
 tslib_1.__decorate([
     (0, class_validator_1.IsIn)(Object.values(interfaces_1.AccountType)),
-    tslib_1.__metadata("design:type", typeof (_b = typeof interfaces_1.AccountType !== "undefined" && interfaces_1.AccountType) === "function" ? _b : Object)
+    tslib_1.__metadata("design:type", typeof (_c = typeof interfaces_1.AccountType !== "undefined" && interfaces_1.AccountType) === "function" ? _c : Object)
 ], CreateAccountDto.prototype, "type", void 0);
 tslib_1.__decorate([
     (0, class_validator_1.ValidateIf)(o => o.type !== interfaces_1.AccountType.CreditCard),

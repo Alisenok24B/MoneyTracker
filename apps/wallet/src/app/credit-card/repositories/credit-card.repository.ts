@@ -12,7 +12,7 @@ export class CreditRepository {
 
   async create(accountId: string, vo: CreditDetails): Promise<CreditDetailsDocument> {
     const doc = new this.model({ accountId, ...vo });
-    return doc.save();  // тут у нас будут createdAt/updatedAt
+    return doc.save();
   }
 
   async findByAccountId(

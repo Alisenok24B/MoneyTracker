@@ -13,6 +13,7 @@ export class CreditDetailsModel implements ICreditCardDetails {
   billingCycleType: BillingCycleType;
   @Prop() billingCycleLengthDays?: number;
   @Prop() billingCycleStartDayOfMonth?: number;
+  @Prop({ type: Date }) statementAnchor?: Date;
   @Prop({ required: true }) paymentPeriodDays: number;
   @Prop({ required: true }) interestRate: number;
   @Prop() annualFee?: number;

@@ -13,6 +13,9 @@ export namespace AccountCreate {
     @ValidateIf(o => o.billingCycleType === 'fixed')
     @IsNumber()
     billingCycleLengthDays: number;
+    @ValidateIf(o => o.billingCycleType !== 'fixed')
+    @IsOptional()
+    statementAnchor?: Date;
     // обязательно для calendar
     @ValidateIf(o => o.billingCycleType === 'calendar')
     @IsNumber()

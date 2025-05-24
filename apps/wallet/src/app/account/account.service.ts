@@ -4,6 +4,7 @@ import { AccountEntity } from './entities/account.entity';
 import { AccountType, IAccount } from '@moneytracker/interfaces';
 import { AccountEventEmitter } from './account.event-emitter';
 import { CreditService } from '../credit-card/credit-card.service';
+import { CreditPeriodService } from '../credit-card/credit-period.service';
 
 @Injectable()
 export class AccountService {
@@ -11,6 +12,7 @@ export class AccountService {
     private readonly repo: AccountRepository,
     private readonly events: AccountEventEmitter,
     private readonly creditService: CreditService,
+    private readonly creditPeriods: CreditPeriodService
   ) {}
 
   async createAccount(dto: Omit<IAccount, '_id' | 'deletedAt'>): Promise<AccountEntity> {
@@ -31,6 +33,9 @@ export class AccountService {
           if (cd.billingCycleStartDayOfMonth != null) {
             throw new BadRequestException('billingCycleStartDayOfMonth not allowed for fixed cycle');
           }
+          if (cd.statementAnchor == null) {
+            throw new BadRequestException('statementAnchor required for fixed cycle');
+          }
           break;
         case 'calendar':
           if (cd.billingCycleStartDayOfMonth == null) {
@@ -39,9 +44,12 @@ export class AccountService {
           if (cd.billingCycleLengthDays != null) {
             throw new BadRequestException('billingCycleLengthDays not allowed for calendar cycle');
           }
+          if (cd.statementAnchor != null) {
+            throw new BadRequestException('statementAnchor allowed only for fixed');
+          }
           break;
         default: // perPurchase
-          if (cd.billingCycleLengthDays != null || cd.billingCycleStartDayOfMonth != null) {
+          if (cd.billingCycleLengthDays != null || cd.billingCycleStartDayOfMonth != null || cd.statementAnchor != null) {
             throw new BadRequestException('No cycle-length fields allowed for perPurchase');
           }
       }
@@ -63,6 +71,7 @@ export class AccountService {
     // если кредитка — сохраняем детали
     if (dto.type === AccountType.CreditCard) {
       await this.creditService.createForAccount(created._id!, dto.creditDetails!);
+      await this.creditPeriods.initForAccount(doc._id!.toString(), new Date());
     }
     await this.events.emit(created.events);        // эмитируем события создания
     return created;
@@ -134,6 +143,7 @@ export class AccountService {
     // если это кредитная карта — мягко удаляем её детали
     if (doc.type === AccountType.CreditCard) {
       await this.creditService.softDeleteByAccountId(id);
+      await this.creditPeriods.initForAccount(id);
     }
 
     // отправляем все накопленные события (в частности, account.deleted.event)
