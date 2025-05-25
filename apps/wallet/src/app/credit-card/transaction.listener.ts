@@ -8,6 +8,7 @@ import { AccountRepository } from '../account/repositories/account.repository';
 import { AccountType } from '@moneytracker/interfaces';
 import { CreditPeriodService } from './credit-period.service';
 import { FlowType } from './entities/credit-period.entity';
+import { CreditTxIndexRepository } from './repositories/credit-tx-index.repository';
 
 // RMQ topics:
 const CREATED = 'transaction.created.event';
@@ -27,6 +28,7 @@ export class TransactionListener {
   constructor(
     private readonly svc:      CreditPeriodService,
     private readonly accounts: AccountRepository,
+    private readonly indexRepo:   CreditTxIndexRepository,
   ) {}
 
   private async detectFlow(m: TxMsg): Promise<{ flow: FlowType; cardId: string } | null> {
@@ -120,5 +122,16 @@ export class TransactionListener {
       amount:    msg.amount,
       date,
     });
+  }
+
+  // 3) слушаем удаление (soft-delete или purge)
+  @RMQValidate()
+  @RMQRoute('transaction.deleted.event')
+  async onDeleted(msg: { _id: string; }) {
+    // в payload может быть либо ._id, либо .transactionId
+    const txId = msg._id;
+    if (!txId) return;
+    // удаляем все записи об этой транзакции
+    await this.indexRepo.removeByTxId(txId);
   }
 }

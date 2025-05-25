@@ -58,7 +58,7 @@ export class TransactionEntity implements ITransaction {
   markDeleted(): this {
     this.events.push({
       topic: 'transaction.deleted.event',
-      data: { transactionId: this._id },
+      data: { _id: this._id },
     });
     return this;
   }

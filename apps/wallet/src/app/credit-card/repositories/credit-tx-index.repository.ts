@@ -61,4 +61,9 @@ export class CreditTxIndexRepository {
   async remove(txId: string, accountId: string): Promise<void> {
     await this.model.deleteOne({ txId, accountId }).exec();
   }
+
+  /** Удалить все связи данной транзакции с любыми периодами */
+  async removeByTxId(txId: string): Promise<void> {
+    await this.model.deleteMany({ txId }).exec();
+  }
 }
