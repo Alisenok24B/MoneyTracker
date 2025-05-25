@@ -1526,7 +1526,7 @@ tslib_1.__decorate([
 ], CreditDetailsDto.prototype, "billingCycleLengthDays", void 0);
 tslib_1.__decorate([
     (0, class_validator_1.ValidateIf)(o => o.billingCycleType === 'fixed'),
-    (0, class_validator_1.IsDateString)(),
+    (0, class_validator_1.IsDate)(),
     (0, class_transformer_1.Type)(() => Date) // ⇐ преобразуем строку → Date
     ,
     tslib_1.__metadata("design:type", typeof (_b = typeof Date !== "undefined" && Date) === "function" ? _b : Object)

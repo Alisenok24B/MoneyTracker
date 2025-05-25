@@ -1,4 +1,4 @@
-import { IsString, IsIn, IsOptional, ValidateNested, IsNumber, ValidateIf, IsDateString } from 'class-validator';
+import { IsString, IsIn, IsOptional, ValidateNested, IsNumber, ValidateIf, IsDateString, IsDate } from 'class-validator';
 import { Type } from 'class-transformer';
 import { AccountType, BillingCycleType, ICreditCardDetails } from '@moneytracker/interfaces';
 
@@ -17,7 +17,7 @@ class CreditDetailsDto implements ICreditCardDetails {
   billingCycleLengthDays: number;
 
   @ValidateIf(o => o.billingCycleType === 'fixed')
-  @IsDateString()
+  @IsDate()
   @Type(() => Date) // ⇐ преобразуем строку → Date
   statementAnchor!: Date;
 

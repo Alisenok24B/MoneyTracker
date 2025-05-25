@@ -1,55 +1,72 @@
 import { Controller } from '@nestjs/common';
 import { RMQRoute, RMQValidate } from 'nestjs-rmq';
+import {
+  TransactionCreate,        // событие «создана»
+  TransactionUpdate,        // событие «обновлена»
+} from '@moneytracker/contracts';
+import { AccountRepository } from '../account/repositories/account.repository';
+import { AccountType } from '@moneytracker/interfaces';
 import { CreditPeriodService } from './credit-period.service';
+import { FlowType } from './entities/credit-period.entity';
 
-type FlowType = 'expense' | 'income';
+// RMQ topics:
+const CREATED = 'transaction.created.event';
+const UPDATED = 'transaction.updated.event';
 
-/** структура event-сообщений, которые эмитит TransactionEntity */
-interface TxEventPayload {
-  transactionId: string;
-  accountId: string;
-  type: 'expense' | 'income' | 'transfer';
-  amount: number;
-  date: string;
-}
-
-const CREATED_TOPIC = 'transaction.created.event';
-const UPDATED_TOPIC = 'transaction.updated.event';
+type TxMsg = {
+  _id:        string;      // id транзакции
+  accountId?: string;
+  toAccountId?: string;
+  amount:     number;
+  type:       'income' | 'expense' | 'transfer';
+  date:       string | Date;
+};
 
 @Controller()
 export class TransactionListener {
-  constructor(private readonly svc: CreditPeriodService) {}
+  constructor(
+    private readonly svc:      CreditPeriodService,
+    private readonly accounts: AccountRepository,
+  ) {}
 
-  // -------------------------------------------------------
-  // helper — переводим из полного типа в FlowType
-  private toFlow(t: TxEventPayload['type']): FlowType {
-    return t === 'expense' ? 'expense' : 'income';
+  private async detectFlow(m: TxMsg): Promise<{ flow: FlowType; cardId: string } | null> {
+    if (m.accountId) {
+      const acc = await this.accounts.findByIdIncludeDeleted(m.accountId);
+      if (acc?.type === AccountType.CreditCard) return { flow: 'expense', cardId: acc._id.toString() };
+    }
+    if (m.toAccountId) {
+      const acc = await this.accounts.findByIdIncludeDeleted(m.toAccountId);
+      if (acc?.type === AccountType.CreditCard) return { flow: 'income', cardId: acc._id.toString() };
+    }
+    return null;
   }
 
-  /** обработка нового tx */
   @RMQValidate()
-  @RMQRoute(CREATED_TOPIC)
-  async onCreated(msg: TxEventPayload) {
+  @RMQRoute(CREATED)
+  async onCreated(msg: TxMsg) {
     if (msg.type === 'transfer') return;
+    const info = await this.detectFlow(msg);
+    if (!info) return;
 
     await this.svc.registerTransaction({
-      txId: msg.transactionId,
-      accountId: msg.accountId,
-      flow: this.toFlow(msg.type),
+      txId: msg._id,
+      accountId: info.cardId,
+      flow: info.flow,
       amount: msg.amount,
       date: new Date(msg.date),
     });
   }
 
-  /** обработка изменения tx */
   @RMQValidate()
-  @RMQRoute(UPDATED_TOPIC)
-  async onUpdated(msg: TxEventPayload) {
+  @RMQRoute(UPDATED)
+  async onUpdated(msg: TxMsg) {
     if (msg.type === 'transfer') return;
+    const info = await this.detectFlow(msg);
+    if (!info) return;
 
-    await this.svc.updateTransaction(msg.transactionId, {
-      accountId: msg.accountId,
-      flow: this.toFlow(msg.type),
+    await this.svc.updateTransaction(msg._id, {
+      accountId: info.cardId,
+      flow: info.flow,
       amount: msg.amount,
       date: new Date(msg.date),
     });

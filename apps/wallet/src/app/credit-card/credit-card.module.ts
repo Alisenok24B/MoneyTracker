@@ -1,5 +1,5 @@
 // apps/wallet-service/src/app/credit/credit.module.ts
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ScheduleModule } from '@nestjs/schedule'
 import { CreditDetailsSchema } from './models/credit-details.model';
@@ -14,6 +14,7 @@ import { CreditPeriodRepository } from './repositories/credit-period.repository'
 import { CreditPeriodModel, CreditPeriodSchema } from './models/credit-period.model';
 import { CreditTxIndex, CreditTxIndexSchema } from './models/credit-tx-index.model';
 import { CreditTxIndexRepository } from './repositories/credit-tx-index.repository';
+import { AccountModule } from '../account/account.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { CreditTxIndexRepository } from './repositories/credit-tx-index.reposito
       { name: 'CreditTxIndex', schema: CreditTxIndexSchema },
     ]),
     ScheduleModule.forRoot(),
+    forwardRef(() => AccountModule)
   ],
   providers: [CreditRepository, 
     CreditService, 
@@ -30,10 +32,9 @@ import { CreditTxIndexRepository } from './repositories/credit-tx-index.reposito
     CreditPeriodRepository, 
     CreditCycleCalculator, 
     CreditPeriodService,
-    TransactionListener,
     CreditTxIndexRepository
   ],
-  controllers: [CreditController],
+  controllers: [CreditController, TransactionListener],
   exports: [CreditService, CreditPeriodService], // чтобы AccountModule мог инжектить
 })
 export class CreditCardModule {}

@@ -25,3 +25,6 @@ export class CreditTxIndex {
 }
 
 export const CreditTxIndexSchema = SchemaFactory.createForClass(CreditTxIndex);
+
+/** уникальность транзакции **для конкретной карты** */
+CreditTxIndexSchema.index({ txId: 1, accountId: 1 }, { unique: true });

@@ -1,115 +1,183 @@
-import { Injectable } from '@nestjs/common';
-import { CreditPeriodRepository }    from './repositories/credit-period.repository';
-import { CreditTxIndexRepository }   from './repositories/credit-tx-index.repository';
-import { CreditCycleCalculator }     from './credit-cycle-calculator.service';
-import { CreditRepository }          from './repositories/credit-card.repository';
+import { Injectable, Logger } from '@nestjs/common';
+import { Cron, CronExpression } from '@nestjs/schedule';
+import {
+  isAfter,
+  isBefore,
+} from 'date-fns';
+
+import { CreditPeriodRepository }       from './repositories/credit-period.repository';
+import { CreditTxIndexRepository }      from './repositories/credit-tx-index.repository';
+import { CreditRepository }             from './repositories/credit-card.repository';
+import { CreditCycleCalculator }        from './credit-cycle-calculator.service';
 import { CreditPeriodEntity, FlowType } from './entities/credit-period.entity';
-import { ICreditCardDetails }        from '@moneytracker/interfaces';
 
 @Injectable()
 export class CreditPeriodService {
+  private readonly log = new Logger(CreditPeriodService.name);
+
   constructor(
-    private readonly periods:     CreditPeriodRepository,
-    private readonly index:       CreditTxIndexRepository,
-    private readonly calc:        CreditCycleCalculator,
-    private readonly detailsRepo: CreditRepository,   // используется listener-ом
+    private readonly periods:      CreditPeriodRepository,
+    private readonly index:        CreditTxIndexRepository,
+    private readonly calc:         CreditCycleCalculator,
+    private readonly creditRepo:   CreditRepository,
   ) {}
 
-  /** гарантирует, что у счёта есть «живой» период */
-  async ensurePeriod(
-    accountId: string,
-    today: Date = new Date(),
-  ): Promise<CreditPeriodEntity> {
-
-    const open = await this.periods.findOpenByAccount(accountId);
-    if (open && today >= open.statementStart && today <= open.paymentDue) {
-      return open;
-    }
-
-    const detDoc = await this.detailsRepo.findByAccountId(accountId);
-    if (!detDoc) throw new Error('credit details missing');
-
-    const det = detDoc.toObject() as unknown as ICreditCardDetails;
-
-    const win =
-      det.billingCycleType === 'fixed'
-        ? this.calc.getFixedWindow(det.statementAnchor!, det)
-        : det.billingCycleType === 'calendar'
-        ? this.calc.getCalendarWindow(today, det)
-        : this.calc.getPerPurchaseWindow(today, det);
-
-    const next = new CreditPeriodEntity({
-      accountId,
-      ...win,
-      status:
-        today <= win.statementEnd ? 'open'
-        : today <= win.paymentDue  ? 'payment'
-        : 'overdue',
-      totalSpent:       0,
-      paidAmount:       0,
-      interestAccrued:  0,
-    }).markCreated();
-
-    return this.periods.create(next);
+  /* ------------------------------------------------------------------
+   * INITIALISATION
+   * ---------------------------------------------------------------- */
+  /**
+   * Вызывается из AccountService сразу после создания кредитного счёта.
+   * Заводит «живой» кредит-период, если его ещё нет.
+   */
+  async initForAccount(accountId: string, today = new Date()) {
+    await this.ensurePeriod(accountId, today);
   }
 
-  /* ---------- учёт транзакций ---------- */
+  /* ------------------------------------------------------------------
+   * CORE
+   * ---------------------------------------------------------------- */
+  /**
+   * Гарантирует, что на дату *today* для счёта существует открытый / платёжный
+   * период и возвращает его.
+   */
+  async ensurePeriod(accountId: string, today = new Date()): Promise<CreditPeriodEntity> {
+    const current = await this.periods.findOpenByAccount(accountId);
+    if (current && today >= current.statementStart && today <= current.paymentDue) {
+      return current;
+    }
 
-  async registerTransaction(p: {
-    txId: string; accountId: string; amount: number;
-    flow: FlowType; date: Date;
-  }) {
-    const period = await this.ensurePeriod(p.accountId, p.date);
+    const details = await this.creditRepo.findByAccountId(accountId);
+    if (!details) throw new Error(`Credit details for account ${accountId} not found`);
 
-    if (p.flow === 'expense') period.addExpense(p.amount).markUpdated();
-    else                      period.addPayment(p.amount).markUpdated();
+    const win =
+      details.billingCycleType === 'fixed'
+        ? this.calc.getFixedWindow(new Date(details.statementAnchor), details)
+        : details.billingCycleType === 'calendar'
+        ? this.calc.getCalendarWindow(today, details)
+        : this.calc.getPerPurchaseWindow(today, details);
 
+    const status =
+      isBefore(today, win.statementEnd)
+        ? 'open'
+        : isAfter(today, win.paymentDue)
+        ? 'overdue'
+        : 'payment';
+
+    const entity = new CreditPeriodEntity({
+      accountId,
+      ...win,
+      status,
+      totalSpent: 0,
+      paidAmount: 0,
+      interestAccrued: 0,
+      interestRate: details.interestRate,          // ← добавлено
+    }).markCreated();
+
+    return this.periods.create(entity);
+  }
+
+
+  /* ------------------------------------------------------------------
+   *  ТРАНЗАКЦИИ
+   * ---------------------------------------------------------------- */
+
+  /** Учитываем новую транзакцию (income / expense) */
+  async registerTransaction(args: {
+    txId: string;
+    accountId: string;
+    amount: number;
+    flow: FlowType;          // 'income' | 'expense'
+    date: Date;
+  }): Promise<void> {
+    const period = await this.ensurePeriod(args.accountId, args.date);
+
+    if (args.flow === 'expense') {
+      period.addExpense(args.amount).markUpdated();
+    } else {
+      period.addPayment(args.amount).markUpdated();
+    }
     await this.periods.update(period);
+
     await this.index.create({
-      txId: p.txId,
-      accountId: p.accountId,
+      txId:      args.txId,
       periodId:  period._id!,
-      flow:      p.flow,
-      amount:    p.amount,
-      date:      p.date,
+      accountId: args.accountId,
+      flow:      args.flow,
+      amount:    args.amount,
+      date:      args.date,
     });
   }
 
-  async updateTransaction(txId: string, patch: {
-    accountId: string; date: Date; amount: number; flow: FlowType;
-  }) {
+  /** Обрабатываем изменение транзакции */
+  async updateTransaction(
+    txId: string,
+    patch: { accountId: string; date: Date; amount: number; flow: FlowType },
+  ): Promise<void> {
     const idx = await this.index.findByTxId(txId);
+
+    // если раньше не индексировали (например, старая «transfer» стала expense)
     if (!idx) {
-      return this.registerTransaction({ txId, ...patch });
+      await this.registerTransaction({ txId, ...patch });
+      return;
     }
 
-    /* 1) откат из прежнего периода */
-    const prev = await this.periods.findById(idx.periodId);
-    if (prev) {
-      if (idx.flow === 'expense') prev.totalSpent -= idx.amount;
-      else                        prev.paidAmount -= idx.amount;
-      await this.periods.update(prev.markUpdated());
+    /* ---- 1. Откатываем влияние из старого периода --------------------- */
+    const old = await this.periods.findById(idx.periodId);
+    if (old) {
+      if (idx.flow === 'expense') old.totalSpent -= idx.amount;
+      else                        old.paidAmount -= idx.amount;
+      old.markUpdated();
+      await this.periods.update(old);
     }
 
-    /* 2) запись в новый */
-    const next = await this.ensurePeriod(patch.accountId, patch.date);
-    if (patch.flow === 'expense') next.totalSpent += patch.amount;
-    else                          next.paidAmount += patch.amount;
-    await this.periods.update(next.markUpdated());
+    /* ---- 2. Применяем к (возможно новому) периоду ---------------------- */
+    const period = await this.ensurePeriod(patch.accountId, patch.date);
+    if (patch.flow === 'expense') period.totalSpent += patch.amount;
+    else                          period.paidAmount += patch.amount;
+    period.markUpdated();
+    await this.periods.update(period);
 
-    /* 3) патч индекса */
+    /* ---- 3. Патчим индекс --------------------------------------------- */
     await this.index.update(txId, {
+      periodId:  period._id!,
       accountId: patch.accountId,
-      periodId:  next._id!,
       flow:      patch.flow,
       amount:    patch.amount,
       date:      patch.date,
     });
   }
 
-  async initForAccount(accountId: string, today: Date = new Date()): Promise<void> {
-    const detDoc = await this.detailsRepo.findByAccountId(accountId);
-    if (!detDoc) return;                       // детали уже удалены → нечего инициализировать
-    await this.ensurePeriod(accountId, today); // создаст первый/текущий период, если нужно
+  /* ------------------------------------------------------------------
+   *  CRON-JOB
+   *  — выполняется ежедневно в 00:00, закрывает периоды
+   *    и начисляет проценты по просрочке
+   * ---------------------------------------------------------------- */
+  @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
+  async nightlyRecalc(): Promise<void> {
+    const today = new Date();
+    this.log.log('⏰ Nightly credit-cycle recalc');
+
+    const open = await this.periods.findAllOpen();   // ← метод теперь без обязательного id
+    for (const p of open) {
+      let changed = false;
+
+      if (p.status === 'open' && today > p.statementEnd) {
+        p.status = 'payment'; changed = true;
+      }
+      if (p.status === 'payment' && today > p.paymentDue) {
+        p.status = 'overdue'; changed = true;
+      }
+      if (p.status === 'overdue') {
+        const unpaid = p.totalSpent - p.paidAmount;
+        if (unpaid > 0) {
+          p.interestAccrued += unpaid * (p.interestRate / 36500);
+          changed = true;
+        }
+      }
+      if (changed) {
+        p.markUpdated();
+        await this.periods.update(p);
+      }
+    }
   }
 }

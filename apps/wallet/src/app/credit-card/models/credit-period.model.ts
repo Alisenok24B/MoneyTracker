@@ -27,9 +27,15 @@ export class CreditPeriodModel {
   @Prop({ type: Number, default: 0 })
   paidAmount: number;
 
+  /** накопленные % по просрочке */
   @Prop({ type: Number, default: 0 })
   interestAccrued: number;
 
+  /** ставка (% годовых) сохраняется «срезом» при создании периода */
+  @Prop({ type: Number, required: true })
+  interestRate: number;
+
+  /** soft-delete */
   @Prop({ type: Date, default: null })
   deletedAt?: Date;
 }

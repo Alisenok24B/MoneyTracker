@@ -1,7 +1,7 @@
 import { IDomainEvent } from '@moneytracker/interfaces';
 
 export type PeriodStatus = 'open' | 'payment' | 'overdue' | 'closed';
-export type FlowType = 'income' | 'expense';
+export type FlowType     = 'income' | 'expense';
 
 export interface ICreditPeriod {
   _id?: string;
@@ -22,6 +22,7 @@ export interface ICreditPeriod {
   paidAmount: number;
   /** начисленные проценты (копятся ежедневно после paymentDue) */
   interestAccrued: number;
+  interestRate: number;
 
   /** soft-delete */
   deletedAt?: Date;
@@ -37,13 +38,14 @@ export class CreditPeriodEntity implements ICreditPeriod {
   totalSpent: number;
   paidAmount: number;
   interestAccrued: number;
+  interestRate: number;
   deletedAt?: Date;
 
   /** доменные события  */
   events: IDomainEvent[] = [];
 
-  constructor(data: Partial<ICreditPeriod>) {
-    Object.assign(this, data);
+  constructor(data?: Partial<ICreditPeriod>) {
+    if (data) Object.assign(this, data);
   }
 
   markCreated() {

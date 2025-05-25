@@ -8,6 +8,7 @@ import { RMQModule } from 'nestjs-rmq';
 import { getMongoConfig } from './configs/mongo.config';
 import { getRMQConfig } from './configs/rmq.config';
 import { CreditCardModule } from './credit-card/credit-card.module';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { CreditCardModule } from './credit-card/credit-card.module';
     }),
     RMQModule.forRootAsync(getRMQConfig()),
     MongooseModule.forRootAsync(getMongoConfig()),
+    ScheduleModule.forRoot(), 
     AccountModule,
     CreditCardModule,
   ],

@@ -19,6 +19,7 @@ export class CreditService {
       dto.cashWithdrawalFeePercent,
       dto.cashWithdrawalFeeFixed,
       dto.cashWithdrawalLimitPerMonth,
+      dto.statementAnchor ? new Date(dto.statementAnchor) : undefined,
     );
     await this.repo.create(accountId, vo);
   }
@@ -39,6 +40,7 @@ export class CreditService {
       o.cashWithdrawalFeePercent,
       o.cashWithdrawalFeeFixed,
       o.cashWithdrawalLimitPerMonth,
+      o.statementAnchor,
     );
   }
 

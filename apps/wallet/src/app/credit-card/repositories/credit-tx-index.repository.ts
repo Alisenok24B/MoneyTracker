@@ -6,6 +6,18 @@ import {
   CreditTxIndexDocument,
 } from '../models/credit-tx-index.model';
 
+/** Поток сделки внутри кредит-периода */
+export type FlowType = 'income' | 'expense';
+
+interface IndexPayload {
+  txId: string;
+  accountId: string;
+  periodId: string;
+  flow: FlowType;
+  amount: number;
+  date: Date;
+}
+
 @Injectable()
 export class CreditTxIndexRepository {
   constructor(
@@ -13,20 +25,44 @@ export class CreditTxIndexRepository {
     private readonly model: Model<CreditTxIndexDocument>,
   ) {}
 
-  async create(idx: Omit<CreditTxIndex, '_id'>) {
-    await new this.model(idx).save();
+  /** Создаём запись: один tx может фигурировать в нескольких аккаунтах (transfer) */
+  // apps/wallet-service/src/app/credit/repositories/credit-tx-index.repository.ts
+  async create(idx: IndexPayload): Promise<CreditTxIndexDocument> {
+    return this.model.findOneAndUpdate(
+      { txId: idx.txId, accountId: idx.accountId },
+      { $set: idx },
+      { upsert: true, new: true }
+    ).exec();
   }
 
-  async findByTxId(txId: string): Promise<CreditTxIndex | null> {
-    const doc = await this.model.findOne({ txId }).lean().exec();
-    return doc ?? null;
+  /** Обновляем все записи данного tx (при смене даты / суммы / периода) */
+  async update(
+    txId: string,
+    patch: Omit<IndexPayload, 'txId'>,
+  ): Promise<void> {
+    await this.model.updateMany({ txId }, { $set: patch }).exec();
   }
 
-  async update(txId: string, patch: Partial<CreditTxIndex>) {
-    await this.model.updateOne({ txId }, { $set: patch }).exec();
+  /** Один индекс (конкретный счёт) – для отката / перемещения */
+  async findByTxIdAndAccount(
+    txId: string,
+    accountId: string,
+  ): Promise<CreditTxIndexDocument | null> {
+    return this.model.findOne({ txId, accountId }).exec();
   }
 
-  async delete(txId: string) {
-    await this.model.deleteOne({ txId }).exec();
+  /** Все индексы по транзакции (нужны для transfer) */
+  async findAllByTxId(txId: string): Promise<CreditTxIndexDocument[]> {
+    return this.model.find({ txId }).exec();
+  }
+
+  /** Получить первую запись по id транзакции (для update) */
+  async findByTxId(txId: string): Promise<CreditTxIndexDocument | null> {
+    return this.model.findOne({ txId }).exec();
+  }
+
+  /** Удаляем конкретную пару (tx, account) – используется при жёстком удалении tx */
+  async remove(txId: string, accountId: string): Promise<void> {
+    await this.model.deleteOne({ txId, accountId }).exec();
   }
 }

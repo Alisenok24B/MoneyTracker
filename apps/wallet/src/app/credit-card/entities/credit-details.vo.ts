@@ -13,6 +13,7 @@ export class CreditDetails implements ICreditCardDetails {
     public cashWithdrawalFeePercent?: number,
     public cashWithdrawalFeeFixed?: number,
     public cashWithdrawalLimitPerMonth?: number,
+    public statementAnchor?: Date
   ) {
     /* in-class валидация */
     if (billingCycleType === 'fixed'     && billingCycleLengthDays == null)
