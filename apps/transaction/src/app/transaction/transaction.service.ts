@@ -58,10 +58,11 @@ export class TransactionService {
       userId,
       type: catType,
       date: dateOnly,
-    }).markCreated();
+    })
   
     const saved = await this.repo.create(entity);
     entity._id = saved._id;
+    entity.markCreated();
     await this.events.emit(entity.events);
     return {};
   }

@@ -11,6 +11,6 @@ export namespace TransactionGet {
   }
 
   export class Response {
-    transaction: ITransaction;
+  transaction: ITransaction;
   }
 }

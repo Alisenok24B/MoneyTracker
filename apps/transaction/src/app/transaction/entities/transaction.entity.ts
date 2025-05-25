@@ -22,7 +22,17 @@ export class TransactionEntity implements ITransaction {
   markCreated(): this {
     this.events.push({
       topic: 'transaction.created.event',
-      data: { transactionId: this._id },
+      data: {
+        _id:          this._id,
+        userId:       this.userId,
+        accountId:    this.accountId,
+        toAccountId:  this.toAccountId,
+        categoryId:   this.categoryId,
+        type:         this.type,
+        amount:       this.amount,
+        date:         this.date,
+        description:  this.description,
+      },
     });
     return this;
   }
@@ -30,7 +40,17 @@ export class TransactionEntity implements ITransaction {
   markUpdated(): this {
     this.events.push({
       topic: 'transaction.updated.event',
-      data: { transactionId: this._id },
+      data: {
+        _id:          this._id,
+        userId:       this.userId,
+        accountId:    this.accountId,
+        toAccountId:  this.toAccountId,
+        categoryId:   this.categoryId,
+        type:         this.type,
+        amount:       this.amount,
+        date:         this.date,
+        description:  this.description,
+      },
     });
     return this;
   }

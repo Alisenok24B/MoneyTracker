@@ -28,11 +28,8 @@ export class CreditTxIndexRepository {
   /** Создаём запись: один tx может фигурировать в нескольких аккаунтах (transfer) */
   // apps/wallet-service/src/app/credit/repositories/credit-tx-index.repository.ts
   async create(idx: IndexPayload): Promise<CreditTxIndexDocument> {
-    return this.model.findOneAndUpdate(
-      { txId: idx.txId, accountId: idx.accountId },
-      { $set: idx },
-      { upsert: true, new: true }
-    ).exec();
+    const doc = new this.model(idx);
+    return doc.save();
   }
 
   /** Обновляем все записи данного tx (при смене даты / суммы / периода) */
