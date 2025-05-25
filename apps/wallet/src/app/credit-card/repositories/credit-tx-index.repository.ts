@@ -26,7 +26,6 @@ export class CreditTxIndexRepository {
   ) {}
 
   /** Создаём запись: один tx может фигурировать в нескольких аккаунтах (transfer) */
-  // apps/wallet-service/src/app/credit/repositories/credit-tx-index.repository.ts
   async create(idx: IndexPayload): Promise<CreditTxIndexDocument> {
     const doc = new this.model(idx);
     return doc.save();

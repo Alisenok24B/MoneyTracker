@@ -5,7 +5,7 @@ export type CreditTxIndexDocument = CreditTxIndex & Document;
 
 @Schema({ versionKey: false })
 export class CreditTxIndex {
-  @Prop({ type: Types.ObjectId, required: true, unique: true })
+  @Prop({ type: Types.ObjectId, required: true })
   txId: string;                       // id транзакции
 
   @Prop({ type: Types.ObjectId, required: true, index: true })

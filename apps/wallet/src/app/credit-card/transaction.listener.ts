@@ -41,34 +41,84 @@ export class TransactionListener {
     return null;
   }
 
+  private async isCredit(accId: string): Promise<boolean> {
+    const acc = await this.accounts.findByIdIncludeDeleted(accId);
+    return acc?.type === AccountType.CreditCard;
+  }
+
   @RMQValidate()
   @RMQRoute(CREATED)
   async onCreated(msg: TxMsg) {
-    if (msg.type === 'transfer') return;
+    const date = new Date(msg.date);
+
+    if (msg.type === 'transfer') {
+      // Перевод: создаём записи для каждой вовлечённой кредитки
+      if (msg.accountId && await this.isCredit(msg.accountId)) {
+        await this.svc.registerTransaction({
+          txId:      msg._id,
+          accountId: msg.accountId,
+          flow:      'expense',
+          amount:    msg.amount,
+          date,
+        });
+      }
+      if (msg.toAccountId && await this.isCredit(msg.toAccountId)) {
+        await this.svc.registerTransaction({
+          txId:      msg._id,
+          accountId: msg.toAccountId,
+          flow:      'income',
+          amount:    msg.amount,
+          date,
+        });
+      }
+      return;
+    }
+
+    // Не-transfer (income/expense)
     const info = await this.detectFlow(msg);
     if (!info) return;
-
     await this.svc.registerTransaction({
-      txId: msg._id,
+      txId:      msg._id,
       accountId: info.cardId,
-      flow: info.flow,
-      amount: msg.amount,
-      date: new Date(msg.date),
+      flow:      info.flow,
+      amount:    msg.amount,
+      date,
     });
   }
 
   @RMQValidate()
   @RMQRoute(UPDATED)
   async onUpdated(msg: TxMsg) {
-    if (msg.type === 'transfer') return;
+    const date = new Date(msg.date);
+
+    if (msg.type === 'transfer') {
+      // Для апдейта переводов откатывать/пересчитывать обе стороны
+      if (msg.accountId && await this.isCredit(msg.accountId)) {
+        await this.svc.updateTransaction(msg._id, {
+          accountId: msg.accountId,
+          flow:      'expense',
+          amount:    msg.amount,
+          date,
+        });
+      }
+      if (msg.toAccountId && await this.isCredit(msg.toAccountId)) {
+        await this.svc.updateTransaction(msg._id, {
+          accountId: msg.toAccountId,
+          flow:      'income',
+          amount:    msg.amount,
+          date,
+        });
+      }
+      return;
+    }
+
     const info = await this.detectFlow(msg);
     if (!info) return;
-
     await this.svc.updateTransaction(msg._id, {
       accountId: info.cardId,
-      flow: info.flow,
-      amount: msg.amount,
-      date: new Date(msg.date),
+      flow:      info.flow,
+      amount:    msg.amount,
+      date,
     });
   }
 }
