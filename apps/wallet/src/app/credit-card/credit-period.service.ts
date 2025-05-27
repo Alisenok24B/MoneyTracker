@@ -1,6 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import {
+  formatISO,
   isAfter,
   isBefore,
 } from 'date-fns';
@@ -158,25 +159,38 @@ export class CreditPeriodService {
     }, 0);
   }
 
-  /**
-   * Возвращает все периоды по карте, у которых задолженность > 0.
-   * Каждый элемент { periodId, debt }.
-   */
-  async listOutstandingDebts(accountId: string): Promise<{ periodId: string; debt: number }[]> {
-    // берём все периоды в статусе payment|overdue
-    const periods = await this.periods.findMany({
-      accountId,
-      status: undefined,           // репозиторий findMany умеет фильтровать status!
-      statementEndLt: undefined,
-      paymentDueLt: undefined,
-    });
-    // но оставим только нужные статусы
-    const relevant = periods.filter(p => p.status === 'payment' || p.status === 'overdue');
+  /** Возвращает периоды с долгами > 0 и их диапазон дат */
+  async listOutstandingDebts(
+    accountId: string
+  ): Promise<
+    { periodId: string; debt: number; statementStart: string; paymentDue: string }[]
+  > {
+    // 1) все периоды payment|overdue
+    const periods = await this.periods.findMany({ accountId });
+    const relevant = periods.filter(
+      p => p.status === 'payment' || p.status === 'overdue'
+    );
 
-    const result: { periodId: string; debt: number }[] = [];
+    const result: {
+      periodId: string;
+      debt: number;
+      statementStart: string;
+      paymentDue: string;
+    }[] = [];
+
     for (const p of relevant) {
       const debt = await this.calculateDebt(p._id!);
-      if (debt > 0) result.push({ periodId: p._id!, debt });
+      if (debt > 0) {
+        // форматируем даты YYYY-MM-DD
+        const start = formatISO(p.statementStart, { representation: 'date' });
+        const due   = formatISO(p.paymentDue,   { representation: 'date' });
+        result.push({
+          periodId:       p._id!,
+          debt,
+          statementStart: start,
+          paymentDue:     due,
+        });
+      }
     }
     return result;
   }
