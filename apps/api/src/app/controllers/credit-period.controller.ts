@@ -1,4 +1,4 @@
-import { Controller, ForbiddenException, Get, Param, UseGuards } from '@nestjs/common';
+import { BadRequestException, Controller, ForbiddenException, Get, Param, UseGuards } from '@nestjs/common';
 import { RMQService } from 'nestjs-rmq';
 import { JWTAuthGuard } from '../guards/jwt.guard';
 import {
@@ -6,6 +6,7 @@ import {
   CreditPeriodsDebts,
 } from '@moneytracker/contracts';
 import { UserId } from '../guards/user.decorator';
+import { AccountType } from '@moneytracker/interfaces';
 
 @Controller('credit-cards')
 export class CreditPeriodController {
@@ -25,6 +26,11 @@ export class CreditPeriodController {
     if (account.userId !== userId) {
       throw new ForbiddenException('Access denied to this account');
     }
+
+    // 2) проверяем, что это именно кредитная карта
+    if (account.type !== AccountType.CreditCard) {
+        throw new BadRequestException('Account is not a credit card');
+      }
 
     // 2) запрашиваем у кредитного модуля список долгов
     const { debts } = await this.rmq.send<
