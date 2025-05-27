@@ -9,6 +9,7 @@ export namespace TransactionCreate {
     @IsString() userId: string;
     @IsString() accountId: string;
     @IsString() categoryId: string;
+    @IsOptional() @IsString() periodId?: string; // только для кредитных карт
     @IsOptional() @IsString() toAccountId?: string; // только для transfer
     @IsNumber() amount: number;
     @IsDateString() @Type(() => Date) date: Date;

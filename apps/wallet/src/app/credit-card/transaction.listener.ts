@@ -18,6 +18,7 @@ type TxMsg = {
   _id:        string;      // id транзакции
   accountId?: string;
   toAccountId?: string;
+  periodId?:  string,
   amount:     number;
   type:       'income' | 'expense' | 'transfer';
   date:       string | Date;
@@ -74,7 +75,7 @@ export class TransactionListener {
           accountId: msg.accountId,
           flow:      'expense',
           amount:    msg.amount,
-          date,
+          date
         });
       }
       if (msg.toAccountId && await this.isCredit(msg.toAccountId)) {
@@ -84,6 +85,7 @@ export class TransactionListener {
           flow:      'income',
           amount:    msg.amount,
           date,
+          periodId:  msg.periodId,
         });
       }
       return;
@@ -98,6 +100,7 @@ export class TransactionListener {
       flow:      info.flow,
       amount:    msg.amount,
       date,
+      periodId:  info.flow === 'income' ? msg.periodId : undefined,
     });
   }
 

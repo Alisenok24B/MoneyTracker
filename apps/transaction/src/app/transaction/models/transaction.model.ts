@@ -16,6 +16,10 @@ export class Transaction extends Document implements ITransaction {
   @Prop({ type: Types.ObjectId, ref: 'Account' })
   toAccountId?: string;
 
+  /** Только для income/transfer-операций по кредитной карте */
+  @Prop({ type: Types.ObjectId, ref: 'CreditPeriod', required: false })
+  periodId?: string;
+
   // только для income/expense
   @Prop({ type: Types.ObjectId, ref: 'Category', required: true })
   categoryId: string;

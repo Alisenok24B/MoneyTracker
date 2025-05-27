@@ -1,4 +1,3 @@
-// apps/api/src/app/dtos/create-transaction.dto.ts
 import { IsString, IsNumber, IsDateString, IsOptional } from 'class-validator';
 
 export class CreateTransactionDto {
@@ -11,6 +10,10 @@ export class CreateTransactionDto {
   @IsOptional()
   @IsString()
   toAccountId?: string;
+
+  @IsOptional()
+  @IsString()
+  periodId?: string;
 
   @IsNumber()
   amount: number;

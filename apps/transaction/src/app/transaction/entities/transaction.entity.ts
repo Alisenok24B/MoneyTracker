@@ -5,6 +5,7 @@ export class TransactionEntity implements ITransaction {
   userId: string;
   accountId: string;
   toAccountId?: string; // только для transfer
+  periodId?: string; // только для кредитных карт при accountId + income и toAccountId + transfer
   categoryId: string;
   type: FlowType;
   amount: number;
@@ -27,6 +28,7 @@ export class TransactionEntity implements ITransaction {
         userId:       this.userId,
         accountId:    this.accountId,
         toAccountId:  this.toAccountId,
+        periodId:  this.periodId,
         categoryId:   this.categoryId,
         type:         this.type,
         amount:       this.amount,
@@ -45,6 +47,7 @@ export class TransactionEntity implements ITransaction {
         userId:       this.userId,
         accountId:    this.accountId,
         toAccountId:  this.toAccountId,
+        periodId:  this.periodId,
         categoryId:   this.categoryId,
         type:         this.type,
         amount:       this.amount,

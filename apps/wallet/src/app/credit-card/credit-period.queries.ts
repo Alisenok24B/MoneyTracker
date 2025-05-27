@@ -1,6 +1,8 @@
 import { Controller } from '@nestjs/common';
 import { RMQRoute, RMQValidate } from 'nestjs-rmq';
 import {
+    CreditPeriodDebt,
+    CreditPeriodGet,
   CreditPeriodsDebts,  // новый контракт
 } from '@moneytracker/contracts';
 import { CreditPeriodService } from './credit-period.service';
@@ -16,5 +18,23 @@ export class CreditPeriodQueries {
   ): Promise<CreditPeriodsDebts.Response> {
     const entries = await this.svc.listOutstandingDebts(payload.accountId);
     return { debts: entries };
+  }
+
+  @RMQValidate()
+  @RMQRoute(CreditPeriodGet.topic)
+  async getPeriod(
+    payload: CreditPeriodGet.Request
+  ): Promise<CreditPeriodGet.Response> {
+    const period = await this.svc.getPeriod(payload.accountId, payload.periodId);
+    return { period };
+  }
+
+  @RMQValidate()
+  @RMQRoute(CreditPeriodDebt.topic)
+  async getDebt(
+    payload: CreditPeriodDebt.Request
+  ): Promise<CreditPeriodDebt.Response> {
+    const debt = await this.svc.calculateDebt(payload.periodId);
+    return { debt };
   }
 }

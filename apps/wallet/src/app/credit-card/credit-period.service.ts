@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import {
   formatISO,
@@ -89,8 +89,21 @@ export class CreditPeriodService {
     amount: number;
     flow: FlowType;          // 'income' | 'expense'
     date: Date;
+    periodId?: string;
   }): Promise<void> {
-    const period = await this.ensurePeriod(args.accountId, args.date);
+    let period: CreditPeriodEntity;
+
+    if (args.periodId) {
+      // 1) Берём указанный период и проверяем
+      const p = await this.periods.findById(args.periodId);
+      if (!p || p.accountId !== args.accountId) {
+        throw new Error(`Credit period ${args.periodId} not found for account ${args.accountId}`);
+      }
+      period = p;
+    } else {
+      // 2) Обычный auto-period
+      period = await this.ensurePeriod(args.accountId, args.date);
+    }
 
     if (args.flow === 'expense') {
       period.addExpense(args.amount).markUpdated();
@@ -193,6 +206,24 @@ export class CreditPeriodService {
       }
     }
     return result;
+  }
+
+  /**
+   * Возвращает один период по его id (или бросает, если не найден или чужой)
+   */
+  async getPeriod(accountId: string, periodId: string) {
+    const ent = await this.periods.findById(periodId);
+    if (!ent || ent.accountId !== accountId) {
+      throw new NotFoundException('Credit period not found for this account');
+    }
+    return {
+      _id:            ent._id!,
+      accountId:      ent.accountId,
+      statementStart: ent.statementStart.toISOString().slice(0, 10),
+      statementEnd:   ent.statementEnd.toISOString().slice(0, 10),
+      paymentDue:     ent.paymentDue.toISOString().slice(0, 10),
+      status:         ent.status,
+    };
   }
 
   /* ------------------------------------------------------------------

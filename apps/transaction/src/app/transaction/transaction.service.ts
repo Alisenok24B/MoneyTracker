@@ -1,10 +1,9 @@
-// apps/transactions/src/app/transactions/transaction.service.ts
-import { Injectable, ForbiddenException, NotFoundException, BadRequestException } from '@nestjs/common';
+import { Injectable, ForbiddenException, NotFoundException, BadRequestException, Logger } from '@nestjs/common';
 import { TransactionRepository } from './repositories/transaction.repository';
 import { TransactionEntity } from './entities/transaction.entity';
-import { ITransaction, FlowType } from '@moneytracker/interfaces';
+import { ITransaction, FlowType, AccountType } from '@moneytracker/interfaces';
 import { TransactionEventEmitter } from './transaction.event-emitter';
-import { AccountGet, AccountList, CategoryGet, TransactionCreate, TransactionUpdate } from '@moneytracker/contracts';
+import { AccountGet, AccountList, CategoryGet, CreditPeriodDebt, CreditPeriodGet, TransactionCreate, TransactionUpdate } from '@moneytracker/contracts';
 import { RMQService } from 'nestjs-rmq';
 
 @Injectable()
@@ -14,17 +13,87 @@ export class TransactionService {
     private readonly events: TransactionEventEmitter,
     private readonly rmq: RMQService
   ) {}
+  private readonly logger = new Logger(TransactionService.name);
+
+  /** Проверяет, что по данной кредитке и periodId можно провести операцию amount на дату dateOnly */
+  private async validateCreditPeriod(
+    userId: string,
+    accountId: string,
+    periodId: string | undefined,
+    dateOnly: Date,
+    amount: number,
+    action: 'income' | 'transfer',
+  ) {
+
+    // 1. Получаем сам счёт, убеждаемся, что это кредитка
+    const { account } = await this.rmq.send<AccountGet.Request, AccountGet.Response>(
+      AccountGet.topic, { userId, id: accountId }
+    );
+    if (account.type !== AccountType.CreditCard) return;
+    this.logger.log(`Это кредитная карта`);
+
+    if (!periodId) {
+      this.logger.log(`Нет periodId`);
+      throw new BadRequestException(`periodId required for ${action} on credit card`);
+    }
+    this.logger.log(`Есть periodId`);
+    
+    // 2. Запрашиваем период
+    const { period } = await this.rmq.send<
+      CreditPeriodGet.Request,
+      CreditPeriodGet.Response
+    >(CreditPeriodGet.topic, { accountId, periodId });
+    this.logger.log(`Запросили период`);
+
+    const stmtEnd = new Date(period.statementEnd);
+    const payDue  = new Date(period.paymentDue);
+  
+    // 3) проверяем границы: statementEnd ≤ date
+    if (stmtEnd > dateOnly) {
+      throw new BadRequestException('Date is before the start of the specified period');
+    }
+    // 4) если статус=payment — дополнительно date ≤ paymentDue
+    if (period.status === 'payment' && dateOnly > payDue) {
+      throw new BadRequestException('Date is after paymentDue for this period');
+    }
+    // 5) статус должен быть payment|overdue
+    if (period.status !== 'payment' && period.status !== 'overdue') {
+      throw new BadRequestException('Specified period is not in payment or overdue');
+    }
+    this.logger.log(`Проверили statementEnd и статус`);
+
+    // 4. Проверяем остаток долга
+    // Если период в статусе PAYMENT — проверяем debt >= amount
+  // Если OVERDUE — переплата разрешена, проверку не делаем
+  if (period.status === 'payment') {
+    const { debt } = await this.rmq.send<
+      CreditPeriodDebt.Request,
+      CreditPeriodDebt.Response
+    >(CreditPeriodDebt.topic, { periodId });
+    if (debt < amount) {
+      throw new BadRequestException(
+        action === 'income'
+          ? 'Payment amount exceeds outstanding debt'
+          : 'Transfer amount exceeds outstanding debt'
+      );
+    }
+  }
+    this.logger.log(`Проверили остаток долга`);
+  }
 
   /** Создание транзакции */
   async create(userId: string, dto: TransactionCreate.Request): Promise<TransactionCreate.Response> {
+    this.logger.log(`Начало создания транзакции`);
     // 1. Проверяем счёт
     await this.rmq.send(AccountGet.topic, { userId, id: dto.accountId });
+    this.logger.log(`Аваите`);
   
     // 2. Получаем категорию и её тип
     const { category } = await this.rmq.send<CategoryGet.Request, CategoryGet.Response>(
       CategoryGet.topic, { userId, id: dto.categoryId },
     );
     const catType = category.type as FlowType;   // income | expense | transfer
+    this.logger.log(`Категория`);
   
     // 3. Валидации transfer-категории
     if (catType === FlowType.Transfer) {
@@ -44,13 +113,57 @@ export class TransactionService {
       // проверяем категорию
       await this.rmq.send(CategoryGet.topic, { userId, id: dto.categoryId });
     }
+    this.logger.log(`Валидация transfer категории`);
 
     //проверяем счет списания
     await this.rmq.send(AccountGet.topic, { userId, id: dto.accountId });
+    this.logger.log(`Счет списания`);
+
+     // 2) Определяем, когда нужен periodId
+    //    — для income по кредитке по accountId
+    //    — для transfer на кредитку по toAccountId
+    const { account: srcAcc } = await this.rmq.send<
+      AccountGet.Request, AccountGet.Response
+    >(AccountGet.topic, { userId, id: dto.accountId });
+    const sourceIsCredit = srcAcc.type === AccountType.CreditCard;
+
+    let targetIsCredit = false;
+    if (catType === FlowType.Transfer && dto.toAccountId) {
+      const { account: tgtAcc } = await this.rmq.send<
+        AccountGet.Request, AccountGet.Response
+      >(AccountGet.topic, { userId, id: dto.toAccountId });
+      targetIsCredit = tgtAcc.type === AccountType.CreditCard;
+    }
+
+    const needsPeriodId =
+      (catType === FlowType.Income && sourceIsCredit) ||
+      (catType === FlowType.Transfer && targetIsCredit);
+
+    if (needsPeriodId && !dto.periodId) {
+      throw new BadRequestException('periodId is required for this transaction');
+    }
+    if (!needsPeriodId && dto.periodId) {
+      throw new BadRequestException('periodId is not allowed for this transaction');
+    }
   
     // 4. Нормализуем дату
     const dateOnly = new Date(dto.date);
     dateOnly.setUTCHours(0,0,0,0);
+    this.logger.log(`Нормализация даты`);
+
+    // Проверяем для переводов на кредитную карту корректное указание кредитного периода
+    if (catType === FlowType.Income) {
+      // income по accountId
+      await this.validateCreditPeriod(
+        userId, dto.accountId, dto.periodId, dateOnly, dto.amount, 'income'
+      );
+    } else if (catType === FlowType.Transfer && dto.toAccountId) {
+      // transfer → toAccountId
+      await this.validateCreditPeriod(
+        userId, dto.toAccountId, dto.periodId, dateOnly, dto.amount, 'transfer'
+      );
+    }
+    this.logger.log(`Проверено для переводов на кредитную карту корректное указание кредитного периода`);
   
     // 5. Собираем сущность
     const entity = new TransactionEntity({
