@@ -20,4 +20,5 @@ export * from './lib/transaction/transaction.get';
 export * from './lib/transaction/transaction.list';
 export * from './lib/wallet/wallet.create-credit-details';
 export * from './lib/wallet/wallet.update-credit-details';
+export * from './lib/credit-period/credit-period.get-debts';
 

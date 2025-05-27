@@ -34,11 +34,24 @@ export class TransactionListener {
   private async detectFlow(m: TxMsg): Promise<{ flow: FlowType; cardId: string } | null> {
     if (m.accountId) {
       const acc = await this.accounts.findByIdIncludeDeleted(m.accountId);
-      if (acc?.type === AccountType.CreditCard) return { flow: 'expense', cardId: acc._id.toString() };
+      if (acc?.type === AccountType.CreditCard) {
+        // Если просто операция по счёту (не transfer),
+        // flow соответствует тому, что прислали в msg.type
+        return {
+          flow: m.type === 'expense' ? 'expense' : 'income',
+          cardId: acc._id.toString(),
+        };
+      }
     }
     if (m.toAccountId) {
       const acc = await this.accounts.findByIdIncludeDeleted(m.toAccountId);
-      if (acc?.type === AccountType.CreditCard) return { flow: 'income', cardId: acc._id.toString() };
+      if (acc?.type === AccountType.CreditCard) {
+        // В случае transfer–income (зачисление на кредитку)
+        return {
+          flow: m.type === 'expense' ? 'expense' : 'income',
+          cardId: acc._id.toString(),
+        };
+      }
     }
     return null;
   }

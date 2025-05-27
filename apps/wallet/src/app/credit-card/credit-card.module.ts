@@ -15,6 +15,7 @@ import { CreditPeriodModel, CreditPeriodSchema } from './models/credit-period.mo
 import { CreditTxIndex, CreditTxIndexSchema } from './models/credit-tx-index.model';
 import { CreditTxIndexRepository } from './repositories/credit-tx-index.repository';
 import { AccountModule } from '../account/account.module';
+import { CreditPeriodQueries } from './credit-period.queries';
 
 @Module({
   imports: [
@@ -34,7 +35,7 @@ import { AccountModule } from '../account/account.module';
     CreditPeriodService,
     CreditTxIndexRepository
   ],
-  controllers: [CreditController, TransactionListener],
+  controllers: [CreditController, TransactionListener, CreditPeriodQueries],
   exports: [CreditService, CreditPeriodService], // чтобы AccountModule мог инжектить
 })
 export class CreditCardModule {}

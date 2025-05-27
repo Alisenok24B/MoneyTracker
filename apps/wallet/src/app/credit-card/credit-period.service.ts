@@ -147,6 +147,40 @@ export class CreditPeriodService {
     });
   }
 
+  /**
+   * Считает задолженность по одному периоду:
+   * expense → +amount, income → -amount
+   */
+  async calculateDebt(periodId: string): Promise<number> {
+    const entries = await this.index.findByPeriodId(periodId);
+    return entries.reduce((sum, idx) => {
+      return sum + (idx.flow === 'expense' ? idx.amount : -idx.amount);
+    }, 0);
+  }
+
+  /**
+   * Возвращает все периоды по карте, у которых задолженность > 0.
+   * Каждый элемент { periodId, debt }.
+   */
+  async listOutstandingDebts(accountId: string): Promise<{ periodId: string; debt: number }[]> {
+    // берём все периоды в статусе payment|overdue
+    const periods = await this.periods.findMany({
+      accountId,
+      status: undefined,           // репозиторий findMany умеет фильтровать status!
+      statementEndLt: undefined,
+      paymentDueLt: undefined,
+    });
+    // но оставим только нужные статусы
+    const relevant = periods.filter(p => p.status === 'payment' || p.status === 'overdue');
+
+    const result: { periodId: string; debt: number }[] = [];
+    for (const p of relevant) {
+      const debt = await this.calculateDebt(p._id!);
+      if (debt > 0) result.push({ periodId: p._id!, debt });
+    }
+    return result;
+  }
+
   /* ------------------------------------------------------------------
    *  CRON-JOB
    *  — выполняется ежедневно в 00:00, закрывает периоды

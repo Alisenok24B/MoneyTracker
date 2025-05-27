@@ -66,4 +66,9 @@ export class CreditTxIndexRepository {
   async removeByTxId(txId: string): Promise<void> {
     await this.model.deleteMany({ txId }).exec();
   }
+
+  /** Находит все записи по конкретному периоду */
+  async findByPeriodId(periodId: string): Promise<CreditTxIndexDocument[]> {
+    return this.model.find({ periodId }).exec();
+  }
 }

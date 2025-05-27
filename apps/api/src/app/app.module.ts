@@ -11,6 +11,7 @@ import { JwtStrategy } from './strategies/jwt.strategy';
 import { WalletController } from './controllers/wallet.controller';
 import { CategoryController } from './controllers/category.controller';
 import { TransactionController } from './controllers/transaction.controller';
+import { CreditPeriodController } from './controllers/credit-period.controller';
 
 @Module({
   imports: [
@@ -19,7 +20,14 @@ import { TransactionController } from './controllers/transaction.controller';
     JwtModule.registerAsync(getJWTConfig()),
     PassportModule.register({defaultStrategy: 'jwt'})
   ],
-  controllers: [AuthController, UserController, WalletController, CategoryController, TransactionController],
+  controllers: [
+    AuthController, 
+    UserController, 
+    WalletController, 
+    CategoryController, 
+    TransactionController,
+    CreditPeriodController
+  ],
   providers: [
     JwtStrategy
   ]
