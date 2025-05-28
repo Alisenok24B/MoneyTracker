@@ -31,6 +31,10 @@ export class CreditPeriodModel {
   @Prop({ type: Number, default: 0 })
   interestAccrued: number;
 
+  /** начисляются ли проценты (true, если статус overdue) */
+  @Prop({ type: Boolean, default: false })
+  hasInterest: boolean;
+
   /** ставка (% годовых) сохраняется «срезом» при создании периода */
   @Prop({ type: Number, required: true })
   interestRate: number;

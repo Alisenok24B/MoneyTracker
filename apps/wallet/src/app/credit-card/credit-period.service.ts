@@ -71,7 +71,7 @@ export class CreditPeriodService {
       totalSpent: 0,
       paidAmount: 0,
       interestAccrued: 0,
-      interestRate: details.interestRate,          // ← добавлено
+      interestRate: details.interestRate,
     }).markCreated();
 
     return this.periods.create(entity);
@@ -231,7 +231,7 @@ export class CreditPeriodService {
    *  — выполняется ежедневно в 00:00, закрывает периоды
    *    и начисляет проценты по просрочке
    * ---------------------------------------------------------------- */
-  @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
+  @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT) //'*/1 * * * *'
   async nightlyRecalc(): Promise<void> {
     const today = new Date();
     this.log.log('⏰ Nightly credit-cycle recalc');
@@ -244,7 +244,9 @@ export class CreditPeriodService {
         p.status = 'payment'; changed = true;
       }
       if (p.status === 'payment' && today > p.paymentDue) {
-        p.status = 'overdue'; changed = true;
+        p.status = 'overdue';
+        p.hasInterest = true;
+        changed = true;
       }
       if (p.status === 'overdue') {
         const unpaid = p.totalSpent - p.paidAmount;

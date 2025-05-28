@@ -23,6 +23,8 @@ export interface ICreditPeriod {
   /** начисленные проценты (копятся ежедневно после paymentDue) */
   interestAccrued: number;
   interestRate: number;
+  /** флаг: начали начислять проценты */
+  hasInterest: boolean;
 
   /** soft-delete */
   deletedAt?: Date;
@@ -39,6 +41,7 @@ export class CreditPeriodEntity implements ICreditPeriod {
   paidAmount: number;
   interestAccrued: number;
   interestRate: number;
+  hasInterest: boolean;
   deletedAt?: Date;
 
   /** доменные события  */
@@ -46,6 +49,7 @@ export class CreditPeriodEntity implements ICreditPeriod {
 
   constructor(data?: Partial<ICreditPeriod>) {
     if (data) Object.assign(this, data);
+    this.hasInterest = data?.hasInterest ?? false;
   }
 
   markCreated() {
