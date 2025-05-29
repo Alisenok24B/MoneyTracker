@@ -35,6 +35,10 @@ export class Transaction extends Document implements ITransaction {
 
   @Prop()
   description?: string;
+
+  // Флаг: переплата по просроченному кредитному периоду
+  @Prop({ type: Boolean, default: false })
+  hasInterest?: boolean;
 }
 
 export const TransactionSchema = SchemaFactory.createForClass(Transaction);

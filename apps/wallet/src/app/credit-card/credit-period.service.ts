@@ -90,6 +90,7 @@ export class CreditPeriodService {
     flow: FlowType;          // 'income' | 'expense'
     date: Date;
     periodId?: string;
+    hasInterest?: boolean;
   }): Promise<void> {
     let period: CreditPeriodEntity;
 
@@ -105,11 +106,18 @@ export class CreditPeriodService {
       period = await this.ensurePeriod(args.accountId, args.date);
     }
 
+    // 1) Сохраняем сумму
     if (args.flow === 'expense') {
-      period.addExpense(args.amount).markUpdated();
+      period.addExpense(args.amount);
     } else {
-      period.addPayment(args.amount).markUpdated();
+      period.addPayment(args.amount);
     }
+    // 2) Если hasInterest — закрываем период, иначе просто помечаем его обновлённым
+    if (args.hasInterest) {
+      period.status = 'closed';
+      period.hasInterest = true;
+    }
+    period.markUpdated();
     await this.periods.update(period);
 
     await this.index.create({

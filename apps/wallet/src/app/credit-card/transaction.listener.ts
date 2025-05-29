@@ -19,6 +19,7 @@ type TxMsg = {
   accountId?: string;
   toAccountId?: string;
   periodId?:  string,
+  hasInterest?: boolean;
   amount:     number;
   type:       'income' | 'expense' | 'transfer';
   date:       string | Date;
@@ -86,6 +87,7 @@ export class TransactionListener {
           amount:    msg.amount,
           date,
           periodId:  msg.periodId,
+          hasInterest: msg.hasInterest,
         });
       }
       return;
@@ -101,6 +103,7 @@ export class TransactionListener {
       amount:    msg.amount,
       date,
       periodId:  info.flow === 'income' ? msg.periodId : undefined,
+      hasInterest: info.flow === 'income' ? msg.hasInterest : undefined,
     });
   }
 

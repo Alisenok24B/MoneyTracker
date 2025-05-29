@@ -97,6 +97,8 @@ export class TransactionController {
           date: isoDateOnly(tx.date),
           type:    tx.type,
           description: tx.description,
+          periodId: tx.periodId,
+          hasInterest: tx.hasInterest,
           user: {
             id:   tx.userId,
             name: userRes?.profile?.displayName ?? null,
@@ -193,6 +195,8 @@ export class TransactionController {
       amount: tx.amount,
       date: isoDateOnly(tx.date),
       description: tx.description,
+      periodId: tx.periodId,
+      hasInterest: tx.hasInterest, 
       deletedAt: tx.deletedAt ?? null,
       user: {
         id:   tx.userId,

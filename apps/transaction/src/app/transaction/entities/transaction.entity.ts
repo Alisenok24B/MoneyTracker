@@ -6,6 +6,7 @@ export class TransactionEntity implements ITransaction {
   accountId: string;
   toAccountId?: string; // только для transfer
   periodId?: string; // только для кредитных карт при accountId + income и toAccountId + transfer
+  hasInterest?: boolean; // только для overdue периодов
   categoryId: string;
   type: FlowType;
   amount: number;
@@ -29,6 +30,7 @@ export class TransactionEntity implements ITransaction {
         accountId:    this.accountId,
         toAccountId:  this.toAccountId,
         periodId:  this.periodId,
+        hasInterest:  this.hasInterest,
         categoryId:   this.categoryId,
         type:         this.type,
         amount:       this.amount,

@@ -70,6 +70,7 @@ export class TransactionService {
       CreditPeriodDebt.Request,
       CreditPeriodDebt.Response
     >(CreditPeriodDebt.topic, { periodId });
+    this.logger.log(`Задолженность = ${debt}}`);
     if (debt < amount) {
       throw new BadRequestException(
         action === 'income'
@@ -135,15 +136,21 @@ export class TransactionService {
       targetIsCredit = tgtAcc.type === AccountType.CreditCard;
     }
 
-    const needsPeriodId =
-      (catType === FlowType.Income && sourceIsCredit) ||
-      (catType === FlowType.Transfer && targetIsCredit);
+    // определяем, нужен ли periodId/hasInterest
+    const isIncomeOnCredit = catType === FlowType.Income && sourceIsCredit;
+    const isTransferToCredit = catType === FlowType.Transfer && targetIsCredit;
 
-    if (needsPeriodId && !dto.periodId) {
+    const needsPeriod = isIncomeOnCredit || isTransferToCredit;
+
+    if (needsPeriod && !dto.periodId) {
       throw new BadRequestException('periodId is required for this transaction');
     }
-    if (!needsPeriodId && dto.periodId) {
+    if (!needsPeriod && dto.periodId) {
       throw new BadRequestException('periodId is not allowed for this transaction');
+    }
+    // если период не нужен — hasInterest запрещён
+    if (!needsPeriod && dto.hasInterest !== undefined) {
+      throw new BadRequestException('hasInterest is not allowed for this transaction');
     }
   
     // 4. Нормализуем дату
@@ -164,7 +171,47 @@ export class TransactionService {
       );
     }
     this.logger.log(`Проверено для переводов на кредитную карту корректное указание кредитного периода`);
-  
+
+    // 8. Логика hasInterest для overdue-периода
+  if (needsPeriod) {
+    // Получим период сразу, чтобы знать его статус и paymentDue
+    const { period } = await this.rmq.send<
+      CreditPeriodGet.Request,
+      CreditPeriodGet.Response
+    >(CreditPeriodGet.topic, {
+      accountId: isIncomeOnCredit ? dto.accountId : dto.toAccountId!,
+      periodId:  dto.periodId!,
+    });
+
+    const payDue = new Date(period.paymentDue);
+    if (period.status === 'overdue') {
+      // если overdue, flag обязателен
+      if (dto.hasInterest === undefined) {
+        throw new BadRequestException('hasInterest is required for overdue-period transactions');
+      }
+      // разрешаем true только когда amount > debt
+      const { debt } = await this.rmq.send<
+        CreditPeriodDebt.Request,
+        CreditPeriodDebt.Response
+      >(CreditPeriodDebt.topic, { periodId: dto.periodId! });
+      if (dto.hasInterest) {
+        if (dto.amount <= debt) {
+          throw new BadRequestException('For hasInterest=true amount must exceed outstanding debt');
+        }
+      } else {
+        throw new BadRequestException('hasInterest must be true for overdue-period transactions');
+      }
+      this.logger.log(`hasInterest-проверка пройдена: true, debt=${debt}, amount=${dto.amount}`);
+    } else {
+      // во всех остальных случаях флаг запрещён
+      if (dto.hasInterest !== undefined) {
+        throw new BadRequestException('hasInterest not allowed for non-overdue transactions');
+      }
+      this.logger.log(`hasInterest не применяется (status=${period.status})`);
+    }
+  }
+
+
     // 5. Собираем сущность
     const entity = new TransactionEntity({
       ...dto,

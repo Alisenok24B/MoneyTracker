@@ -1,4 +1,4 @@
-import { IsString, IsNumber, IsDateString, IsOptional } from 'class-validator';
+import { IsString, IsNumber, IsDateString, IsOptional, IsBoolean } from 'class-validator';
 
 export class CreateTransactionDto {
   @IsString()
@@ -14,6 +14,10 @@ export class CreateTransactionDto {
   @IsOptional()
   @IsString()
   periodId?: string;
+
+  // флаг для overdue-пополнений
+  @IsOptional() @IsBoolean()
+  hasInterest?: boolean;
 
   @IsNumber()
   amount: number;
