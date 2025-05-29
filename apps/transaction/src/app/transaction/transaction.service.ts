@@ -50,7 +50,7 @@ export class TransactionService {
   
     // 3) проверяем границы: statementEnd ≤ date
     if (stmtEnd > dateOnly) {
-      throw new BadRequestException('Date is before the start of the specified period');
+      throw new BadRequestException('Date is before the start of the specified payment-period');
     }
     // 4) если статус=payment — дополнительно date ≤ paymentDue
     if (period.status === 'payment' && dateOnly > payDue) {
@@ -198,9 +198,10 @@ export class TransactionService {
         if (dto.amount <= debt) {
           throw new BadRequestException('For hasInterest=true amount must exceed outstanding debt');
         }
-      } else {
-        throw new BadRequestException('hasInterest must be true for overdue-period transactions');
-      }
+        else {
+          throw new BadRequestException('hasInterest must be true for overdue-period transaction if amount >= debt');
+        }
+      } 
       this.logger.log(`hasInterest-проверка пройдена: true, debt=${debt}, amount=${dto.amount}`);
     } else {
       // во всех остальных случаях флаг запрещён
