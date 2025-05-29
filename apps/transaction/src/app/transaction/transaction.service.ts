@@ -183,12 +183,31 @@ export class TransactionService {
       periodId:  dto.periodId!,
     });
 
+    const stmtEnd = new Date(period.statementEnd);
     const payDue = new Date(period.paymentDue);
     if (period.status === 'overdue') {
       // если overdue, flag обязателен
       if (dto.hasInterest === undefined) {
         throw new BadRequestException('hasInterest is required for overdue-period transactions');
       }
+      if (dateOnly <= payDue) {
+        // внутри границы платежного периода переплата не считается
+        // 8a) внутри window ([statementEnd..paymentDue]) сумма не может превышать долг
+        const { debt } = await this.rmq.send<
+          CreditPeriodDebt.Request,
+          CreditPeriodDebt.Response
+        >(CreditPeriodDebt.topic, { periodId: dto.periodId! });
+        if (dto.amount > debt) {
+          throw new BadRequestException(
+            'Transaction amount exceeds outstanding debt for this period'
+          );
+        }
+        if (dto.hasInterest) {
+          throw new BadRequestException(
+            'hasInterest cannot be true when transaction date is within paymentDue'
+          );
+        }
+      } else {
       // разрешаем true только когда amount > debt
       const { debt } = await this.rmq.send<
         CreditPeriodDebt.Request,
@@ -199,14 +218,9 @@ export class TransactionService {
           this.logger.log(`hasInterest-проверка пройдена: true, debt=${debt}, amount=${dto.amount}`);
           throw new BadRequestException('For hasInterest=true amount must exceed outstanding debt');
         }
-      } 
-      else {
-        if (dto.amount > debt) {
-          this.logger.log(`hasInterest-проверка пройдена: true, debt=${debt}, amount=${dto.amount}`);
-          throw new BadRequestException('hasInterest must be true for overdue-period transaction if amount > debt');
-        }
       }
       this.logger.log(`hasInterest-проверка пройдена: true, debt=${debt}, amount=${dto.amount}`);
+    }
     } else {
       // во всех остальных случаях флаг запрещён
       if (dto.hasInterest !== undefined) {
@@ -214,6 +228,7 @@ export class TransactionService {
       }
       this.logger.log(`hasInterest не применяется (status=${period.status})`);
     }
+
   }
 
 
