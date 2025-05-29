@@ -196,12 +196,16 @@ export class TransactionService {
       >(CreditPeriodDebt.topic, { periodId: dto.periodId! });
       if (dto.hasInterest) {
         if (dto.amount <= debt) {
+          this.logger.log(`hasInterest-проверка пройдена: true, debt=${debt}, amount=${dto.amount}`);
           throw new BadRequestException('For hasInterest=true amount must exceed outstanding debt');
         }
-        else {
-          throw new BadRequestException('hasInterest must be true for overdue-period transaction if amount >= debt');
-        }
       } 
+      else {
+        if (dto.amount > debt) {
+          this.logger.log(`hasInterest-проверка пройдена: true, debt=${debt}, amount=${dto.amount}`);
+          throw new BadRequestException('hasInterest must be true for overdue-period transaction if amount > debt');
+        }
+      }
       this.logger.log(`hasInterest-проверка пройдена: true, debt=${debt}, amount=${dto.amount}`);
     } else {
       // во всех остальных случаях флаг запрещён
