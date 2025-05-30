@@ -70,7 +70,7 @@ export class TransactionService {
       CreditPeriodDebt.Request,
       CreditPeriodDebt.Response
     >(CreditPeriodDebt.topic, { periodId });
-    this.logger.log(`Задолженность = ${debt}}`);
+    this.logger.log(`Задолженность = ${debt}`);
     if (debt < amount) {
       throw new BadRequestException(
         action === 'income'

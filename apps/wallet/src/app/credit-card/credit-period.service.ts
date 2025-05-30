@@ -128,7 +128,28 @@ export class CreditPeriodService {
       amount:    args.amount,
       date:      args.date,
     });
+
+  // 5) Дополнительная проверка для income без hasInterest:
+  // если пополнение (flow='income'), период в payment|overdue
+  // и дата внутри [statementEnd..paymentDue],
+  // то при долге = 0 автоматически закрываем период.
+  if (
+    !args.hasInterest &&
+    args.flow === 'income' &&
+    (period.status === 'payment' || period.status === 'overdue')
+  ) {
+    const stmtEnd = period.statementStart;
+    const payDue  = period.paymentDue;
+    if (args.date >= stmtEnd && args.date <= payDue) {
+      const debt = await this.calculateDebt(period._id!);
+      if (debt === 0) {
+        period.status = 'closed';
+        period.markUpdated();
+        await this.periods.update(period);
+      }
+    }
   }
+}
 
   /** Обрабатываем изменение транзакции */
   async updateTransaction(
