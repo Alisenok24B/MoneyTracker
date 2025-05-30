@@ -42,9 +42,20 @@ export class CreditPeriodRepository {
 
   async findOpenByAccount(acc: string) {
     const d = await this.model
-      .findOne({ accountId: acc, status: { $in: ['open','payment'] }, deletedAt: null })
+      .findOne({ accountId: acc, status: { $in: ['open'] }, deletedAt: null })
       .exec();
     return d ? this.toEntity(d) : null;
+  }
+
+  async findByDate(accountId: string, date: Date): Promise<CreditPeriodEntity | null> {
+    const doc = await this.model
+      .findOne({
+        accountId,
+        statementStart: { $lte: date },
+        statementEnd:   { $gte: date },
+      })
+      .exec();
+    return doc ? this.toEntity(doc) : null;
   }
 
   async findAllOpen() {

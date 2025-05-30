@@ -70,15 +70,6 @@ export class TransactionListener {
 
     if (msg.type === 'transfer') {
       // Перевод: создаём записи для каждой вовлечённой кредитки
-      if (msg.accountId && await this.isCredit(msg.accountId)) {
-        await this.svc.registerTransaction({
-          txId:      msg._id,
-          accountId: msg.accountId,
-          flow:      'expense',
-          amount:    msg.amount,
-          date
-        });
-      }
       if (msg.toAccountId && await this.isCredit(msg.toAccountId)) {
         await this.svc.registerTransaction({
           txId:      msg._id,
@@ -88,6 +79,15 @@ export class TransactionListener {
           date,
           periodId:  msg.periodId,
           hasInterest: msg.hasInterest,
+        });
+      }
+      if (msg.accountId && await this.isCredit(msg.accountId)) {
+        await this.svc.registerTransaction({
+          txId:      msg._id,
+          accountId: msg.accountId,
+          flow:      'expense',
+          amount:    msg.amount,
+          date
         });
       }
       return;

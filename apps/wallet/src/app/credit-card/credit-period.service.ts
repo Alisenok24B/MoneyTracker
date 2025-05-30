@@ -42,14 +42,23 @@ export class CreditPeriodService {
    * период и возвращает его.
    */
   async ensurePeriod(accountId: string, today = new Date()): Promise<CreditPeriodEntity> {
-    const current = await this.periods.findOpenByAccount(accountId);
-    if (current && today >= current.statementStart && today <= current.paymentDue) {
-      return current;
+    // 0) Попробовать найти ПЕРИОД, охватывающий именно дату «today» (любой статус, даже closed)
+    const existingByDate = await this.periods.findByDate(accountId, today);
+    if (existingByDate) {
+      // если он был closed, переводим в overdue
+      if (existingByDate.status === 'closed') {
+        existingByDate.status = 'overdue';
+        existingByDate.markUpdated();
+        await this.periods.update(existingByDate);
+      }
+      return existingByDate;
     }
 
+    // 1) Ничего не найдено — заводим новый период
     const details = await this.creditRepo.findByAccountId(accountId);
     if (!details) throw new Error(`Credit details for account ${accountId} not found`);
 
+    // вычисляем окно по типу цикла
     const win =
       details.billingCycleType === 'fixed'
         ? this.calc.getFixedWindow(new Date(details.statementAnchor), details)
