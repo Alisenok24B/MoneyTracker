@@ -3,7 +3,7 @@ import { TransactionRepository } from './repositories/transaction.repository';
 import { TransactionEntity } from './entities/transaction.entity';
 import { ITransaction, FlowType, AccountType } from '@moneytracker/interfaces';
 import { TransactionEventEmitter } from './transaction.event-emitter';
-import { AccountGet, AccountList, CategoryGet, CreditPeriodDebt, CreditPeriodGet, TransactionCreate, TransactionUpdate } from '@moneytracker/contracts';
+import { AccountGet, AccountList, CategoryGet, CreditGetAvailable, CreditPeriodDebt, CreditPeriodGet, TransactionCreate, TransactionUpdate } from '@moneytracker/contracts';
 import { RMQService } from 'nestjs-rmq';
 
 @Injectable()
@@ -116,17 +116,31 @@ export class TransactionService {
     }
     this.logger.log(`Валидация transfer категории`);
 
-    //проверяем счет списания
-    await this.rmq.send(AccountGet.topic, { userId, id: dto.accountId });
-    this.logger.log(`Счет списания`);
-
-     // 2) Определяем, когда нужен periodId
-    //    — для income по кредитке по accountId
-    //    — для transfer на кредитку по toAccountId
+    // 5. Определяем, «снимаем» ли мы с кредитки:
     const { account: srcAcc } = await this.rmq.send<
       AccountGet.Request, AccountGet.Response
     >(AccountGet.topic, { userId, id: dto.accountId });
     const sourceIsCredit = srcAcc.type === AccountType.CreditCard;
+
+    // 6. Если expense с кредитки — проверяем «available»
+    if ((catType === FlowType.Expense || catType === FlowType.Transfer) && sourceIsCredit) {
+      const { available } = await this.rmq.send<
+        CreditGetAvailable.Request,
+        CreditGetAvailable.Response
+      >(CreditGetAvailable.topic, { accountId: dto.accountId });
+
+      if (dto.amount > available) {
+        this.logger.log(`${catType} ${dto.amount} ERROR (available=${available})`);
+        throw new BadRequestException(
+          'Insufficient credit: attempt to spend more than available limit',
+        );
+      }
+      this.logger.log(`${catType} ${dto.amount} OK (available=${available})`);
+    }
+
+     // 2) Определяем, когда нужен periodId
+    //    — для income по кредитке по accountId
+    //    — для transfer на кредитку по toAccountId
 
     let targetIsCredit = false;
     if (catType === FlowType.Transfer && dto.toAccountId) {
@@ -231,21 +245,20 @@ export class TransactionService {
 
   }
 
+  // 5. Собираем сущность
+  const entity = new TransactionEntity({
+    ...dto,
+    userId,
+    type: catType,
+    date: dateOnly,
+  })
 
-    // 5. Собираем сущность
-    const entity = new TransactionEntity({
-      ...dto,
-      userId,
-      type: catType,
-      date: dateOnly,
-    })
-  
-    const saved = await this.repo.create(entity);
-    entity._id = saved._id;
-    entity.markCreated();
-    await this.events.emit(entity.events);
-    return {};
-  }
+  const saved = await this.repo.create(entity);
+  entity._id = saved._id;
+  entity.markCreated();
+  await this.events.emit(entity.events);
+  return {};
+}
 
 
 

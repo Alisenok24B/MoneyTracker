@@ -264,6 +264,37 @@ export class CreditPeriodService {
     };
   }
 
+  /**
+   * Считает общий долг по всем кредитным периодам данного accountId,
+   * у которых status = "open" | "payment" | "overdue".
+   */
+  async calculateTotalDebt(accountId: string): Promise<number> {
+    // Берём только те периоды, у которых статус в [open, payment, overdue]
+    // и где accountId совпадает.
+    const relevant: CreditPeriodEntity[] = await this.periods.findActiveByAccount(accountId);
+
+    let total = 0;
+    for (const period of relevant) {
+      const debt = await this.calculateDebt(period._id!);
+      total += debt > 0 ? debt : 0;
+    }
+    return total;
+  }
+
+  /**
+   * Возвращает «свободный» остаток по кредитке: creditLimit − текущий долг.
+   * Если кредитные детали не найдены — кидаем ошибку.
+   */
+  async getAvailableCredit(accountId: string): Promise<number> {
+    const detailsDoc = await this.creditRepo.findByAccountId(accountId);
+    if (!detailsDoc) {
+      throw new Error(`Credit details not found for account ${accountId}`);
+    }
+    const creditLimit = detailsDoc.creditLimit;
+    const totalDebt   = await this.calculateTotalDebt(accountId);
+    return creditLimit - totalDebt;
+  }
+
   /* ------------------------------------------------------------------
    *  CRON-JOB
    *  — выполняется ежедневно в 00:00, закрывает периоды

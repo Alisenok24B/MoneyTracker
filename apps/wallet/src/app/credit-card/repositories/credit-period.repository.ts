@@ -75,4 +75,24 @@ export class CreditPeriodRepository {
     const docs = await this.model.find(q).lean().exec();
     return docs.map(d => new CreditPeriodEntity({ ...d, _id: d._id.toString() }));
   }
+
+  /**
+   * Сразу возвращает все периоды данного accountId, 
+   * у которых статус = 'open' или 'payment' или 'overdue', и deletedAt = null.
+   */
+  async findActiveByAccount(accountId: string): Promise<CreditPeriodEntity[]> {
+    const docs = await this.model
+      .find({
+        accountId,
+        status: { $in: ['open', 'payment', 'overdue'] },
+        deletedAt: null,
+      })
+      .lean()
+      .exec();
+
+    return docs.map(d => new CreditPeriodEntity({ 
+      ...d, 
+      _id: d._id.toString() 
+    }));
+  }
 }

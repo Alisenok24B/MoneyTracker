@@ -23,4 +23,5 @@ export * from './lib/wallet/wallet.update-credit-details';
 export * from './lib/credit-period/credit-period.get-debts';
 export * from './lib/credit-period/credit-period.get-debt';
 export * from './lib/credit-period/credit-period.get';
+export * from './lib/wallet/credit.get-available';
 
