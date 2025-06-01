@@ -31,7 +31,7 @@ export namespace AccountCreate {
   export class Request {
     @IsString() userId: string;
     @IsString() name: string;
-    @IsIn(['savings', 'debit', 'creditCard']) type: string;
+    @IsIn(['savings', 'debit', 'creditCard', 'cash']) type: string;
     @IsOptional() @IsString() currency?: string;
     // initial balance обязателен, если не кредитная карта
     @ValidateIf(o => o.type !== 'creditCard')

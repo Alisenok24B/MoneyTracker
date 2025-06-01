@@ -2,6 +2,7 @@ export enum AccountType {
   Savings = 'savings',
   Debit = 'debit',
   CreditCard = 'creditCard',
+  Cash = 'cash',
 }
 
 // Типы расчётного периода
