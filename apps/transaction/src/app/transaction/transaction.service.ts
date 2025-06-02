@@ -277,15 +277,31 @@ async list(
   toFilter?: Date,
 ): Promise<TransactionEntity[]> {
 
-  /* 1. Получаем доступные счёта (ваши + peers) */
-  const { accounts } = await this.rmq.send<
-    AccountList.Request,
-    AccountList.Response
-  >(AccountList.topic, { userId, peers });
+  /* ----------------------------------------------------------
+   * 0. Определяем базовый набор "допустимых" счётов
+   *    ─ если вызывающая сторона уже прислала accountIdsFilter
+   *      и peers пуст, значит она доверена (это wallet-сервис)
+   *      ─ пропускаем шаг с account.list.query, чтобы
+   *        не попасть в циклический RPC.
+   *    ─ иначе работаем по старой схеме.
+   * ---------------------------------------------------------- */
 
-  const accessibleAccountIds = accounts
-    .filter((a): a is { _id: string } => !!a && !!a._id)
-    .map(a => a._id);
+  let accessibleAccountIds: string[];
+
+  if (accountIdsFilter.length && peers.length === 0) {
+    // wallet уже дал конкретный счёт – доверяем
+    accessibleAccountIds = [...accountIdsFilter];
+  } else {
+    // стандартная проверка доступа
+    const { accounts } = await this.rmq.send<
+      AccountList.Request,
+      AccountList.Response
+    >(AccountList.topic, { userId, peers });
+
+    accessibleAccountIds = accounts
+      .filter((a): a is { _id: string } => !!a && !!a._id)
+      .map(a => a._id);
+  }
 
   if (accessibleAccountIds.length === 0) return [];
 

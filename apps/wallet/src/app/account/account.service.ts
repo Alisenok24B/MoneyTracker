@@ -1,4 +1,4 @@
-import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { AccountRepository } from './repositories/account.repository';
 import { AccountEntity } from './entities/account.entity';
 import { AccountType, IAccount } from '@moneytracker/interfaces';
@@ -15,7 +15,64 @@ export class AccountService {
     private readonly events: AccountEventEmitter,
     private readonly creditService: CreditService,
     private readonly creditPeriods: CreditPeriodService,
+    private readonly rmq: RMQService,
   ) {}
+  private readonly logger = new Logger(AccountService.name);
+
+  /**
+   * Считает текущий баланс для «обычного» (не-кредитного) счёта:
+   *   current = initialBalance 
+   *           + Σ(income)
+   *           − Σ(expense)
+   *           + Σ(transfers_in)
+   *           − Σ(transfers_out)
+   */
+  private async calculateNonCreditCurrentBalance(
+    userId: string,
+    accountId: string,
+    initialBalance: number,
+  ): Promise<number> {
+    // Запрашиваем у Transaction-микросервиса все транзакции, в которых фигурирует данный accountId
+    const { transactions } = await this.rmq.send<
+      TransactionList.Request,
+      TransactionList.Response
+    >(TransactionList.topic, {
+      userId,
+      accountIds: [accountId],
+      // остальные фильтры не нужны: берём всё
+    });
+
+    let delta = 0;
+    for (const tx of transactions) {
+      switch (tx.type) {
+        case 'income':
+          if (tx.accountId === accountId) {
+            delta += tx.amount;
+          }
+          break;
+        case 'expense':
+          if (tx.accountId === accountId) {
+            delta -= tx.amount;
+          }
+          break;
+        case 'transfer':
+          // если этот счёт – «отправитель» (accountId), то вычитаем
+          if (tx.accountId === accountId) {
+            delta -= tx.amount;
+          }
+          // если этот счёт – «получатель» (toAccountId), то добавляем
+          if (tx.toAccountId === accountId) {
+            delta += tx.amount;
+          }
+          break;
+        default:
+          // ничего
+          break;
+      }
+    }
+
+    return initialBalance + delta;
+  }
 
   async createAccount(dto: Omit<IAccount, '_id' | 'deletedAt'>): Promise<AccountEntity> {
     // Если пытаются задать creditDetails для любого типа кроме CreditCard — запрещаем
@@ -87,7 +144,17 @@ export class AccountService {
     return Promise.all(
       entities.map(async e => {
         if (e.type === AccountType.CreditCard) {
+          const debt = await this.creditPeriods.getAvailableCredit(e._id!.toString());
+          e.balance = debt;
           e.creditDetails = await this.creditService.getDetailsByAccountId(e._id!);
+        } else {
+          // 2.б) Обычный: «initialBalance» в e.balance, нужно скорректировать
+          const current = await this.calculateNonCreditCurrentBalance(
+            userId,
+            e._id!.toString(),
+            e.balance,
+          );
+          e.balance = current;
         }
         return e;
       }),
@@ -101,7 +168,18 @@ export class AccountService {
     const entity = new AccountEntity(doc.toObject());
 
     if (entity.type === AccountType.CreditCard) {
+      // Для кредитной карты balance = долг
+      const debt = await this.creditPeriods.getAvailableCredit(id);
+      entity.balance = debt;
       entity.creditDetails = await this.creditService.getDetailsByAccountId(id);
+    } else {
+      // Для остальных – «текущий баланс» на основе initial + транзакций
+      const current = await this.calculateNonCreditCurrentBalance(
+        userId,
+        id,
+        entity.balance, 
+      );
+      entity.balance = current;
     }
     return entity;
   }
