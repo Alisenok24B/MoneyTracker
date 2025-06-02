@@ -290,14 +290,25 @@ async list(
   if (accessibleAccountIds.length === 0) return [];
 
   /* 2. Забираем все транзакции по доступным счётам */
-  let txs = await this.repo.findByAccountIds(accessibleAccountIds);
+  //let txs = await this.repo.findByAccountIds(accessibleAccountIds);
+
+  /* 2. Забираем все транзакции по доступным счётам
+   *    (и исходящие, и входящие transfer-ы)        */
+  let txs = await this.repo.findByAccountOrToAccountIds(accessibleAccountIds);
 
   /* 3. Базовый фильтр: не удалённые + по type (если задан) */
   txs = txs.filter(t => !t.deletedAt && (!type || t.type === type));
 
   /* 4. Дополнительные фильтры из query-параметров */
-  if (accountIdsFilter.length) {
+  /*if (accountIdsFilter.length) {
     txs = txs.filter(t => accountIdsFilter.includes(t.accountId));
+  }*/
+  if (accountIdsFilter.length) {
+    txs = txs.filter(
+      t =>
+        accountIdsFilter.includes(t.accountId) ||
+        (t.toAccountId && accountIdsFilter.includes(t.toAccountId)),
+    );
   }
 
   if (userIdsFilter.length) {

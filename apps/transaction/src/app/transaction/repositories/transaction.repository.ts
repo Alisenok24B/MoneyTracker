@@ -27,6 +27,27 @@ export class TransactionRepository {
     return docs.map(d => new TransactionEntity({ ...d, _id: d._id.toString() }));
   }
 
+  /**
+   * Возвращает все транзакции, где счёт фигурирует
+   *   – либо как accountId   (списание / исход перевод),
+   *   – либо как toAccountId (поступление перевода).
+   */
+  async findByAccountOrToAccountIds(accountIds: string[]): Promise<TransactionEntity[]> {
+    const docs = await this.transactionModel
+      .find({
+        $or: [
+          { accountId:   { $in: accountIds } },
+          { toAccountId: { $in: accountIds } },
+        ],
+      })
+      .lean()
+      .exec();
+
+    return docs.map(
+      d => new TransactionEntity({ ...d, _id: d._id.toString() }),
+    );
+  }
+
   /** Находит одну транзакцию по ID и конвертирует в доменную сущность */
   async findById(id: string): Promise<TransactionEntity | null> {
     const doc = await this.transactionModel.findById(id).exec();

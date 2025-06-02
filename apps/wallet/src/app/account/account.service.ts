@@ -5,6 +5,8 @@ import { AccountType, IAccount } from '@moneytracker/interfaces';
 import { AccountEventEmitter } from './account.event-emitter';
 import { CreditService } from '../credit-card/credit-card.service';
 import { CreditPeriodService } from '../credit-card/credit-period.service';
+import { RMQService } from 'nestjs-rmq';
+import { TransactionList } from '@moneytracker/contracts';
 
 @Injectable()
 export class AccountService {
@@ -12,7 +14,7 @@ export class AccountService {
     private readonly repo: AccountRepository,
     private readonly events: AccountEventEmitter,
     private readonly creditService: CreditService,
-    private readonly creditPeriods: CreditPeriodService
+    private readonly creditPeriods: CreditPeriodService,
   ) {}
 
   async createAccount(dto: Omit<IAccount, '_id' | 'deletedAt'>): Promise<AccountEntity> {
