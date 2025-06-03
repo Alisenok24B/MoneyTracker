@@ -8,14 +8,17 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { getMongoConfig } from './configs/mongo.config';
 import { RMQModule } from 'nestjs-rmq';
 import { getRMQConfig } from './configs/rmq.config';
+import { SharedAccessModule } from './shared-access/shared-access.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({isGlobal: true, envFilePath: 'envs/.account.env'}), 
+    ConfigModule.forRoot({ isGlobal: true, envFilePath: 'envs/.account.env' }),
     RMQModule.forRootAsync(getRMQConfig()),
-    UserModule, 
+    UserModule,
     AuthModule,
-    MongooseModule.forRootAsync(getMongoConfig())
+    MongooseModule.forRootAsync(getMongoConfig()),
+    SharedAccessModule,
+    SharedAccessModule
   ],
   controllers: [AppController],
   providers: [AppService],

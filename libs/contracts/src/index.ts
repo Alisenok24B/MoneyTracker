@@ -2,6 +2,7 @@ export * from './lib/account/account.login';
 export * from './lib/account/account.register';
 export * from './lib/account/account.user-info';
 export * from './lib/account/account.change-profile';
+export * from './lib/account/account.search';
 export * from './lib/wallet/wallet.create-account';
 export * from './lib/wallet/wallet.update-account';
 export * from './lib/wallet/wallet.get-account';
@@ -24,4 +25,8 @@ export * from './lib/credit-period/credit-period.get-debts';
 export * from './lib/credit-period/credit-period.get-debt';
 export * from './lib/credit-period/credit-period.get';
 export * from './lib/wallet/credit.get-available';
+export * from './lib/shared-access/shared-access.invite';
+export * from './lib/shared-access/shared-access.accept';
+export * from './lib/shared-access/shared-access.list';
+export * from './lib/notification/notification.send';
 

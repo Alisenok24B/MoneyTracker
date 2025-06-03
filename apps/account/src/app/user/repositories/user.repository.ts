@@ -31,4 +31,12 @@ export class UserRepository {
     async deleteUser(email: string) {
         this.userModel.deleteOne({email}).exec();
     }
+
+    async searchByEmail(substr: string, limit = 10) {
+        return this.userModel
+            .find({ email: { $regex: substr, $options: 'i' } })
+            .limit(limit)
+            .lean()
+            .exec();
+    }
 }

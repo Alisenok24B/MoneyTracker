@@ -45,7 +45,8 @@
         "wallet-e2e/**/*",
         "apps/wallet-e2e/**/*",
         "apps/wallet-e2e/**/*",
-        "apps/transaction-e2e/**/*"
+        "apps/transaction-e2e/**/*",
+        "apps/notification-e2e/**/*"
       ]
     }
   ]
