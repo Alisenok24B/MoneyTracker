@@ -3,6 +3,7 @@ import { RMQRoute, RMQValidate } from 'nestjs-rmq';
 import {
   NotificationSend,
   NotificationRead,
+  NotificationListUnread,
 } from '@moneytracker/contracts';
 import { NotificationRepo } from './repositories/notification.repository';
 import { NotificationGateway } from './notification.gateway';
@@ -38,4 +39,19 @@ export class NotificationController {
     await this.repo.markRead(dto.notificationId);
     return {};
   }
+
+  @RMQValidate()
+@RMQRoute(NotificationListUnread.topic)
+async listUnread(
+  @Body() dto: NotificationListUnread.Request,
+): Promise<NotificationListUnread.Response> {
+  const raw = await this.repo.findUnread(dto.userId);
+  const notifications = raw.map(n => ({
+    _id       : n._id.toString(),
+    text      : n.text,
+    read      : n.read,
+    createdAt : n.createdAt,
+  }));
+  return { notifications };
+}
 }

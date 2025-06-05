@@ -19,4 +19,12 @@ export class NotificationRepo {
   markRead(id: string) {
     return this.model.updateOne({ _id: id }, { $set: { read: true } }).exec();
   }
+
+  findUnread(userId: string) {
+    return this.model
+      .find({ userId, read: false }, { _id: 1, text: 1, read: 1, createdAt: 1 })
+      .sort({ createdAt: -1 })
+      .lean()
+      .exec();
+  }
 }

@@ -13,6 +13,7 @@ import { CategoryController } from './controllers/category.controller';
 import { TransactionController } from './controllers/transaction.controller';
 import { CreditPeriodController } from './controllers/credit-period.controller';
 import { AccessController } from './controllers/access.controller';
+import { NotificationController } from './controllers/notification.controller';
 
 @Module({
   imports: [
@@ -28,7 +29,8 @@ import { AccessController } from './controllers/access.controller';
     CategoryController, 
     TransactionController,
     CreditPeriodController,
-    AccessController
+    AccessController,
+    NotificationController
   ],
   providers: [
     JwtStrategy

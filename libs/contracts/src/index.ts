@@ -31,4 +31,5 @@ export * from './lib/shared-access/shared-access.list';
 export * from './lib/shared-access/shared-access.reject';
 export * from './lib/notification/notification.send';
 export * from './lib/notification/notification.read';
+export * from './lib/notification/notification.list-unread';
 
