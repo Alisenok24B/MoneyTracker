@@ -6,15 +6,16 @@ import { NotificationGateway } from './notification.gateway';
 import { NotificationRepo } from './repositories/notification.repository';
 import { JwtModule } from '@nestjs/jwt';
 import { getJWTConfig } from '../configs/jwt.config';
+import { NotificationService } from './notification.service';
 
 @Module({
   imports: [
     MongooseModule.forFeature([
       { name: Notification.name, schema: NotificationSchema },
     ]),
-    JwtModule.registerAsync(getJWTConfig())
+    JwtModule.registerAsync(getJWTConfig()),
   ],
   controllers: [NotificationController],
-  providers:   [NotificationRepo, NotificationGateway],   // ← gateway в providers
+  providers: [NotificationRepo, NotificationGateway, NotificationService],
 })
 export class NotificationModule {}

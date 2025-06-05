@@ -5,7 +5,8 @@ export namespace NotificationRead {
 
   /** Отметить уведомление прочитанным */
   export class Request {
-    @IsString() notificationId!: string;
+    @IsString() userId!: string; // кому принадлежит
+    @IsString() notificationId!: string; // id уведомления
   }
   export class Response {}
 }

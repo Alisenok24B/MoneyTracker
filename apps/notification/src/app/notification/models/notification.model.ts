@@ -14,6 +14,10 @@ export class Notification extends Document {
 
   @Prop({ type: Date })
   createdAt!: Date;
+
+  /** интерактивное («нужно действие») */
+  @Prop({ type: Boolean, default: false })
+  requiresResponse!: boolean;
 }
 
 export const NotificationSchema = SchemaFactory.createForClass(Notification);

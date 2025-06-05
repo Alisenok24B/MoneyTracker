@@ -1,12 +1,14 @@
-import { Injectable, BadRequestException, NotFoundException } from '@nestjs/common';
+import { Injectable, BadRequestException, NotFoundException, Logger } from '@nestjs/common';
 import { InviteRepo } from './repositories/invite.repository';
 import { PeerRepo }   from './repositories/peer.repository';
 import { RMQService } from 'nestjs-rmq';
 import { NotificationRead, NotificationSend } from '@moneytracker/contracts';
 import { AccessMessages } from './access.messages';
+import { InviteEntity } from './entities/invite.entity';
 
 @Injectable()
 export class SharedAccessService {
+  private log = new Logger(SharedAccessService.name);
   constructor(
     private readonly invites: InviteRepo,
     private readonly peers:   PeerRepo,
@@ -17,12 +19,18 @@ export class SharedAccessService {
   async invite(from: string, to: string) {
     if (from === to) throw new BadRequestException('Cannot invite yourself');
 
-    const inv = await this.invites.create(from, to);
+    const inv = await this.invites.create(
+      new InviteEntity({ fromUserId: from, toUserId: to })
+    );
 
     // создаём уведомление и сохраняем его id внутрь приглашения
     const { notificationId } = await this.rmq.send<NotificationSend.Request, any>(
         NotificationSend.topic,
-        { userId: to, text: 'Приглашение в совместный бюджет' },
+        { 
+          userId: to, 
+          text: 'Приглашение в совместный бюджет',
+          requiresResponse: true,
+        },
     );
     await this.invites.update(inv._id.toString(), { notificationId });
 
@@ -46,8 +54,11 @@ export class SharedAccessService {
     if (inv.notificationId) {
         await this.rmq.send<NotificationRead.Request, any>(
         NotificationRead.topic,
-        { notificationId: inv.notificationId },
-        );
+        { 
+          userId: inv.toUserId,
+          notificationId: inv.notificationId 
+        },
+      );
     }
 
     // 2. шлём уведомление инициатору
@@ -61,6 +72,8 @@ export class SharedAccessService {
   async reject(userId: string, inviteId: string) {
     const inv = await this.invites.findById(inviteId);
     if (!inv || inv.toUserId !== userId) {
+      this.log.log(inv);
+      //this.log.log(`toUserId = ${inv.toUserId}`);
       throw new NotFoundException('Invite not found');
     }
     if (inv.status !== 'pending') {
@@ -73,8 +86,11 @@ export class SharedAccessService {
     if (inv.notificationId) {
         await this.rmq.send<NotificationRead.Request, any>(
         NotificationRead.topic,
-        { notificationId: inv.notificationId },
-        );
+        { 
+          userId: inv.toUserId,
+          notificationId: inv.notificationId 
+        },
+      );
     }
 
     // 2. уведомляем инициатора

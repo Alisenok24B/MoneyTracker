@@ -14,6 +14,7 @@ export namespace NotificationListUnread {
       _id:   string;
       text:  string;
       read:  boolean;
+      requiresResponse: boolean;
       /** могут понадобиться даты на фронте */
       createdAt: Date;
     }[];

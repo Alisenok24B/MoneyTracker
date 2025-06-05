@@ -4,6 +4,7 @@ import { Model } from 'mongoose';
 import {
   Notification
 } from '../models/notification.model';
+import { NotificationEntity } from '../entities/notification.entity';
 
 @Injectable()
 export class NotificationRepo {
@@ -12,8 +13,9 @@ export class NotificationRepo {
     private readonly model: Model<Notification>,
   ) {}
 
-  create(userId: string, text: string) {
-    return new this.model({ userId, text }).save();
+  async create(entity: NotificationEntity) {
+    const doc = new this.model(entity);
+    return doc.save();
   }
 
   markRead(id: string) {
@@ -22,9 +24,13 @@ export class NotificationRepo {
 
   findUnread(userId: string) {
     return this.model
-      .find({ userId, read: false }, { _id: 1, text: 1, read: 1, createdAt: 1 })
+      .find({ userId, read: false }, { _id: 1, text: 1, read: 1, createdAt: 1, requiresResponse: 1 })
       .sort({ createdAt: -1 })
       .lean()
       .exec();
+  }
+
+  findById(id: string) {
+    return this.model.findById(id).exec();
   }
 }
