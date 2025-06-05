@@ -32,8 +32,12 @@ export class SharedAccessService {
   /* ───────────────── accept ───────────────── */
   async accept(userId: string, inviteId: string) {
     const inv = await this.invites.findById(inviteId);
-    if (!inv || inv.toUserId !== userId)
+    if (!inv || inv.toUserId !== userId) {
       throw new NotFoundException('Invite not found');
+    }
+    if (inv.status !== 'pending') {
+      throw new BadRequestException('Invite is already processed');
+    }
 
     await this.invites.setAccepted(inviteId);
     await this.peers.addPair(inv.fromUserId, inv.toUserId);
@@ -56,8 +60,12 @@ export class SharedAccessService {
   /* ───────────────── reject ───────────────── */
   async reject(userId: string, inviteId: string) {
     const inv = await this.invites.findById(inviteId);
-    if (!inv || inv.toUserId !== userId)
+    if (!inv || inv.toUserId !== userId) {
       throw new NotFoundException('Invite not found');
+    }
+    if (inv.status !== 'pending') {
+      throw new BadRequestException('Invite is already processed');
+    }
 
     await this.invites.setRejected(inviteId);
 
