@@ -4,6 +4,7 @@ import {
   SharedAccessInvite,
   SharedAccessAccept,
   SharedAccessList,
+  SharedAccessReject,
 } from '@moneytracker/contracts';
 import { SharedAccessService } from './shared-access.service';
 
@@ -22,6 +23,13 @@ export class SharedAccessController {
   @RMQRoute(SharedAccessAccept.topic)
   async accept(@Body() dto: SharedAccessAccept.Request): Promise<SharedAccessAccept.Response> {
     await this.svc.accept(dto.userId, dto.inviteId);
+    return {};
+  }
+
+  @RMQValidate()
+    @RMQRoute(SharedAccessReject.topic)
+    async reject(@Body() dto: SharedAccessReject.Request): Promise<SharedAccessReject.Response> {
+    await this.svc.reject(dto.userId, dto.inviteId);
     return {};
   }
 

@@ -2,7 +2,8 @@ import { Injectable, BadRequestException, NotFoundException } from '@nestjs/comm
 import { InviteRepo } from './repositories/invite.repository';
 import { PeerRepo }   from './repositories/peer.repository';
 import { RMQService } from 'nestjs-rmq';
-import { NotificationSend } from '@moneytracker/contracts';
+import { NotificationRead, NotificationSend } from '@moneytracker/contracts';
+import { AccessMessages } from './access.messages';
 
 @Injectable()
 export class SharedAccessService {
@@ -12,23 +13,70 @@ export class SharedAccessService {
     private readonly rmq:     RMQService
   ) {}
 
+  /* ───────────────── invite ───────────────── */
   async invite(from: string, to: string) {
     if (from === to) throw new BadRequestException('Cannot invite yourself');
+
     const inv = await this.invites.create(from, to);
-    await this.rmq.notify(NotificationSend.topic, {
-      userId: to,
-      text:   `Пользователь пригласил вас к совместному бюджету`,
-    });
+
+    // создаём уведомление и сохраняем его id внутрь приглашения
+    const { notificationId } = await this.rmq.send<NotificationSend.Request, any>(
+        NotificationSend.topic,
+        { userId: to, text: 'Приглашение в совместный бюджет' },
+    );
+    await this.invites.update(inv._id.toString(), { notificationId });
+
     return inv._id.toString();
   }
 
+  /* ───────────────── accept ───────────────── */
   async accept(userId: string, inviteId: string) {
     const inv = await this.invites.findById(inviteId);
-    if (!inv || inv.toUserId !== userId) throw new NotFoundException('Invite not found');
+    if (!inv || inv.toUserId !== userId)
+      throw new NotFoundException('Invite not found');
+
     await this.invites.setAccepted(inviteId);
     await this.peers.addPair(inv.fromUserId, inv.toUserId);
+
+    // 1. гасим уведомление у получателя
+    if (inv.notificationId) {
+        await this.rmq.send<NotificationRead.Request, any>(
+        NotificationRead.topic,
+        { notificationId: inv.notificationId },
+        );
+    }
+
+    // 2. шлём уведомление инициатору
+    await this.rmq.notify(NotificationSend.topic, {
+        userId: inv.fromUserId,
+        text: 'Ваше приглашение принято',
+    });
   }
 
+  /* ───────────────── reject ───────────────── */
+  async reject(userId: string, inviteId: string) {
+    const inv = await this.invites.findById(inviteId);
+    if (!inv || inv.toUserId !== userId)
+      throw new NotFoundException('Invite not found');
+
+    await this.invites.setRejected(inviteId);
+
+    // 1. гасим уведомление у получателя
+    if (inv.notificationId) {
+        await this.rmq.send<NotificationRead.Request, any>(
+        NotificationRead.topic,
+        { notificationId: inv.notificationId },
+        );
+    }
+
+    // 2. уведомляем инициатора
+    await this.rmq.notify(NotificationSend.topic, {
+        userId: inv.fromUserId,
+        text: 'Ваше приглашение отклонено',
+    });
+  }
+
+  /* ───────────────── list ───────────────── */
   async listPeers(userId: string): Promise<string[]> {
     const list = await this.peers.listPeers(userId);
     return list.map(p => p.peerId);

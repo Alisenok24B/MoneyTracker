@@ -8,5 +8,6 @@ export class Invite {
   @Prop({ type: Types.ObjectId, required: true }) toUserId!: string;
   @Prop({ type: String, enum: ['pending','accepted','rejected'], default: 'pending' })
   status!: 'pending'|'accepted'|'rejected';
+  @Prop({ type: Types.ObjectId }) notificationId?: string;
 }
 export const InviteSchema = SchemaFactory.createForClass(Invite);

@@ -17,7 +17,6 @@ import { SharedAccessModule } from './shared-access/shared-access.module';
     UserModule,
     AuthModule,
     MongooseModule.forRootAsync(getMongoConfig()),
-    SharedAccessModule,
     SharedAccessModule
   ],
   controllers: [AppController],
