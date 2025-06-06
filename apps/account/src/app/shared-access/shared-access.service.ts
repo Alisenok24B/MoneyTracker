@@ -111,4 +111,23 @@ export class SharedAccessService {
   async listPeers(userId: string): Promise<string[]> {
     return this.peers.listPeers(userId);
   }
+
+  /* ───────────────── terminate ───────────────── */
+  async terminate(userId: string, peerId: string) {
+    /* 1.  проверяем, что связь есть */
+    const peers = await this.peers.listPeers(userId);
+    const exists = peers.includes(peerId);
+    if (!exists) {
+      throw new BadRequestException('Shared access not found');
+    }
+    this.log.log(`userId: ${userId}, peerId: ${peerId}`)
+    /* 2.  удаляем пару */
+    await this.peers.removePair(userId, peerId);
+
+    /* 3.  уведомляем вторую сторону */
+    await this.rmq.notify(NotificationSend.topic, {
+      userId : peerId,
+      text   : `Пользователь отменил совместный доступ`
+    });
+  }
 }

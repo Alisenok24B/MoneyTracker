@@ -29,6 +29,7 @@ export * from './lib/shared-access/shared-access.invite';
 export * from './lib/shared-access/shared-access.accept';
 export * from './lib/shared-access/shared-access.list';
 export * from './lib/shared-access/shared-access.reject';
+export * from './lib/shared-access/shared-access.terminate';
 export * from './lib/notification/notification.send';
 export * from './lib/notification/notification.read';
 export * from './lib/notification/notification.list-unread';

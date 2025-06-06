@@ -14,6 +14,7 @@ import {
   SharedAccessReject,
   SharedAccessList,
   AccountUserInfo,
+  SharedAccessTerminate,
 } from '@moneytracker/contracts';
 import { InviteDto  } from '../dtos/invite.dto';
 import { RespondDto } from '../dtos/respond.dto';
@@ -92,5 +93,18 @@ export class AccessController {
       }),
     );
     return { users };
+  }
+
+  /** ➜ POST /access/terminate — расторгнуть совместный доступ */
+  @UseGuards(JWTAuthGuard)
+  @Post('terminate')
+  async terminate(
+    @UserId() userId: string,
+    @Body('peerId') peerId: string,      // peerId передаётся простым JSON: { peerId: "…" }
+  ) {
+    return this.rmqService.send<
+      SharedAccessTerminate.Request,
+      SharedAccessTerminate.Response
+    >(SharedAccessTerminate.topic, { userId, peerId });
   }
 }

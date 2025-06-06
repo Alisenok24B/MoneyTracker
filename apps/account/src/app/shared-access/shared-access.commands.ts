@@ -5,6 +5,7 @@ import {
   SharedAccessAccept,
   SharedAccessList,
   SharedAccessReject,
+  SharedAccessTerminate,
 } from '@moneytracker/contracts';
 import { SharedAccessService } from './shared-access.service';
 
@@ -38,5 +39,14 @@ export class SharedAccessController {
   async list(@Body() dto: SharedAccessList.Request): Promise<SharedAccessList.Response> {
     const peers = await this.svc.listPeers(dto.userId);
     return { peers };
+  }
+
+  @RMQValidate()
+  @RMQRoute(SharedAccessTerminate.topic)
+  async terminate(
+    @Body() dto: SharedAccessTerminate.Request,
+  ): Promise<SharedAccessTerminate.Response> {
+    await this.svc.terminate(dto.userId, dto.peerId);
+    return {};
   }
 }

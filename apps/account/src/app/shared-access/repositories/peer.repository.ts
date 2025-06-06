@@ -1,11 +1,12 @@
 // apps/account/src/app/shared-access/repositories/peer.repository.ts
 import { InjectModel } from '@nestjs/mongoose';
-import { Injectable }  from '@nestjs/common';
-import { Model }       from 'mongoose';
+import { Injectable, Logger }  from '@nestjs/common';
+import { Model, Types }       from 'mongoose';
 import { Peer, PeerLinkDocument } from '../models/peer.model';
 
 @Injectable()
 export class PeerRepo {
+  private log = new Logger(PeerRepo.name);
   constructor(
     @InjectModel(Peer.name) private readonly model: Model<PeerLinkDocument>,
   ) {}
@@ -40,5 +41,11 @@ export class PeerRepo {
 
     // из каждой пары убираем сам userId → остаётся peer
     return docs.map(d => (d.members[0] === userId ? d.members[1] : d.members[0]));
+  }
+
+  /** Удалить пару */
+  async removePair(u1: string, u2: string): Promise<void> {
+    const members = [u1, u2].sort();
+    await this.model.deleteOne({ members }).exec();
   }
 }
