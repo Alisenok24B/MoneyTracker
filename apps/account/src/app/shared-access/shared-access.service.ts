@@ -5,6 +5,7 @@ import { RMQService } from 'nestjs-rmq';
 import { NotificationRead, NotificationSend } from '@moneytracker/contracts';
 import { AccessMessages } from './access.messages';
 import { InviteEntity } from './entities/invite.entity';
+import { UserRepository } from '../user/repositories/user.repository';
 
 @Injectable()
 export class SharedAccessService {
@@ -12,8 +13,15 @@ export class SharedAccessService {
   constructor(
     private readonly invites: InviteRepo,
     private readonly peers:   PeerRepo,
+    private readonly users:   UserRepository,
     private readonly rmq:     RMQService
   ) {}
+
+  /* ───────────────── helpers ───────────────── */
+  private async userName(id: string): Promise<string> {
+    const u = await this.users.findUserById(id);
+    return u.displayName;
+  }
 
   /* ───────────────── invite ───────────────── */
   async invite(from: string, to: string) {
@@ -30,12 +38,14 @@ export class SharedAccessService {
       new InviteEntity({ fromUserId: from, toUserId: to })
     );
 
+    const fromName = await this.userName(from);
+
     // создаём уведомление и сохраняем его id внутрь приглашения
     const { notificationId } = await this.rmq.send<NotificationSend.Request, any>(
         NotificationSend.topic,
         { 
           userId: to, 
-          text: 'Приглашение в совместный бюджет',
+          text: AccessMessages.invite(fromName),
           requiresResponse: true,
         },
     );
@@ -69,9 +79,10 @@ export class SharedAccessService {
     }
 
     // 2. шлём уведомление инициатору
+    const toName = await this.userName(inv.toUserId);
     await this.rmq.notify(NotificationSend.topic, {
         userId: inv.fromUserId,
-        text: 'Ваше приглашение принято',
+        text:   AccessMessages.accepted(toName),
     });
   }
 
@@ -101,9 +112,10 @@ export class SharedAccessService {
     }
 
     // 2. уведомляем инициатора
+    const toName = await this.userName(inv.toUserId);
     await this.rmq.notify(NotificationSend.topic, {
         userId: inv.fromUserId,
-        text: 'Ваше приглашение отклонено',
+        text:   AccessMessages.rejected(toName),
     });
   }
 
@@ -125,9 +137,10 @@ export class SharedAccessService {
     await this.peers.removePair(userId, peerId);
 
     /* 3.  уведомляем вторую сторону */
+    const fromName = await this.userName(userId);
     await this.rmq.notify(NotificationSend.topic, {
       userId : peerId,
-      text   : `Пользователь отменил совместный доступ`
+      text:   AccessMessages.canceled(fromName),
     });
   }
 }

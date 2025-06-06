@@ -6,6 +6,8 @@ import { InviteRepo } from './repositories/invite.repository';
 import { PeerRepo   } from './repositories/peer.repository';
 import { SharedAccessService } from './shared-access.service';
 import { SharedAccessController } from './shared-access.commands';
+import { UserRepository } from '../user/repositories/user.repository';
+import { UserModule } from '../user/user.module';
 
 @Module({
   imports:[
@@ -13,6 +15,7 @@ import { SharedAccessController } from './shared-access.commands';
       { name: Invite.name, schema: InviteSchema },
       { name: Peer.name,   schema: PeerSchema   },
     ]),
+    UserModule
   ],
   providers:[ InviteRepo, PeerRepo, SharedAccessService ],
   controllers:[ SharedAccessController ],
