@@ -1,11 +1,15 @@
+// apps/account/src/app/shared-access/models/peer-link.model.ts
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
-export type PeerDocument = Peer & Document;
+export type PeerLinkDocument = Peer & Document;
 
-@Schema({ versionKey:false })
+@Schema({ versionKey: false, timestamps: true })
 export class Peer {
-  @Prop({ type: Types.ObjectId, required: true, index: true }) userId!: string;
-  @Prop({ type: Types.ObjectId, required: true }) peerId!: string;
+  /** Ровно два участника, сохранённые в отсортированном порядке */
+  @Prop({ type: [Types.ObjectId], required: true, length: 2 })
+  members!: [string, string];               // напр. ['64…a1', '64…f3']
 }
+
+/*  уникальность множества участников  */
 export const PeerSchema = SchemaFactory.createForClass(Peer);
-PeerSchema.index({ userId:1, peerId:1 }, { unique:true });
+PeerSchema.index({ members: 1 }, { unique: true });

@@ -19,6 +19,13 @@ export class SharedAccessService {
   async invite(from: string, to: string) {
     if (from === to) throw new BadRequestException('Cannot invite yourself');
 
+    /* 0. Уже являемся «парами»? — запрещаем повторно приглашать */
+    if (await this.peers.existsPair(from, to)) {
+      throw new BadRequestException(
+        'Shared access with this user already exists',
+      );
+    }
+
     const inv = await this.invites.create(
       new InviteEntity({ fromUserId: from, toUserId: to })
     );
@@ -48,7 +55,7 @@ export class SharedAccessService {
     }
 
     await this.invites.setAccepted(inviteId);
-    await this.peers.addPair(inv.fromUserId, inv.toUserId);
+    await this.peers.ensurePair(inv.fromUserId, inv.toUserId);
 
     // 1. гасим уведомление у получателя
     if (inv.notificationId) {
@@ -102,7 +109,6 @@ export class SharedAccessService {
 
   /* ───────────────── list ───────────────── */
   async listPeers(userId: string): Promise<string[]> {
-    const list = await this.peers.listPeers(userId);
-    return list.map(p => p.peerId);
+    return this.peers.listPeers(userId);
   }
 }

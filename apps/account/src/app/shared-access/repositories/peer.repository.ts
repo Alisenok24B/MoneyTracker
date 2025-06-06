@@ -1,17 +1,44 @@
-import { Injectable } from '@nestjs/common';
+// apps/account/src/app/shared-access/repositories/peer.repository.ts
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
-import { Peer, PeerDocument } from '../models/peer.model';
+import { Injectable }  from '@nestjs/common';
+import { Model }       from 'mongoose';
+import { Peer, PeerLinkDocument } from '../models/peer.model';
 
 @Injectable()
 export class PeerRepo {
-  constructor(@InjectModel(Peer.name) private readonly model: Model<PeerDocument>) {}
+  constructor(
+    @InjectModel(Peer.name) private readonly model: Model<PeerLinkDocument>,
+  ) {}
 
-  async addPair(u1: string, u2: string) {
-    await this.model.updateOne({ userId:u1, peerId:u2 }, {}, { upsert:true });
-    await this.model.updateOne({ userId:u2, peerId:u1 }, {}, { upsert:true });
+  /** Нормализуем пару: сортируем, чтобы ['a','b'] === ['b','a']  */
+  private static normalize(u1: string, u2: string): [string, string] {
+    return u1 < u2 ? [u1, u2] : [u2, u1];
   }
-  listPeers(userId: string) {
-    return this.model.find({ userId }).lean().exec();
+
+  /** Создать (или гарантировать наличие) единственной записи связи */
+  async ensurePair(u1: string, u2: string): Promise<void> {
+    const members = PeerRepo.normalize(u1, u2);
+    await this.model.updateOne(
+      { members },        // фильтр по массиву
+      { $setOnInsert: { members } },
+      { upsert: true },
+    ).exec();
+  }
+
+  /** Проверка существования пары */
+  async existsPair(u1: string, u2: string): Promise<boolean> {
+    const members = PeerRepo.normalize(u1, u2);
+    return !!(await this.model.findOne({ members }).lean().exec());
+  }
+
+  /** Список peer-id для пользователя */
+  async listPeers(userId: string): Promise<string[]> {
+    const docs = await this.model
+      .find({ members: userId })
+      .lean()
+      .exec();
+
+    // из каждой пары убираем сам userId → остаётся peer
+    return docs.map(d => (d.members[0] === userId ? d.members[1] : d.members[0]));
   }
 }
