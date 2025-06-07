@@ -1,4 +1,4 @@
-import { IsString } from 'class-validator';
+import { IsArray, IsOptional, IsString } from 'class-validator';
 import { ICategory } from '@moneytracker/interfaces';
 
 export namespace CategoryGet {
@@ -10,6 +10,9 @@ export namespace CategoryGet {
 
     @IsString()
     id: string;
+
+    @IsOptional() @IsArray() @IsString({ each:true })
+    peers?: string[]; 
   }
 
   export class Response {

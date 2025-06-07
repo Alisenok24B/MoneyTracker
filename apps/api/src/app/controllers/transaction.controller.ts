@@ -8,6 +8,7 @@ import {
     Query,
     Body,
     UseGuards,
+    Logger,
   } from '@nestjs/common';
 import { RMQService } from 'nestjs-rmq';
 import { JWTAuthGuard } from '../guards/jwt.guard';
@@ -41,6 +42,7 @@ export class TransactionController {
     private readonly rmq: RMQService,
     private readonly peersHelper: PeersHelper
   ) {}
+  private readonly logger = new Logger(TransactionController.name);
 
   @UseGuards(JWTAuthGuard)
   @Post()
@@ -48,6 +50,7 @@ export class TransactionController {
     @UserId() userId: string,
     @Body() dto: CreateTransactionDto,
   ) {
+    const peers = await this.peersHelper.getPeers(userId);
     await this.rmq.send<
       TransactionCreate.Request,
       TransactionCreate.Response
@@ -57,6 +60,7 @@ export class TransactionController {
         userId,
         ...dto,
         date: new Date(dto.date),
+        peers
       },
     );
     return {};
@@ -107,7 +111,7 @@ export class TransactionController {
           ),
           this.rmq.send<CategoryGet.Request, CategoryGet.Response>(
             CategoryGet.topic,
-            { userId: tx.userId, id: tx.categoryId },
+            { userId, id: tx.categoryId, peers },
           ),
         ]);
 
@@ -211,7 +215,7 @@ export class TransactionController {
         AccountUserInfo.topic, { id: tx.userId },
       ),
       this.rmq.send<CategoryGet.Request, CategoryGet.Response>(
-        CategoryGet.topic, { userId: tx.userId, id: tx.categoryId },
+        CategoryGet.topic, { userId, id: tx.categoryId, peers },
       ),
     ]);
 
@@ -333,6 +337,8 @@ export class TransactionController {
     @UserId() userId: string,
     @Param() params: TransactionIdDto,
   ) {
+    const peers = await this.peersHelper.getPeers(userId);
+    this.logger.log(`peers=${peers}`);
     await this.rmq.send<
       TransactionPurge.Request,
       TransactionPurge.Response
@@ -341,6 +347,7 @@ export class TransactionController {
       {
         userId,
         id: params.id,
+        peers
       },
     );
     return {};

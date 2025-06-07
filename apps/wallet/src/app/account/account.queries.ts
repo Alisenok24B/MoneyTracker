@@ -16,7 +16,7 @@ export class AccountQueries {
     payload: AccountList.Request,
   ): Promise<AccountList.Response> {
     const { userId, peers } = payload;
-    const accounts = await this.service.listAccounts(userId, peers);
+    const accounts = await this.service.listAccounts(userId, peers ?? []);
     return { accounts };
   }
 
@@ -25,8 +25,8 @@ export class AccountQueries {
   async get(
     payload: AccountGet.Request,
   ): Promise<AccountGet.Response> {
-    const { userId, id } = payload;
-    const account = await this.service.getAccount(userId, id);
+    const { userId, id, peers } = payload;
+    const account = await this.service.getAccount(userId, id, peers ?? []);
     return { account };
   }
 }

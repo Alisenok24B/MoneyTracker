@@ -1,4 +1,4 @@
-import { IsString } from 'class-validator';
+import { IsArray, IsOptional, IsString } from 'class-validator';
 
 export namespace TransactionDelete {
   export const topic = 'transaction.delete.command';

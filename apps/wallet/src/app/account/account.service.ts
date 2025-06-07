@@ -161,10 +161,10 @@ export class AccountService {
     );
   }
 
-  async getAccount(userId: string, id: string): Promise<AccountEntity> {
+  async getAccount(userId: string, id: string, peers: string[] = []): Promise<AccountEntity> {
     const doc = await this.repo.findByIdIncludeDeleted(id);
     if (!doc) throw new NotFoundException('Account not found or deleted');
-    if (doc.userId !== userId) throw new ForbiddenException('Access denied');
+    if (![userId, ...peers].includes(doc.userId)) throw new ForbiddenException('Access denied');
     const entity = new AccountEntity(doc.toObject());
 
     if (entity.type === AccountType.CreditCard) {

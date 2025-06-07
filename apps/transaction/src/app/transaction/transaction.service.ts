@@ -23,11 +23,12 @@ export class TransactionService {
     dateOnly: Date,
     amount: number,
     action: 'income' | 'transfer',
+    peers: string[]
   ) {
 
     // 1. Получаем сам счёт, убеждаемся, что это кредитка
     const { account } = await this.rmq.send<AccountGet.Request, AccountGet.Response>(
-      AccountGet.topic, { userId, id: accountId }
+      AccountGet.topic, { userId, id: accountId, peers }
     );
     if (account.type !== AccountType.CreditCard) return;
     this.logger.log(`Это кредитная карта`);
@@ -84,14 +85,15 @@ export class TransactionService {
 
   /** Создание транзакции */
   async create(userId: string, dto: TransactionCreate.Request): Promise<TransactionCreate.Response> {
+    const peers = dto.peers ?? [];
     this.logger.log(`Начало создания транзакции`);
     // 1. Проверяем счёт
-    await this.rmq.send(AccountGet.topic, { userId, id: dto.accountId });
+    await this.rmq.send(AccountGet.topic, { userId, id: dto.accountId, peers });
     this.logger.log(`Аваите`);
   
     // 2. Получаем категорию и её тип
     const { category } = await this.rmq.send<CategoryGet.Request, CategoryGet.Response>(
-      CategoryGet.topic, { userId, id: dto.categoryId },
+      CategoryGet.topic, { userId, id: dto.categoryId, peers },
     );
     const catType = category.type as FlowType;   // income | expense | transfer
     this.logger.log(`Категория`);
@@ -105,21 +107,21 @@ export class TransactionService {
         throw new BadRequestException('toAccountId must differ from accountId');
       }
       // проверяем целевой счёт
-      await this.rmq.send(AccountGet.topic, { userId, id: dto.toAccountId });
+      await this.rmq.send(AccountGet.topic, { userId, id: dto.toAccountId, peers });
     } else {
       // non-transfer: toAccountId недопустим
       if (dto.toAccountId) {
         throw new BadRequestException('toAccountId allowed only for transfer category');
       }
       // проверяем категорию
-      await this.rmq.send(CategoryGet.topic, { userId, id: dto.categoryId });
+      await this.rmq.send(CategoryGet.topic, { userId, id: dto.categoryId, peers });
     }
     this.logger.log(`Валидация transfer категории`);
 
     // 5. Определяем, «снимаем» ли мы с кредитки:
     const { account: srcAcc } = await this.rmq.send<
       AccountGet.Request, AccountGet.Response
-    >(AccountGet.topic, { userId, id: dto.accountId });
+    >(AccountGet.topic, { userId, id: dto.accountId, peers });
     const sourceIsCredit = srcAcc.type === AccountType.CreditCard;
 
     // 6. Если expense с кредитки — проверяем «available»
@@ -146,7 +148,7 @@ export class TransactionService {
     if (catType === FlowType.Transfer && dto.toAccountId) {
       const { account: tgtAcc } = await this.rmq.send<
         AccountGet.Request, AccountGet.Response
-      >(AccountGet.topic, { userId, id: dto.toAccountId });
+      >(AccountGet.topic, { userId, id: dto.toAccountId, peers });
       targetIsCredit = tgtAcc.type === AccountType.CreditCard;
     }
 
@@ -176,12 +178,12 @@ export class TransactionService {
     if (catType === FlowType.Income) {
       // income по accountId
       await this.validateCreditPeriod(
-        userId, dto.accountId, dto.periodId, dateOnly, dto.amount, 'income'
+        userId, dto.accountId, dto.periodId, dateOnly, dto.amount, 'income', peers
       );
     } else if (catType === FlowType.Transfer && dto.toAccountId) {
       // transfer → toAccountId
       await this.validateCreditPeriod(
-        userId, dto.toAccountId, dto.periodId, dateOnly, dto.amount, 'transfer'
+        userId, dto.toAccountId, dto.periodId, dateOnly, dto.amount, 'transfer', peers
       );
     }
     this.logger.log(`Проверено для переводов на кредитную карту корректное указание кредитного периода`);
@@ -462,11 +464,14 @@ async list(
     await this.events.emit(entity.events);
   }
 
-  async purge(userId: string, id: string): Promise<void> {
+  async purge(userId: string, id: string, peers: string[] = []): Promise<void> {
     const existing = await this.repo.findById(id);
     if (!existing) throw new NotFoundException('Transaction not found');
-    if (existing.userId !== userId)
+    if (![userId, ...peers].includes(existing.userId)) {
+      this.logger.log(peers);
+      
       throw new ForbiddenException('Access denied');
+    }
 
     // генерируем событие «удалено навсегда», если нужно
     const entity = existing.markDeleted(); // используем то же событие

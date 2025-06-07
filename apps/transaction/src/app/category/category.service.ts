@@ -57,12 +57,13 @@ export class CategoryService {
   async get(
     userId: string,
     id: string,
+    peers: string[] = []
   ): Promise<CategoryEntity> {
     const doc = await this.repo.findById(id);
     if (!doc) {
       throw new NotFoundException('Category not found');
     }
-    if (!doc.isDefault && doc.userId?.toString() !== userId) {
+    if (!doc.isDefault && ![userId, ...peers].includes(doc.userId?.toString())) {
       throw new ForbiddenException('Access denied');
     }
 

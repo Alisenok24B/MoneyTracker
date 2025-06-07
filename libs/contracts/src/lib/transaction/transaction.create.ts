@@ -1,5 +1,5 @@
 // libs/contracts/src/lib/transaction/transaction.create.ts
-import { IsString, IsNumber, IsDateString, IsOptional, IsBoolean } from 'class-validator';
+import { IsString, IsNumber, IsDateString, IsOptional, IsBoolean, IsArray } from 'class-validator';
 import { Type } from 'class-transformer';
 
 export namespace TransactionCreate {
@@ -15,6 +15,7 @@ export namespace TransactionCreate {
     @IsDateString() @Type(() => Date) date: Date;
     @IsOptional() @IsString() description?: string;
     @IsOptional() @IsBoolean() hasInterest?: boolean;
+    @IsOptional() @IsArray() @IsString({ each:true }) peers?: string[];
   }
 
   export class Response {}

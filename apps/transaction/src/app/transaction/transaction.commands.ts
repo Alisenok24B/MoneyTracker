@@ -36,7 +36,7 @@ export class TransactionCommands {
   @RMQValidate()
   @RMQRoute(TransactionPurge.topic)
   async purge(@Body() dto: TransactionPurge.Request): Promise<TransactionPurge.Response> {
-    await this.svc.purge(dto.userId, dto.id);
+    await this.svc.purge(dto.userId, dto.id, dto.peers ?? []);
     return {};
   }
 }
