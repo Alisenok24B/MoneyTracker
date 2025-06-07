@@ -9,6 +9,7 @@ import {
   Query,
   UseGuards,
   BadRequestException,
+  ForbiddenException,
 } from '@nestjs/common';
 import { RMQService } from 'nestjs-rmq';
 import { JWTAuthGuard } from '../guards/jwt.guard';
@@ -20,6 +21,7 @@ import {
   AccountGet,
   AccountUpdate,
   AccountDelete,
+  AccountUserInfo,
 } from '@moneytracker/contracts';
 
 import { CreateAccountDto } from '../dtos/create-account.dto';
@@ -43,22 +45,36 @@ export class WalletController {
     @UserId() userId: string,
     @Query() dto: ListAccountsDto,
   ) {
-    /* получаем peers автоматически */
+    // 1.1) достаём ID peers
     const peers = await this.peersHelper.getPeers(userId);
-    const response = await this.rmqService.send<
+
+    // 1.2) получаем все счета (own + peers)
+    const { accounts } = await this.rmqService.send<
       AccountList.Request,
       AccountList.Response
     >(AccountList.topic, { userId, peers });
 
-    const sanitized = response.accounts.map(account => {
-      const { _id, name, type, balance, currency, creditDetails } = account;
-      if (type === AccountType.CreditCard) {
-        return { _id, name, type, balance, currency, creditDetails };
-      }
-      return { _id, name, type, balance, currency };
-    });
+    // 1.3) для каждого счета собираем базу и — если owner ≠ текущего — добираем имя и id владельца
+    const result = await Promise.all(
+      accounts.map(async acc => {
+        const { _id, name, type, balance, currency, creditDetails, userId: ownerId } = acc;
+        const base: any = { _id, name, type, balance, currency };
+        if (type === AccountType.CreditCard) {
+          base.creditDetails = creditDetails;
+        }
+        // чужой счет — добавляем owner
+        if (ownerId !== userId) {
+          const { profile } = await this.rmqService.send<
+            AccountUserInfo.Request,
+            AccountUserInfo.Response
+          >(AccountUserInfo.topic, { id: ownerId });
+          base.owner = { id: ownerId, name: profile.displayName };
+        }
+        return base;
+      })
+    );
 
-    return { accounts: sanitized };
+    return { accounts: result };
   }
 
   // 2) Создать новый счет
@@ -86,23 +102,34 @@ export class WalletController {
     );
   }
 
-  // 3) Получить один счет по ID, возвращая только определённые поля
+  // 3) Получить один счет по ID, + owner если не свой
   @UseGuards(JWTAuthGuard)
   @Get(':id')
   async getById(
     @UserId() userId: string,
     @Param() params: AccountIdDto,
   ) {
-    const response = await this.rmqService.send<
+    const peers = await this.peersHelper.getPeers(userId);
+    const { account } = await this.rmqService.send<
       AccountGet.Request,
       AccountGet.Response
-    >(AccountGet.topic, { userId, id: params.id });
-    const { account } = response;
-    const { _id, name, type, balance, currency, creditDetails } = account;
+    >(AccountGet.topic, { userId, id: params.id, peers });
+    const { _id, name, type, balance, currency, creditDetails, userId: ownerId } = account;
+
+    const base: any = { _id, name, type, balance, currency };
     if (type === AccountType.CreditCard) {
-      return { account: { _id, name, type, balance, currency, creditDetails } };
+      base.creditDetails = creditDetails;
     }
-    return { account: { _id, name, type, balance, currency } };
+    // чужой — добавляем владельца
+    if (ownerId !== userId) {
+      const { profile } = await this.rmqService.send<
+        AccountUserInfo.Request,
+        AccountUserInfo.Response
+      >(AccountUserInfo.topic, { id: ownerId });
+      base.owner = { id: ownerId, name: profile.displayName };
+    }
+
+    return { account: base };
   }
 
   // 4) Обновить счет по ID
