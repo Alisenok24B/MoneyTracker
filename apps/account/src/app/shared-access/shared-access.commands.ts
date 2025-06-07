@@ -10,7 +10,7 @@ import {
 import { SharedAccessService } from './shared-access.service';
 
 @Controller()
-export class SharedAccessController {
+export class SharedAccessCommands {
   constructor(private readonly svc: SharedAccessService) {}
 
   @RMQValidate()
@@ -32,13 +32,6 @@ export class SharedAccessController {
     async reject(@Body() dto: SharedAccessReject.Request): Promise<SharedAccessReject.Response> {
     await this.svc.reject(dto.userId, dto.inviteId);
     return {};
-  }
-
-  @RMQValidate()
-  @RMQRoute(SharedAccessList.topic)
-  async list(@Body() dto: SharedAccessList.Request): Promise<SharedAccessList.Response> {
-    const peers = await this.svc.listPeers(dto.userId);
-    return { peers };
   }
 
   @RMQValidate()

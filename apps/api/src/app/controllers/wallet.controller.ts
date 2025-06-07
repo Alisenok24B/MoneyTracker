@@ -27,10 +27,14 @@ import { UpdateAccountDto } from '../dtos/update-account.dto';
 import { ListAccountsDto } from '../dtos/list-accounts.dto';
 import { AccountIdDto } from '../dtos/account-id.dto';
 import { AccountType } from '@moneytracker/interfaces';
+import { PeersHelper } from '../helpers/peer.helper';
 
 @Controller('accounts')
 export class WalletController {
-  constructor(private readonly rmqService: RMQService) {}
+  constructor(
+    private readonly rmqService: RMQService,
+    private readonly peersHelper: PeersHelper
+  ) {}
 
   // 1) Получить список счетов (своих и peers), возвращаем только нужные поля
   @UseGuards(JWTAuthGuard)
@@ -39,10 +43,12 @@ export class WalletController {
     @UserId() userId: string,
     @Query() dto: ListAccountsDto,
   ) {
+    /* получаем peers автоматически */
+    const peers = await this.peersHelper.getPeers(userId);
     const response = await this.rmqService.send<
       AccountList.Request,
       AccountList.Response
-    >(AccountList.topic, { userId, peers: dto.peers || [] });
+    >(AccountList.topic, { userId, peers });
 
     const sanitized = response.accounts.map(account => {
       const { _id, name, type, balance, currency, creditDetails } = account;

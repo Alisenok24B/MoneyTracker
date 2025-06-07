@@ -14,6 +14,7 @@ import { TransactionController } from './controllers/transaction.controller';
 import { CreditPeriodController } from './controllers/credit-period.controller';
 import { AccessController } from './controllers/access.controller';
 import { NotificationController } from './controllers/notification.controller';
+import { PeersHelper } from './helpers/peer.helper';
 
 @Module({
   imports: [
@@ -33,7 +34,11 @@ import { NotificationController } from './controllers/notification.controller';
     NotificationController
   ],
   providers: [
-    JwtStrategy
+    JwtStrategy,
+    PeersHelper
+  ],
+  exports: [
+    PeersHelper
   ]
 })
 export class AppModule {}

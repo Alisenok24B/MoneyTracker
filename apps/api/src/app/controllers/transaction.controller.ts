@@ -23,11 +23,13 @@ import {
   AccountGet,
   CategoryGet,
   TransactionPurge,
+  AccountList,
 } from '@moneytracker/contracts';
 import { CreateTransactionDto } from '../dtos/create-transaction.dto';
 import { ListTransactionsDto } from '../dtos/list-transactions.dto';
 import { TransactionIdDto } from '../dtos/transaction-id.dto';
 import { UpdateTransactionDto } from '../dtos/update-transaction.dto';
+import { PeersHelper } from '../helpers/peer.helper';
 
 function isoDateOnly(d: Date | string): string {
   return new Date(d).toISOString().split('T')[0];
@@ -35,7 +37,10 @@ function isoDateOnly(d: Date | string): string {
 
 @Controller('transactions')
 export class TransactionController {
-  constructor(private readonly rmq: RMQService) {}
+  constructor(
+    private readonly rmq: RMQService,
+    private readonly peersHelper: PeersHelper
+  ) {}
 
   @UseGuards(JWTAuthGuard)
   @Post()
@@ -60,12 +65,26 @@ export class TransactionController {
   @UseGuards(JWTAuthGuard)
   @Get()
   async list(@UserId() userId: string, @Query() dto: ListTransactionsDto) {
+    const peers = await this.peersHelper.getPeers(userId);
+
+    /* Список всех доступных счетов */
+    const { accounts } = await this.rmq.send<
+      AccountList.Request,
+      AccountList.Response
+    >(AccountList.topic, { userId, peers });
+
+    const accById = new Map(
+      accounts.map(a => [a._id.toString(), a]),
+    );
+
+    /* берем транзакции */
     const { transactions: flat } = await this.rmq.send<
       TransactionList.Request,
       TransactionList.Response
     >(TransactionList.topic, {
       userId,
-      peers: dto.peers ?? [],
+      peers,
+      /* фильтры из query-строки */
       accountIds: dto.accountIds,
       userIds: dto.userIds,
       categoryIds: dto.categoryIds,
@@ -77,9 +96,10 @@ export class TransactionController {
       to: dto.to ? new Date(dto.to) : undefined,
     });
 
+    /* обогащаем данными, используя map счётов */
     const enriched = await Promise.all(
       flat.map(async tx => {
-        // --- общие данные: пользователь и категория -----------------
+        // общие данные: пользователь и категория
         const [userRes, catRes] = await Promise.all([
           this.rmq.send<AccountUserInfo.Request, AccountUserInfo.Response>(
             AccountUserInfo.topic,
@@ -87,7 +107,7 @@ export class TransactionController {
           ),
           this.rmq.send<CategoryGet.Request, CategoryGet.Response>(
             CategoryGet.topic,
-            { userId, id: tx.categoryId },
+            { userId: tx.userId, id: tx.categoryId },
           ),
         ]);
 
@@ -112,36 +132,39 @@ export class TransactionController {
         //----------------------------------------------------------------
         if (tx.type === 'transfer') {
           /* данные счетов */
-          const [fromAccRes, toAccRes] = await Promise.all([
-            this.rmq.send<AccountGet.Request, AccountGet.Response>(
-              AccountGet.topic, { userId, id: tx.accountId },
-            ),
-            this.rmq.send<AccountGet.Request, AccountGet.Response>(
-              AccountGet.topic, { userId, id: tx.toAccountId! },
-            ),
-          ]);
+          const fromAcc = accById.get(tx.accountId)!;
+          const toAcc   = accById.get(tx.toAccountId!)!;
 
-          const toOwnerId = toAccRes.account.userId;
-          let toOwner: { name: string } | undefined;
-          if (toOwnerId !== userId) {
-            const ownerRes = await this.rmq.send<
-              AccountUserInfo.Request,
-              AccountUserInfo.Response
-            >(AccountUserInfo.topic, { id: toOwnerId });
-            toOwner = { name: ownerRes.profile.displayName };
-          }
+          /* владелец исходного счёта */
+          const fromOwner =
+          fromAcc.userId === userId
+            ? undefined
+            : {
+              id  : fromAcc.userId,
+              name: (await this.rmq.send<
+                  AccountUserInfo.Request, AccountUserInfo.Response
+                >(AccountUserInfo.topic, { id: fromAcc.userId })
+              ).profile.displayName };
+
+          /* владелец приёмного счёта */
+          const toOwner =
+          toAcc.userId === userId
+            ? undefined
+            : { 
+              id  : toAcc.userId,
+              name: (await this.rmq.send<
+                  AccountUserInfo.Request, AccountUserInfo.Response
+                >(AccountUserInfo.topic, { id: toAcc.userId })
+              ).profile.displayName };
 
           return {
             ...baseFields,
-            fromAccount: pick(
-              fromAccRes.account,
-              ['name', 'type', 'currency'],
-            ),
-            toAccount: {
-              ...pick(
-                toAccRes.account,
-                ['name', 'type', 'currency'],
-              ),
+            fromAccount: {
+              ...pick(fromAcc, ['name', 'type', 'currency']),
+              owner: fromOwner
+            },
+            toAccount  : {
+              ...pick(toAcc, ['name', 'type', 'currency']),
               owner: toOwner,
             },
           };
@@ -149,17 +172,10 @@ export class TransactionController {
         //----------------------------------------------------------------
 
         /* income | expense */
-        const accRes = await this.rmq.send<AccountGet.Request, AccountGet.Response>(
-          AccountGet.topic,
-          { userId, id: tx.accountId },
-        );
-
+        const acc = accById.get(tx.accountId)!;
         return {
           ...baseFields,
-          account: pick(
-            accRes.account,
-            ['name', 'type', 'currency'],
-          ),
+          account: pick(acc, ['name', 'type', 'currency']),
         };
       }),
     );
@@ -170,13 +186,23 @@ export class TransactionController {
   @UseGuards(JWTAuthGuard)
   @Get(':id')
   async get(@UserId() userId: string, @Param() params: TransactionIdDto) {
+    const peers = await this.peersHelper.getPeers(userId);
+
+    /* список счетов */
+    const { accounts } = await this.rmq.send<
+      AccountList.Request,
+      AccountList.Response
+    >(AccountList.topic, { userId, peers });
+    const accById = new Map(accounts.map(a => [a._id.toString(), a]));
+    
+    /* сама транзакция */
     const { transaction: tx } = await this.rmq.send<
       TransactionGet.Request,
       TransactionGet.Response
     >(TransactionGet.topic, {
       userId,
       id: params.id,
-      peers: params.peers ?? [],
+      peers
     });
 
     /* --- общие данные пользователя и категории -------------------- */
@@ -185,7 +211,7 @@ export class TransactionController {
         AccountUserInfo.topic, { id: tx.userId },
       ),
       this.rmq.send<CategoryGet.Request, CategoryGet.Response>(
-        CategoryGet.topic, { userId, id: tx.categoryId },
+        CategoryGet.topic, { userId: tx.userId, id: tx.categoryId },
       ),
     ]);
 
@@ -210,54 +236,51 @@ export class TransactionController {
 
     /* -------------------------------------------------------------- */
     if (tx.type === 'transfer') {
-      const [fromAccRes, toAccRes] = await Promise.all([
-        this.rmq.send<AccountGet.Request, AccountGet.Response>(
-          AccountGet.topic, { userId, id: tx.accountId },
-        ),
-        this.rmq.send<AccountGet.Request, AccountGet.Response>(
-          AccountGet.topic, { userId, id: tx.toAccountId! },
-        ),
-      ]);
+      const fromAcc = accById.get(tx.accountId)!;
+      const toAcc   = accById.get(tx.toAccountId!)!;
 
-      const toOwnerId = toAccRes.account.userId;
-      let toOwner: { name: string } | undefined;
-      if (toOwnerId !== userId) {
-        const ownerRes = await this.rmq.send<
-          AccountUserInfo.Request,
-          AccountUserInfo.Response
-        >(AccountUserInfo.topic, { id: toOwnerId });
-        toOwner = { name: ownerRes.profile.displayName };
-      }
+      const fromOwner =
+        fromAcc.userId === userId
+          ? undefined
+          : { 
+            id  : fromAcc.userId,
+            name: (await this.rmq.send<
+                AccountUserInfo.Request, AccountUserInfo.Response
+              >(AccountUserInfo.topic, { id: fromAcc.userId })
+            ).profile.displayName };
+
+      const toOwner =
+        toAcc.userId === userId
+          ? undefined
+          : { 
+            id  : toAcc.userId,
+            name: (await this.rmq.send<
+                AccountUserInfo.Request, AccountUserInfo.Response
+              >(AccountUserInfo.topic, { id: toAcc.userId })
+            ).profile.displayName };
 
       return {
         transaction: {
           ...base,
-          fromAccount: pick(
-            fromAccRes.account,
-            ['name', 'type', 'currency'],
-          ),
-          toAccount: {
-            ...pick(
-              toAccRes.account,
-              ['name', 'type', 'currency'],
-            ),
+          fromAccount: {
+            ...pick(fromAcc, ['name', 'type', 'currency']),
+            owner: fromOwner
+          },
+          toAccount  : {
+            ...pick(toAcc, ['name', 'type', 'currency']),
             owner: toOwner,
           },
         },
       };
     }
-    /* -------------------------------------------------------------- */
-    const accRes = await this.rmq.send<AccountGet.Request, AccountGet.Response>(
-      AccountGet.topic, { userId, id: tx.accountId },
-    );
+      
+    /* income / expense */
+    const acc = accById.get(tx.accountId)!;
 
     return {
       transaction: {
         ...base,
-        account: pick(
-          accRes.account,
-          ['name', 'type', 'currency'],
-        ),
+        account: pick(acc, ['name', 'type', 'currency']),
       },
     };
   }
