@@ -12,6 +12,15 @@ export class CategoryService {
     private readonly events: CategoryEventEmitter,
   ) {}
 
+  /** владелец либо пользователь-peer */
+  private isOwnerOrPeer(
+    ownerId: string,
+    userId: string,
+    peers: string[],
+  ): boolean {
+    return ownerId === userId || peers.includes(ownerId);
+  }
+
   /** Создание новой категории */
   async create(
     userId: string,
@@ -38,10 +47,11 @@ export class CategoryService {
   /** Список активных (не удалённых) категорий */
   async list(
     userId: string,
+    peers: string[] = [],
     type?: FlowType,
   ): Promise<CategoryEntity[]> {
     const defs   = await this.repo.findDefaults(type);
-    const customs = await this.repo.findByUser(userId, type);
+    const customs  = await this.repo.findByUsers([userId, ...peers], type);
 
     return [...defs, ...customs].map(doc => {
       // doc — это POJO благодаря .lean(), просто ObjectId в _id
@@ -78,6 +88,7 @@ export class CategoryService {
   async update(
     userId: string,
     id: string,
+    peers: string[] = [],
     dto: Partial<Pick<ICategory, 'name' | 'icon'>>,
   ): Promise<CategoryEntity> {
     const doc = await this.repo.findOne(id);
@@ -87,7 +98,13 @@ export class CategoryService {
     if (doc.isDefault) {
       throw new ForbiddenException('Cannot modify default category');
     }
-    if (doc.userId?.toString() !== userId) {
+    if (
+      !this.isOwnerOrPeer(
+        doc.userId?.toString() || '',
+        userId,
+        peers
+      )
+    ) {
       throw new ForbiddenException('Access denied');
     }
 
@@ -118,6 +135,7 @@ export class CategoryService {
   async delete(
     userId: string,
     id: string,
+    peers: string[] = [], 
   ): Promise<void> {
     const doc = await this.repo.findOne(id);
     if (!doc) {
@@ -126,7 +144,13 @@ export class CategoryService {
     if (doc.isDefault) {
       throw new ForbiddenException('Cannot delete default category');
     }
-    if (doc.userId?.toString() !== userId) {
+    if (
+      !this.isOwnerOrPeer(
+        doc.userId?.toString() || '',
+        userId,
+        peers
+      )
+    ) {
       throw new ForbiddenException('Access denied');
     }
 

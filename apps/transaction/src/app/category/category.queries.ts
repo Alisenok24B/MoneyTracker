@@ -9,8 +9,8 @@ export class CategoryQueries {
 
   @RMQValidate()
   @RMQRoute(CategoryList.topic)
-  async list({ userId, type }: CategoryList.Request): Promise<CategoryList.Response> {
-    const categories = await this.service.list(userId, type);
+  async list({ userId, type, peers }: CategoryList.Request): Promise<CategoryList.Response> {
+    const categories = await this.service.list(userId, peers ?? [], type);
     return { categories };
   }
 

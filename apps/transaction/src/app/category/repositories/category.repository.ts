@@ -29,6 +29,17 @@ export class CategoryRepository {
     return this.model.findById(id).exec();
   }
 
+  findByUsers(userIds: string[], type?: FlowType)  { 
+    const query: any = {
+      userId: { $in: userIds },
+      deletedAt: null,            // ← только активные
+    };
+    if (type) {
+      query.type = type;          // ← фильтр по доход / расход / перевод
+    }
+    return this.model.find(query).lean().exec();
+  }
+
   async create(entity: CategoryEntity) {
     const doc = new this.model(entity);
     return doc.save();

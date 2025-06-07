@@ -22,15 +22,15 @@ export class CategoryCommands {
 
   @RMQValidate()
   @RMQRoute(CategoryUpdate.topic)
-  async update({ userId, id, name, icon }: CategoryUpdate.Request): Promise<CategoryUpdate.Response> {
-    await this.service.update(userId, id, { name, icon });
+  async update({ userId, id, name, icon, peers }: CategoryUpdate.Request): Promise<CategoryUpdate.Response> {
+    await this.service.update(userId, id, peers ?? [], { name, icon });
     return {};
   }
 
   @RMQValidate()
   @RMQRoute(CategoryDelete.topic)
-  async delete({ userId, id }: CategoryDelete.Request): Promise<CategoryDelete.Response> {
-    await this.service.delete(userId, id);
+  async delete({ userId, id, peers }: CategoryDelete.Request): Promise<CategoryDelete.Response> {
+    await this.service.delete(userId, id, peers ?? []);
     return {};
   }
 }
