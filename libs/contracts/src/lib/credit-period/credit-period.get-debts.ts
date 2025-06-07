@@ -1,8 +1,10 @@
+import { IsString } from "class-validator";
+
 export namespace CreditPeriodsDebts {
     export const topic = 'credit.period.debts.query';
   
     export class Request {
-      accountId!: string;
+      @IsString() accountId!: string;
     }
   
     export class DebtInfo {
@@ -10,6 +12,7 @@ export namespace CreditPeriodsDebts {
       debt!: number;
       statementStart!: string;  // "YYYY-MM-DD"
       paymentDue!: string;      // "YYYY-MM-DD"
+      status!: string;
     }
   
     export class Response {

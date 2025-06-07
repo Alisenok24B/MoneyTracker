@@ -214,7 +214,7 @@ export class CreditPeriodService {
   async listOutstandingDebts(
     accountId: string
   ): Promise<
-    { periodId: string; debt: number; statementStart: string; paymentDue: string }[]
+    { periodId: string; debt: number; statementStart: string; paymentDue: string; status: string }[]
   > {
     // 1) все периоды payment|overdue
     const periods = await this.periods.findMany({ accountId });
@@ -227,6 +227,7 @@ export class CreditPeriodService {
       debt: number;
       statementStart: string;
       paymentDue: string;
+      status: string;
     }[] = [];
 
     for (const p of relevant) {
@@ -240,6 +241,7 @@ export class CreditPeriodService {
           debt,
           statementStart: start,
           paymentDue:     due,
+          status: p.status
         });
       }
     }

@@ -23,7 +23,7 @@ export class CreditPeriodController {
     @UserId() userId: string,
   ) {
     const peers = await this.peersHelper.getPeers(userId);
-    // 1) проверяем, что счёт действительно принадлежит пользователю
+    // 1) проверяем, что счёт действительно принадлежит пользователю или одному из его peer-ов
     const { account } = await this.rmq.send<
       AccountGet.Request,
       AccountGet.Response
