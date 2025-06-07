@@ -178,12 +178,12 @@ export class TransactionService {
     if (catType === FlowType.Income) {
       // income по accountId
       await this.validateCreditPeriod(
-        userId, dto.accountId, dto.periodId, dateOnly, dto.amount, 'income', peers
+        userId, dto.accountId, dto.periodId, dateOnly, dto.amount, 'income', peers ?? []
       );
     } else if (catType === FlowType.Transfer && dto.toAccountId) {
       // transfer → toAccountId
       await this.validateCreditPeriod(
-        userId, dto.toAccountId, dto.periodId, dateOnly, dto.amount, 'transfer', peers
+        userId, dto.toAccountId, dto.periodId, dateOnly, dto.amount, 'transfer', peers ?? []
       );
     }
     this.logger.log(`Проверено для переводов на кредитную карту корректное указание кредитного периода`);

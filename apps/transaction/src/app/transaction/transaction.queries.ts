@@ -13,7 +13,7 @@ export class TransactionQueries {
     @Body() dto: TransactionList.Request): Promise<TransactionList.Response> {
     const txs = await this.svc.list(
       dto.userId,
-      dto.peers || [],
+      dto.peers ?? [],
       dto.type,
       dto.accountIds,
       dto.userIds,
@@ -30,7 +30,7 @@ export class TransactionQueries {
   @RMQValidate()
   @RMQRoute(TransactionGet.topic)
   async get(@Body() dto: TransactionGet.Request): Promise<TransactionGet.Response> {
-    const tx = await this.svc.get(dto.userId, dto.id, dto.peers || []);
+    const tx = await this.svc.get(dto.userId, dto.id, dto.peers ?? []);
     return { transaction: tx };
   }
 }

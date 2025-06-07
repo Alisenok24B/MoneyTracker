@@ -1,4 +1,4 @@
-import { IsString, IsOptional, IsEnum } from 'class-validator';
+import { IsString, IsOptional, IsEnum, IsArray } from 'class-validator';
 import { CategoryIcon } from '@moneytracker/interfaces';
 
 export namespace CategoryUpdate {
@@ -18,6 +18,8 @@ export namespace CategoryUpdate {
     @IsOptional()
     @IsEnum(CategoryIcon)
     icon?: CategoryIcon;
+
+    @IsOptional() @IsArray() peers?: string[];
   }
 
   export class Response {}

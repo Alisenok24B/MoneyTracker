@@ -1,4 +1,4 @@
-import { IsString } from 'class-validator';
+import { IsArray, IsOptional, IsString } from 'class-validator';
 
 export namespace CategoryDelete {
   export const topic = 'category.delete.command';
@@ -9,6 +9,8 @@ export namespace CategoryDelete {
 
     @IsString()
     id: string;
+
+    @IsOptional() @IsArray() peers?: string[];
   }
 
   export class Response {}
