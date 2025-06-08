@@ -7,7 +7,7 @@ export class CreditCycleCalculator {
   getFixedWindow(anchor: Date, det: ICreditCardDetails) {
     const statementStart = new Date(anchor);
     const statementEnd   = new Date(anchor);
-    statementEnd.setDate(statementEnd.getDate() + det.billingCycleLengthDays! - 1);
+    statementEnd.setDate(statementEnd.getDate() + det.gracePeriodDays! - det.paymentPeriodDays);
 
     const paymentDue = new Date(statementEnd);
     paymentDue.setDate(paymentDue.getDate() + det.paymentPeriodDays);
@@ -19,9 +19,8 @@ export class CreditCycleCalculator {
   getCalendarWindow(today: Date, det: ICreditCardDetails) {
     const y = today.getUTCFullYear();
     const m = today.getUTCMonth();
-    const d = det.billingCycleStartDayOfMonth!;          // 1..31
 
-    const statementStart = new Date(Date.UTC(y, m, d));
+    const statementStart = new Date(Date.UTC(y, m, 1));
     if (today < statementStart) statementStart.setUTCMonth(m - 1); // ещё не начался
 
     const statementEnd = new Date(statementStart);

@@ -86,30 +86,27 @@ export class AccountService {
       const cd = dto.creditDetails;
       switch (cd.billingCycleType) {
         case 'fixed':
-          if (cd.billingCycleLengthDays == null) {
-            throw new BadRequestException('billingCycleLengthDays required for fixed cycle');
-          }
-          if (cd.billingCycleStartDayOfMonth != null) {
-            throw new BadRequestException('billingCycleStartDayOfMonth not allowed for fixed cycle');
+          if (cd.gracePeriodDays == null) {
+            throw new BadRequestException('gracePeriodDays required for fixed');
           }
           if (cd.statementAnchor == null) {
-            throw new BadRequestException('statementAnchor required for fixed cycle');
+            throw new BadRequestException('statementAnchor required for fixed');
           }
           break;
         case 'calendar':
-          if (cd.billingCycleStartDayOfMonth == null) {
-            throw new BadRequestException('billingCycleStartDayOfMonth required for calendar cycle');
-          }
-          if (cd.billingCycleLengthDays != null) {
-            throw new BadRequestException('billingCycleLengthDays not allowed for calendar cycle');
+          if (cd.gracePeriodDays != null) {
+            throw new BadRequestException('gracePeriodDays allowed only for fixed and perPurchase');
           }
           if (cd.statementAnchor != null) {
             throw new BadRequestException('statementAnchor allowed only for fixed');
           }
           break;
         default: // perPurchase
-          if (cd.billingCycleLengthDays != null || cd.billingCycleStartDayOfMonth != null || cd.statementAnchor != null) {
-            throw new BadRequestException('No cycle-length fields allowed for perPurchase');
+          if (cd.gracePeriodDays == null) {
+            throw new BadRequestException('gracePeriodDays required for perPurchase');
+          }
+          if (cd.statementAnchor != null) {
+            throw new BadRequestException('No statementAnchor allowed for perPurchase');
           }
       }
     }
@@ -130,7 +127,18 @@ export class AccountService {
     // если кредитка — сохраняем детали
     if (dto.type === AccountType.CreditCard) {
       await this.creditService.createForAccount(created._id!, dto.creditDetails!);
-      await this.creditPeriods.initForAccount(doc._id!.toString(), new Date());
+      if (dto.creditDetails.billingCycleType === 'fixed') {
+        const msPerDay = 24 * 60 * 60 * 1000;
+        // сколько дней нужно отнять:
+        const daysDelta = (dto.creditDetails.gracePeriodDays! - dto.creditDetails.paymentPeriodDays);
+        // текущее время в мс
+        const anchorMs = new Date(dto.creditDetails.statementAnchor!).getTime()
+                      - daysDelta * msPerDay;
+        const anchor = new Date(anchorMs);
+        await this.creditPeriods.initForAccount(doc._id!.toString(), anchor);
+      } else {
+        await this.creditPeriods.initForAccount(doc._id!.toString(), new Date());
+      }
     }
     await this.events.emit(created.events);        // эмитируем события создания
     return created;

@@ -16,17 +16,14 @@ export interface ICreditCardDetails {
   // лимит
   creditLimit: number;
 
+  // если fixed или perPurchase:
   // льготный период (беспроцентный)
-  gracePeriodDays: number;
+  gracePeriodDays?: number;
 
-  // расчётный период
+  // тип расчётного периода
   billingCycleType: BillingCycleType;
   // если fixed:
-  billingCycleLengthDays?: number;
   statementAnchor?: Date; // дата выписки (указывается ближайшая при создании кредитной карты)
-  // если calendar:
-  billingCycleStartDayOfMonth?: number;
-  // если perPurchase — не нужно дополнительных полей
 
   // платёжный период
   paymentPeriodDays: number;

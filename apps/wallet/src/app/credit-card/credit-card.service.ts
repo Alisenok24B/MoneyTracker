@@ -8,13 +8,11 @@ export class CreditService {
 
   async createForAccount(accountId: string, dto: any): Promise<void> {
     const vo = new CreditDetails(
-      dto.creditLimit,
-      dto.gracePeriodDays,
-      dto.billingCycleType,
-      dto.billingCycleLengthDays,
-      dto.billingCycleStartDayOfMonth,
-      dto.paymentPeriodDays,
-      dto.interestRate,
+      dto.creditLimit,                           // 1. limit
+      dto.billingCycleType,                      // 2. billingCycleType
+      dto.paymentPeriodDays,                     // 3. paymentPeriodDays
+      dto.interestRate,                          // 4. interestRate
+      dto.gracePeriodDays,                       // 5. gracePeriodDays (optional)
       dto.annualFee,
       dto.cashWithdrawalFeePercent,
       dto.cashWithdrawalFeeFixed,
@@ -30,12 +28,10 @@ export class CreditService {
     const o = details.toObject();
     return new CreditDetails(
       o.creditLimit,
-      o.gracePeriodDays,
       o.billingCycleType,
-      o.billingCycleLengthDays,
-      o.billingCycleStartDayOfMonth,
       o.paymentPeriodDays,
       o.interestRate,
+      o.gracePeriodDays,
       o.annualFee,
       o.cashWithdrawalFeePercent,
       o.cashWithdrawalFeeFixed,

@@ -41,7 +41,12 @@ export class CreditPeriodService {
    * Гарантирует, что на дату *today* для счёта существует открытый / платёжный
    * период и возвращает его.
    */
-  async ensurePeriod(accountId: string, today = new Date()): Promise<CreditPeriodEntity> {
+  async ensurePeriod(accountId: string, todayInput = new Date()): Promise<CreditPeriodEntity> {
+    // 0. Приводим вход к Date
+    const today = todayInput instanceof Date
+    ? todayInput
+    : new Date(todayInput);
+
     // 0) Попробовать найти ПЕРИОД, охватывающий именно дату «today» (любой статус, даже closed)
     const existingByDate = await this.periods.findByDate(accountId, today);
     if (existingByDate) {
@@ -59,12 +64,45 @@ export class CreditPeriodService {
     if (!details) throw new Error(`Credit details for account ${accountId} not found`);
 
     // вычисляем окно по типу цикла
-    const win =
-      details.billingCycleType === 'fixed'
-        ? this.calc.getFixedWindow(new Date(details.statementAnchor), details)
-        : details.billingCycleType === 'calendar'
-        ? this.calc.getCalendarWindow(today, details)
-        : this.calc.getPerPurchaseWindow(today, details);
+    let win: { statementStart: Date; statementEnd: Date; paymentDue: Date };
+
+    if (details.billingCycleType === 'fixed') {
+      // <<< FIXED CYCLE MULTI-PERIOD >>>
+      // Найдём все существующие периоды этого счёта:
+      const allPeriods = await this.periods.findMany({ accountId });
+      // Определяем точку “якоря”
+      let anchor: Date;
+      if (allPeriods.length === 0) {
+        // при первом создании — от statementAnchor
+        anchor = today;
+      } else {
+        // ищем последний по statementEnd < today
+        const sorted = allPeriods
+          .map(p => p)
+          .sort((a, b) => a.statementEnd.getTime() - b.statementEnd.getTime());
+        let last = sorted[sorted.length - 1];
+        // если даже последний по каким-то причинам > today, возьмём ближайший слева:
+        for (const p of sorted) {
+          if (p.statementEnd.getTime() < today.getTime()) last = p;
+        }
+        anchor = new Date(last.statementEnd);
+      }
+      // Генерируем цикл, пока дата today не попадёт в [statementStart..statementEnd]
+      win = this.calc.getFixedWindow(anchor, details);
+      this.log.log(`startWin = ${anchor}, statementStart=${win.statementStart}, statementEnd=${win.statementEnd}, ${win.paymentDue}`)
+      while (today.getTime() > win.statementEnd.getTime()) {
+        // сдвигаем “якорь” вперёд на конец предыдущего закрытого периода
+        anchor = new Date(win.statementEnd);
+        win = this.calc.getFixedWindow(anchor, details);
+      }
+      // <<< END FIXED CYCLE MULTI-PERIOD >>>
+
+    } else if (details.billingCycleType === 'calendar') {
+      win = this.calc.getCalendarWindow(today, details);
+    } else {
+      // perPurchase
+      win = this.calc.getPerPurchaseWindow(today, details);
+    }
 
     const status =
       isBefore(today, win.statementEnd)
@@ -82,6 +120,8 @@ export class CreditPeriodService {
       interestAccrued: 0,
       interestRate: details.interestRate,
     }).markCreated();
+
+    this.log.log(entity.statementStart, entity.statementEnd, entity.paymentDue);
 
     return this.periods.create(entity);
   }

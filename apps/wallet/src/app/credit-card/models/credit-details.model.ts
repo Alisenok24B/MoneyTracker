@@ -8,11 +8,9 @@ export type CreditDetailsDocument = CreditDetailsModel & Document;
 export class CreditDetailsModel implements ICreditCardDetails {
   @Prop({ required: true }) accountId: string;
   @Prop({ required: true }) creditLimit: number;
-  @Prop({ required: true }) gracePeriodDays: number;
+  @Prop() gracePeriodDays?: number;
   @Prop({ required: true, type: String, enum: ['fixed', 'calendar', 'perPurchase'] as BillingCycleType[] })
   billingCycleType: BillingCycleType;
-  @Prop() billingCycleLengthDays?: number;
-  @Prop() billingCycleStartDayOfMonth?: number;
   @Prop({ type: Date }) statementAnchor?: Date;
   @Prop({ required: true }) paymentPeriodDays: number;
   @Prop({ required: true }) interestRate: number;

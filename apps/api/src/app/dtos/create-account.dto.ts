@@ -6,6 +6,7 @@ class CreditDetailsDto implements ICreditCardDetails {
   @IsNumber()
   creditLimit: number;
 
+  @ValidateIf(o => o.billingCycleType === 'fixed' || o.billingCycleType === 'perPurchase')
   @IsNumber()
   gracePeriodDays: number;
 
@@ -13,17 +14,9 @@ class CreditDetailsDto implements ICreditCardDetails {
   billingCycleType: BillingCycleType;
 
   @ValidateIf(o => o.billingCycleType === 'fixed')
-  @IsNumber()
-  billingCycleLengthDays: number;
-
-  @ValidateIf(o => o.billingCycleType === 'fixed')
   @IsDate()
   @Type(() => Date) // ⇐ преобразуем строку → Date
   statementAnchor!: Date;
-
-  @ValidateIf(o => o.billingCycleType === 'calendar')
-  @IsNumber()
-  billingCycleStartDayOfMonth: number;
 
   @IsNumber()
   paymentPeriodDays: number;

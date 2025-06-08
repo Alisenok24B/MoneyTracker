@@ -7,19 +7,18 @@ export namespace AccountCreate {
 
   class CreditDto implements ICreditCardDetails {
     @IsNumber() creditLimit: number;
-    @IsNumber() gracePeriodDays: number;
+
     @IsIn(['fixed','calendar','perPurchase'] as BillingCycleType[]) billingCycleType: BillingCycleType;
-    // обязательно для fixed
+
     @ValidateIf(o => o.billingCycleType === 'fixed')
-    @IsNumber()
-    billingCycleLengthDays: number;
-    @ValidateIf(o => o.billingCycleType !== 'fixed')
     @IsOptional()
     statementAnchor?: Date;
-    // обязательно для calendar
-    @ValidateIf(o => o.billingCycleType === 'calendar')
+
     @IsNumber()
-    billingCycleStartDayOfMonth: number;
+    @ValidateIf(o => o.billingCycleType === 'fixed' || o.billingCycleType === 'perPurchase')
+    @IsOptional()
+    gracePeriodDays?: number;
+
     @IsNumber() paymentPeriodDays: number;
     @IsNumber() interestRate: number;
     @IsOptional() @IsNumber() annualFee?: number;
