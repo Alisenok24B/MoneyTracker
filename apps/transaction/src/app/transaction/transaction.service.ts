@@ -199,52 +199,44 @@ export class TransactionService {
       periodId:  dto.periodId!,
     });
 
-    const stmtEnd = new Date(period.statementEnd);
-    const payDue = new Date(period.paymentDue);
-    if (period.status === 'overdue') {
-      // если overdue, flag обязателен
-      if (dto.hasInterest === undefined) {
-        throw new BadRequestException('hasInterest is required for overdue-period transactions');
-      }
-      if (dateOnly <= payDue) {
-        // внутри границы платежного периода переплата не считается
-        // 8a) внутри window ([statementEnd..paymentDue]) сумма не может превышать долг
-        const { debt } = await this.rmq.send<
-          CreditPeriodDebt.Request,
-          CreditPeriodDebt.Response
-        >(CreditPeriodDebt.topic, { periodId: dto.periodId! });
-        if (dto.amount > debt) {
-          throw new BadRequestException(
-            'Transaction amount exceeds outstanding debt for this period'
-          );
-        }
-        if (dto.hasInterest) {
-          throw new BadRequestException(
-            'hasInterest cannot be true when transaction date is within paymentDue'
-          );
-        }
-      } else {
-      // разрешаем true только когда amount > debt
-      const { debt } = await this.rmq.send<
+    // получим задолженность
+    const { debt } = await this.rmq.send<
         CreditPeriodDebt.Request,
         CreditPeriodDebt.Response
       >(CreditPeriodDebt.topic, { periodId: dto.periodId! });
+
+    const stmtEnd = new Date(period.statementEnd);
+    const payDue = new Date(period.paymentDue);
+
+    if (stmtEnd <= dateOnly && dateOnly <= payDue) {
+      // внутри границы платежного периода переплата не считается
+      // 8a) внутри window ([statementEnd..paymentDue]) сумма не может превышать долг
+      if (dto.amount > debt) {
+        throw new BadRequestException(
+          'Transaction amount exceeds outstanding debt for this period'
+        );
+      }
+    }
+
+    // hasInterest разрешён только когда статус overdue и дата > paymentDue
+    if (period.status === 'overdue' && dateOnly > payDue) {
+      // если overdue, flag обязателен
+      if (dto.hasInterest === undefined) {
+        throw new BadRequestException('hasInterest is required for overdue-period transactions after paymentDue');
+      }
       if (dto.hasInterest) {
         if (dto.amount <= debt) {
-          this.logger.log(`hasInterest-проверка пройдена: true, debt=${debt}, amount=${dto.amount}`);
-          throw new BadRequestException('For hasInterest=true amount must exceed outstanding debt');
+          this.logger.log(`hasInterest-проверка не пройдена: true, debt=${debt}, amount=${dto.amount}`);
+          throw new BadRequestException('hasInterest=true requires amount > outstanding debt');
         }
       }
-      this.logger.log(`hasInterest-проверка пройдена: true, debt=${debt}, amount=${dto.amount}`);
-    }
     } else {
       // во всех остальных случаях флаг запрещён
       if (dto.hasInterest !== undefined) {
-        throw new BadRequestException('hasInterest not allowed for non-overdue transactions');
+        throw new BadRequestException('hasInterest not allowed for non-overdue transactions or dateOnly <= payDue');
       }
-      this.logger.log(`hasInterest не применяется (status=${period.status})`);
+      this.logger.log(`hasInterest не применяется (status=${period.status}, dateOnly=${dateOnly}, paymentDue=${payDue})`);
     }
-
   }
 
   // 5. Собираем сущность
