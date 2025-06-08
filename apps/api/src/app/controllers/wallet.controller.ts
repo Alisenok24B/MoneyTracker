@@ -22,6 +22,7 @@ import {
   AccountUpdate,
   AccountDelete,
   AccountUserInfo,
+  AccountsUpcomingPayments,
 } from '@moneytracker/contracts';
 
 import { CreateAccountDto } from '../dtos/create-account.dto';
@@ -100,6 +101,59 @@ export class WalletController {
       AccountCreate.topic,
       { userId, ...dto },
     );
+  }
+
+  /** 6) GET /accounts/upcoming-payments */
+  @UseGuards(JWTAuthGuard)
+  @Get('upcoming-payments')
+  async upcomingPayments(@UserId() userId: string) {
+    // 1) Получаем peers
+    const peers = await this.peersHelper.getPeers(userId);
+
+    // 2) Запрашиваем у кошелька raw-список платежей
+    const { payments } = await this.rmqService.send<
+      AccountsUpcomingPayments.Request,
+      AccountsUpcomingPayments.Response
+    >(AccountsUpcomingPayments.topic, {
+      userId,
+      peers,
+    });
+
+    // 3) Для каждой записи, если владелец != userId, добавляем ownerId + displayName
+    const enriched = await Promise.all(
+      payments.map(async p => {
+        // a) получаем данные счета, чтобы узнать его userId (владелец)
+        const { account } = await this.rmqService.send<
+          AccountGet.Request,
+          AccountGet.Response
+        >(AccountGet.topic, {
+          userId,
+          id: p.accountId,
+          peers, // чтобы разрешить смотреть peer-овые счета
+        });
+
+        // b) если это чужой счет — запрашиваем displayName
+        if (account.userId !== userId) {
+          const { profile } = await this.rmqService.send<
+            AccountUserInfo.Request,
+            AccountUserInfo.Response
+          >(AccountUserInfo.topic, { id: account.userId });
+
+          return {
+            ...p,
+            owner: {
+              id:   account.userId,
+              name: profile.displayName,
+            },
+          };
+        }
+        
+        // c) свой счет — без owner
+        return p;
+      })
+    );
+
+    return { payments: enriched };
   }
 
   // 3) Получить один счет по ID, + owner если не свой

@@ -1,5 +1,6 @@
-import { Controller } from '@nestjs/common';
+import { Body, Controller } from '@nestjs/common';
 import { RMQRoute, RMQValidate } from 'nestjs-rmq';
+import { AccountsUpcomingPayments } from '@moneytracker/contracts';
 import {
   AccountList,
   AccountGet,
@@ -28,5 +29,16 @@ export class AccountQueries {
     const { userId, id, peers } = payload;
     const account = await this.service.getAccount(userId, id, peers ?? []);
     return { account };
+  }
+
+  @RMQValidate()
+  @RMQRoute(AccountsUpcomingPayments.topic)
+  async upcomingPayments(
+  @Body() payload: AccountsUpcomingPayments.Request
+  ): Promise<AccountsUpcomingPayments.Response> {
+    const payments = await this.service.getUpcomingPayments(
+      payload.userId, payload.peers || [],
+    );
+    return { payments };
   }
 }

@@ -1,7 +1,7 @@
 import { BadRequestException, ForbiddenException, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { AccountRepository } from './repositories/account.repository';
 import { AccountEntity } from './entities/account.entity';
-import { AccountType, IAccount } from '@moneytracker/interfaces';
+import { AccountType, IAccount, PaymentInfo } from '@moneytracker/interfaces';
 import { AccountEventEmitter } from './account.event-emitter';
 import { CreditService } from '../credit-card/credit-card.service';
 import { CreditPeriodService } from '../credit-card/credit-period.service';
@@ -228,5 +228,34 @@ export class AccountService {
 
     // отправляем все накопленные события (в частности, account.deleted.event)
     await this.events.emit(entity.events);
+  }
+
+  /**
+   * Сбор “ближайших платежей” по всем кредитным картам пользователя и peer-ов
+   */
+  async getUpcomingPayments(userId: string, peers: string[]): Promise<PaymentInfo[]> {
+    // 1. Забираем все свои и peer-овые аккаунты
+    const all = await this.repo.findByUsers([userId, ...peers]);
+    // 2. Фильтруем только creditCard
+    const cards = all.filter(a => a.type === AccountType.CreditCard);
+
+    const result: PaymentInfo[] = [];
+    for (const c of cards) {
+      // 3. Спрашиваем периоды с долгами
+      const debts = await this.creditPeriods.listOutstandingDebts(c._id.toString()!);
+      for (const d of debts) {
+        result.push({
+          accountId:     c._id.toString()!,
+          accountName:   c.name,
+          accountType:   c.type,
+          periodId:      d.periodId,
+          status:        d.status as any,
+          paymentDue:    d.paymentDue,
+          debt:          d.debt,
+        });
+      }
+    }
+    // 4. Сортируем по дате ближайшего платежа
+    return result.sort((a, b) => a.paymentDue.localeCompare(b.paymentDue));
   }
 }
