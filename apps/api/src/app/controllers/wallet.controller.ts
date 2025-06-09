@@ -23,6 +23,7 @@ import {
   AccountDelete,
   AccountUserInfo,
   AccountsUpcomingPayments,
+  AccountsBalanceHistory,
 } from '@moneytracker/contracts';
 
 import { CreateAccountDto } from '../dtos/create-account.dto';
@@ -31,6 +32,7 @@ import { ListAccountsDto } from '../dtos/list-accounts.dto';
 import { AccountIdDto } from '../dtos/account-id.dto';
 import { AccountType } from '@moneytracker/interfaces';
 import { PeersHelper } from '../helpers/peer.helper';
+import { BalanceHistoryDto } from '../dtos/balance-history.dto';
 
 @Controller('accounts')
 export class WalletController {
@@ -101,6 +103,31 @@ export class WalletController {
       AccountCreate.topic,
       { userId, ...dto },
     );
+  }
+
+  /** 7) POST /accounts/balance-history */
+  @UseGuards(JWTAuthGuard)
+  @Post('balance-history')
+  async balanceHistory(
+    @UserId() userId: string,
+    @Body() dto: BalanceHistoryDto,
+  ) {
+    // 1) peers → достаём разрешённые аккаунты
+    const peers = await this.peersHelper.getPeers(userId);
+
+    // 2) шлём RMQ-запрос в wallet-микросервис
+    const { history } = await this.rmqService.send<
+      AccountsBalanceHistory.Request,
+      AccountsBalanceHistory.Response
+    >(AccountsBalanceHistory.topic, {
+      userId,
+      peers,
+      accountIds: dto.accountIds,
+      dates: dto.dates,
+    });
+
+    // 3) просто возвращаем
+    return { history };
   }
 
   /** 6) GET /accounts/upcoming-payments */

@@ -1,7 +1,7 @@
 import { BadRequestException, ForbiddenException, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { AccountRepository } from './repositories/account.repository';
 import { AccountEntity } from './entities/account.entity';
-import { AccountType, IAccount, PaymentInfo } from '@moneytracker/interfaces';
+import { AccountType, BalanceHistoryEntry, IAccount, PaymentInfo } from '@moneytracker/interfaces';
 import { AccountEventEmitter } from './account.event-emitter';
 import { CreditService } from '../credit-card/credit-card.service';
 import { CreditPeriodService } from '../credit-card/credit-period.service';
@@ -115,7 +115,7 @@ export class AccountService {
     let initialBalance: number;
     if (dto.type === AccountType.CreditCard) {
       // для кредитной карты — всегда 0
-      initialBalance = 0;
+      initialBalance = dto.creditDetails.creditLimit;
     } else {
       // для остальных — balance из dto (в Controller мы уже гарантировали, что оно задано)
       initialBalance = dto.balance!;
@@ -265,5 +265,127 @@ export class AccountService {
     }
     // 4. Сортируем по дате ближайшего платежа
     return result.sort((a, b) => a.paymentDue.localeCompare(b.paymentDue));
+  }
+
+  /**
+   * История балансов по дате
+   */
+  async getBalanceHistory(
+    userId: string,
+    peers: string[],
+    accountIds?: string[],
+    dates?: Date[],
+  ): Promise<BalanceHistoryEntry[]> {
+    // 1) свои + peers
+    this.logger.log(peers);
+    const docs = await this.repo.findByUsers([userId, ...peers]);
+    //const all = docs.map(d => d.toObject());
+    //const allowedIds = all.map(a => a._id!.toString());
+    const allAccounts = docs.map(d => new AccountEntity(d.toObject()));
+    // 2) фильтр по accountIds
+    /*const ids = accountIds && accountIds.length
+      ? accountIds.filter(id => {
+          if (!allowedIds.includes(id)) {
+            throw new ForbiddenException(`Access denied to account ${id}`);
+          }
+          return true;
+        })
+      : allowedIds;*/
+      let ids: string[];
+      if (!accountIds || accountIds.length === 0) {
+        ids = allAccounts
+          .filter(a => a.type !== AccountType.CreditCard)
+          .map(a => a._id!.toString());
+      } else {
+        // Иначе проверяем доступ и используем ровно тот список, что пришёл
+        const allowed = new Set(allAccounts.map(a => a._id!.toString()));
+        this.logger.log(`allowed = ${[...allowed]}`)
+        for (const id of accountIds) {
+          this.logger.log(id);
+          if (!allowed.has(id)) {
+            throw new ForbiddenException(`No access to account ${id}`);
+          }
+        }
+        ids = accountIds;
+      }
+    // 3) составляем список дат
+    let dayList: Date[];
+    if (dates && dates.length) {
+      // если ровно две даты — берем весь диапазон
+      const start = new Date(dates[0]); start.setUTCHours(0,0,0,0);
+      const end   = new Date(dates[1]); end.setUTCHours(0,0,0,0);
+      if (end < start) throw new BadRequestException('End date must be ≥ start date');
+      dayList = [];
+      for (let cur = new Date(start); cur.getTime() <= end.getTime(); cur.setUTCDate(cur.getUTCDate()+1)) {
+        dayList.push(new Date(cur));
+      }
+    } else {
+      // дефолт: с 1-го числа текущего месяца до сегодня
+      const today = new Date(); today.setUTCHours(0,0,0,0);
+      const first = new Date(today); first.setUTCDate(1);
+      dayList = [];
+      for (let cur = new Date(first); cur.getTime() <= today.getTime(); cur.setUTCDate(cur.getUTCDate()+1)) {
+        dayList.push(new Date(cur));
+      }
+    }
+    const result: BalanceHistoryEntry[] = [];
+
+    const allowedAccounts = allAccounts.filter(a => ids.includes(a._id!.toString()));
+    this.logger.log(`allowedAccounts = ${allowedAccounts}`);
+    this.logger.log(ids);
+    // 5) на каждую дату считаем баланс всех счетов
+    for (const date of dayList) {
+      this.logger.log(date);
+      // 1) Получаем все транзакции по нужным счетам до date включительно
+      const { transactions } = await this.rmq.send<
+        TransactionList.Request,
+        TransactionList.Response
+      >(TransactionList.topic, {
+        userId,
+        peers,
+        accountIds: ids,
+        to: date,
+      });
+      let totalForDate = 0;
+  
+      // 2) Для каждого счёта считаем delta
+      for (const acc of allowedAccounts) {
+        const aid = acc._id!.toString();
+        
+        this.logger.log(aid)
+        // Ищем все tx, где этот счёт задействован:
+        // - income/expense через accountId
+        // - transfer via accountId (out) и toAccountId (in)
+        const relevant = transactions.filter(tx =>
+          tx.accountId === aid || tx.toAccountId === aid
+        );
+
+        // Считаем дельту
+        const delta = relevant.reduce((sum, tx) => {
+          if (tx.type === 'income' && tx.accountId === aid) {
+            return sum + tx.amount;
+          }
+          if (tx.type === 'expense' && tx.accountId === aid) {
+            return sum - tx.amount;
+          }
+          if (tx.type === 'transfer') {
+            if (tx.accountId === aid)    return sum - tx.amount; // out
+            if (tx.toAccountId === aid)  return sum + tx.amount; // in
+          }
+          return sum;
+        }, 0);
+
+        // 3) «initialBalance» из модели — это баланс на момент создания счёта
+        totalForDate += acc.balance + delta;
+        this.logger.log(`accountId = ${aid}, balance = ${acc.balance}, delta = ${delta}`)
+      }
+  
+      result.push({
+        date: date.toISOString().slice(0, 10),
+        total: totalForDate,
+      });
+    }
+    this.logger.log('finish');
+    return result;
   }
 }

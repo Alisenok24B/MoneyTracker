@@ -1,6 +1,6 @@
 import { Body, Controller } from '@nestjs/common';
 import { RMQRoute, RMQValidate } from 'nestjs-rmq';
-import { AccountsUpcomingPayments } from '@moneytracker/contracts';
+import { AccountsBalanceHistory, AccountsUpcomingPayments } from '@moneytracker/contracts';
 import {
   AccountList,
   AccountGet,
@@ -40,5 +40,20 @@ export class AccountQueries {
       payload.userId, payload.peers || [],
     );
     return { payments };
+  }
+
+  @RMQValidate()
+  @RMQRoute(AccountsBalanceHistory.topic)
+  async balanceHistory(
+    @Body() dto: AccountsBalanceHistory.Request,
+  ): Promise<AccountsBalanceHistory.Response> {
+    const dates = dto.dates?.map(d => new Date(d));
+    const history = await this.service.getBalanceHistory(
+      dto.userId,
+      dto.peers || [],
+      dto.accountIds,
+      dates,
+    );
+    return { history };
   }
 }

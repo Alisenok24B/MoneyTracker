@@ -6,3 +6,4 @@ export * from './lib/category.interface';
 export * from './lib/transaction.interface';
 export * from './lib/common.types';
 export * from './lib/payment-info.interface';
+export * from './lib/balance-history.interface';

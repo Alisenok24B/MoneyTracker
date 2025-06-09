@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CreditDetailsDocument } from '../models/credit-details.model';
@@ -9,6 +9,7 @@ export class CreditRepository {
   constructor(
     @InjectModel('CreditDetails') private readonly model: Model<CreditDetailsDocument>,
   ) {}
+  private readonly log = new Logger(CreditRepository.name);
 
   async create(accountId: string, vo: CreditDetails): Promise<CreditDetailsDocument> {
     const doc = new this.model({ accountId, ...vo });
