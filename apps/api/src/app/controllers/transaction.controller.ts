@@ -72,7 +72,8 @@ export class TransactionController {
   @Get()
   async list(@UserId() userId: string, @Query() dto: ListTransactionsDto) {
     const peers = await this.peersHelper.getPeers(userId);
-
+    this.logger.log(`peers = ${peers}`);
+    this.logger.log(`Я ДТО: ${dto.accountIds}`)
     /* Список всех доступных счетов */
     const { accounts } = await this.rmq.send<
       AccountList.Request,

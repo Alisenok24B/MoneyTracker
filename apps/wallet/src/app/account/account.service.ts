@@ -29,6 +29,7 @@ export class AccountService {
    */
   private async calculateNonCreditCurrentBalance(
     userId: string,
+    peers: string[],
     accountId: string,
     initialBalance: number,
   ): Promise<number> {
@@ -38,6 +39,7 @@ export class AccountService {
       TransactionList.Response
     >(TransactionList.topic, {
       userId,
+      peers,
       accountIds: [accountId],
       // остальные фильтры не нужны: берём всё
     });
@@ -144,9 +146,13 @@ export class AccountService {
     return created;
   }
 
-  async listAccounts(userId: string, peers: string[] = []): Promise<AccountEntity[]> {
+  async listAccounts(userId: string, peers: string[] = [], lite = false): Promise<AccountEntity[]> {
+    this.logger.log(`peers from accountList=${peers}`);
     const docs = await this.repo.findByUsers([userId, ...peers]);
     const entities = docs.map(d => new AccountEntity(d.toObject()));
+
+    // если lite = true — сразу отдаём, ничего не считаем
+    if (lite) return entities;
 
     // для каждого кредитного аккаунта подгружаем детали
     return Promise.all(
@@ -159,6 +165,7 @@ export class AccountService {
           // 2.б) Обычный: «initialBalance» в e.balance, нужно скорректировать
           const current = await this.calculateNonCreditCurrentBalance(
             userId,
+            peers,
             e._id!.toString(),
             e.balance,
           );
@@ -184,6 +191,7 @@ export class AccountService {
       // Для остальных – «текущий баланс» на основе initial + транзакций
       const current = await this.calculateNonCreditCurrentBalance(
         userId,
+        peers,
         id,
         entity.balance, 
       );

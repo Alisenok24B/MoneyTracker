@@ -271,6 +271,8 @@ async list(
   toFilter?: Date,
 ): Promise<TransactionEntity[]> {
 
+  this.logger.log(`Я ДТО СЕРВИСА: ${accountIdsFilter}`)
+
   /* ----------------------------------------------------------
    * 0. Определяем базовый набор "допустимых" счётов
    *    ─ если вызывающая сторона уже прислала accountIdsFilter
@@ -279,23 +281,37 @@ async list(
    *        не попасть в циклический RPC.
    *    ─ иначе работаем по старой схеме.
    * ---------------------------------------------------------- */
-
+  
   let accessibleAccountIds: string[];
 
-  if (accountIdsFilter.length && peers.length === 0) {
-    // wallet уже дал конкретный счёт – доверяем
-    accessibleAccountIds = [...accountIdsFilter];
-  } else {
-    // стандартная проверка доступа
+  //if (accountIdsFilter.length && peers.length === 0) {
+    // Вызов пришёл из Wallet-сервиса: он уже проверил права.
+    // Используем ровно те счёта, что нам передали.
+    //accessibleAccountIds = [...accountIdsFilter];
+  //} else {
+    this.logger.log(userId);
+    this.logger.log(`peers = ${[...peers]}`);
+    // Стандартная схема: спрашиваем у Wallet допустимые счёта
     const { accounts } = await this.rmq.send<
       AccountList.Request,
       AccountList.Response
-    >(AccountList.topic, { userId, peers });
+    >(AccountList.topic, { userId, peers, lite: true });
 
-    accessibleAccountIds = accounts
-      .filter((a): a is { _id: string } => !!a && !!a._id)
-      .map(a => a._id);
-  }
+    accessibleAccountIds = accounts.map(a => a._id);
+    this.logger.log(accessibleAccountIds)
+    this.logger.log(`Я список фильтров ${accountIdsFilter}`)
+    // Если в запросе был список accountIdsFilter — проверяем доступ
+    if (accountIdsFilter.length) {
+      const allowed = new Set(accessibleAccountIds.map(String));
+      for (const id of accountIdsFilter) {
+        if (!allowed.has(id)) {
+          throw new ForbiddenException(`No access to account ${id}`);
+        }
+      }
+      // и сузим выборку только до этих счётов
+      accessibleAccountIds = accountIdsFilter;
+    }
+  //}
 
   if (accessibleAccountIds.length === 0) return [];
 
@@ -307,7 +323,31 @@ async list(
   let txs = await this.repo.findByAccountOrToAccountIds(accessibleAccountIds);
 
   /* 3. Базовый фильтр: не удалённые + по type (если задан) */
-  txs = txs.filter(t => !t.deletedAt && (!type || t.type === type));
+  //txs = txs.filter(t => !t.deletedAt && (!type || t.type === type));
+  const accSet = new Set(accessibleAccountIds);
+
+  txs = txs.filter(t => {
+    if (t.deletedAt) return false;
+
+    if (!type) return true;                               // без фильтра — всё оставляем
+
+    const out = accSet.has(t.accountId);
+    const inc = t.toAccountId ? accSet.has(t.toAccountId) : false;
+
+    if (type === 'expense') {
+      if (t.type === 'expense' && out) return true;       // обычный расход
+      if (t.type === 'transfer' && out && !inc) return true; // transfer-out
+      return false;
+    }
+
+    if (type === 'income') {
+      if (t.type === 'income' && out) return true;        // обычный доход
+      if (t.type === 'transfer' && inc && !out) return true; // transfer-in
+      return false;
+    }
+
+    return false; // safety
+  });
 
   /* 4. Дополнительные фильтры из query-параметров */
   /*if (accountIdsFilter.length) {

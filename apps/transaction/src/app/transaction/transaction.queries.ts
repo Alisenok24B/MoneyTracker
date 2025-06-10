@@ -1,4 +1,4 @@
-import { Body, Controller } from '@nestjs/common';
+import { Body, Controller, Logger } from '@nestjs/common';
 import { RMQRoute, RMQValidate } from 'nestjs-rmq';
 import { TransactionList, TransactionGet, TransactionSummary } from '@moneytracker/contracts';
 import { TransactionService } from './transaction.service';
@@ -6,11 +6,13 @@ import { TransactionService } from './transaction.service';
 @Controller()
 export class TransactionQueries {
   constructor(private readonly svc: TransactionService) {}
+  private readonly logger = new Logger(TransactionService.name);
 
   @RMQValidate()
   @RMQRoute(TransactionList.topic)
   async list(
     @Body() dto: TransactionList.Request): Promise<TransactionList.Response> {
+      this.logger.log(`А Я ДТО ИЗ RMQ: ${dto.accountIds}`)
     const txs = await this.svc.list(
       dto.userId,
       dto.peers ?? [],

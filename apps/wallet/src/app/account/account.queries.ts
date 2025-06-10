@@ -16,8 +16,8 @@ export class AccountQueries {
   async list(
     payload: AccountList.Request,
   ): Promise<AccountList.Response> {
-    const { userId, peers } = payload;
-    const accounts = await this.service.listAccounts(userId, peers ?? []);
+    //const { userId, peers } = payload;
+    const accounts = await this.service.listAccounts(payload.userId, payload.peers ?? [], !!payload.lite);
     return { accounts };
   }
 

@@ -6,6 +6,7 @@ export namespace AccountList {
   export class Request {
     @IsString() userId: string;
     @IsOptional() @IsArray() peers?: string[];  // для совместного доступа
+    @IsOptional() lite?: boolean;
   }
 
   export class Response {
