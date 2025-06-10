@@ -1,6 +1,6 @@
 import { Body, Controller } from '@nestjs/common';
 import { RMQRoute, RMQValidate } from 'nestjs-rmq';
-import { TransactionList, TransactionGet } from '@moneytracker/contracts';
+import { TransactionList, TransactionGet, TransactionSummary } from '@moneytracker/contracts';
 import { TransactionService } from './transaction.service';
 
 @Controller()
@@ -32,5 +32,20 @@ export class TransactionQueries {
   async get(@Body() dto: TransactionGet.Request): Promise<TransactionGet.Response> {
     const tx = await this.svc.get(dto.userId, dto.id, dto.peers ?? []);
     return { transaction: tx };
+  }
+
+  @RMQValidate()
+  @RMQRoute(TransactionSummary.topic)
+  async summary(
+    @Body() dto: TransactionSummary.Request,
+  ): Promise<TransactionSummary.Response> {
+    return this.svc.summary(
+      dto.userId,
+      dto.peers ?? [],
+      dto.type as 'income' | 'expense',
+      dto.accountIds,
+      dto.from ? new Date(dto.from) : undefined,
+      dto.to   ? new Date(dto.to)   : undefined,
+    );
   }
 }

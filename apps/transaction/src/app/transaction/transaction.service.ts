@@ -3,7 +3,7 @@ import { TransactionRepository } from './repositories/transaction.repository';
 import { TransactionEntity } from './entities/transaction.entity';
 import { ITransaction, FlowType, AccountType } from '@moneytracker/interfaces';
 import { TransactionEventEmitter } from './transaction.event-emitter';
-import { AccountGet, AccountList, CategoryGet, CreditGetAvailable, CreditPeriodDebt, CreditPeriodGet, TransactionCreate, TransactionUpdate } from '@moneytracker/contracts';
+import { AccountGet, AccountList, CategoryGet, CreditGetAvailable, CreditPeriodDebt, CreditPeriodGet, TransactionCreate, TransactionSummary, TransactionUpdate } from '@moneytracker/contracts';
 import { RMQService } from 'nestjs-rmq';
 
 @Injectable()
@@ -469,5 +469,92 @@ async list(
     const entity = existing.markDeleted(); // используем то же событие
     await this.repo.hardDelete(id);        // ⟵ непосредственно удаляем
     await this.events.emit(entity.events); // нотификация
+  }
+
+  
+  async summary(
+    userId: string,
+    peers: string[],
+    type: 'income' | 'expense',
+    accountIds?: string[],
+    from?: Date,
+    to?: Date,
+  ): Promise<TransactionSummary.Response> {
+    /* 1. доступные счёта */
+    const { accounts } = await this.rmq.send<AccountList.Request, AccountList.Response>(
+      AccountList.topic, { userId, peers },
+    );
+    const allowed = new Set(accounts.map(a => a._id));
+
+    /* 2. итоговый список счёт */
+    const ids = accountIds?.length
+      ? accountIds.filter(id => {
+          if (!allowed.has(id)) throw new ForbiddenException(`No access to account ${id}`);
+          return true;
+        })
+      : [...allowed];
+
+    /* 3. период по умолчанию */
+    if (!from || !to) {
+      const today = new Date(); today.setUTCHours(0,0,0,0);
+      if (!from) {
+        from = new Date(today); from.setUTCDate(1);
+      }
+      if (!to) to = today;
+    }
+
+    /* 4. получаем tx */
+    let txs = await this.repo.findByAccountIds(ids);
+
+    /* оставляем только нужный диапазон дат и счета,
+      НО НЕ отсекаем transfer'ы по type —
+      они понадобятся для вычислений */
+    txs = txs.filter(t =>
+      !t.deletedAt &&
+      (!from || t.date >= from) &&
+      (!to   || t.date <= to) &&
+      (
+        // счёт-отправитель в разрешённых
+        ids.includes(t.accountId) ||
+        // или счёт-получатель (для transfer) в разрешённых
+        (t.toAccountId && ids.includes(t.toAccountId))
+      )
+    );
+    
+
+    /* 5. группировка по категории + новый учёт transfer */
+    const byCat = new Map<string, number>();
+    let total = 0;
+
+    for (const tx of txs) {
+      const isOut = ids.includes(tx.accountId);
+      const isIn  = tx.toAccountId ? ids.includes(tx.toAccountId) : false;
+
+      let add = false;
+      if (type === 'expense') {
+        if (tx.type === 'expense' && isOut) add = true;
+        if (tx.type === 'transfer' && isOut && !isIn) add = true;
+      } else { /* income */
+        if (tx.type === 'income'  && isOut) add = true;
+        if (tx.type === 'transfer' && isIn && !isOut) add = true;
+      }
+
+      if (!add) continue;
+      total += tx.amount;
+      byCat.set(tx.categoryId, (byCat.get(tx.categoryId) ?? 0) + tx.amount);
+    }
+
+    /* 6. подтягиваем имена категорий */
+    const breakdown = await Promise.all(
+      [...byCat.entries()].map(async ([categoryId, amount]) => {
+        const { category } = await this.rmq.send<CategoryGet.Request, CategoryGet.Response>(
+          CategoryGet.topic, { userId, id: categoryId, peers },
+        );
+        const percent = total ? +(amount / total * 100).toFixed(2) : 0;
+        return { categoryId, name: category.name, amount, percent };
+      }),
+    );
+
+    return { total, breakdown };
   }
 }

@@ -25,12 +25,14 @@ import {
   CategoryGet,
   TransactionPurge,
   AccountList,
+  TransactionSummary,
 } from '@moneytracker/contracts';
 import { CreateTransactionDto } from '../dtos/create-transaction.dto';
 import { ListTransactionsDto } from '../dtos/list-transactions.dto';
 import { TransactionIdDto } from '../dtos/transaction-id.dto';
 import { UpdateTransactionDto } from '../dtos/update-transaction.dto';
 import { PeersHelper } from '../helpers/peer.helper';
+import { TxSummaryDto } from '../dtos/tx-summary.dto';
 
 function isoDateOnly(d: Date | string): string {
   return new Date(d).toISOString().split('T')[0];
@@ -351,5 +353,29 @@ export class TransactionController {
       },
     );
     return {};
+  }
+
+  /** POST /transactions/summary */
+  @UseGuards(JWTAuthGuard)
+  @Post('summary')
+  async summary(
+    @UserId() userId: string,
+    @Body() dto: TxSummaryDto,
+  ) {
+    const peers = await this.peersHelper.getPeers(userId);
+
+    const { total, breakdown } = await this.rmq.send<
+      TransactionSummary.Request,
+      TransactionSummary.Response
+    >(TransactionSummary.topic, {
+      userId,
+      peers,
+      accountIds: dto.accountIds,
+      type: dto.type,
+      from: dto.from,
+      to: dto.to,
+    });
+
+    return { total, breakdown };
   }
 }

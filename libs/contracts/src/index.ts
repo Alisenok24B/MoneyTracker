@@ -35,4 +35,5 @@ export * from './lib/notification/notification.send';
 export * from './lib/notification/notification.read';
 export * from './lib/notification/notification.list-unread';
 export * from './lib/wallet/wallet.balance-history';
+export * from './lib/transaction/transaction.summary';
 
