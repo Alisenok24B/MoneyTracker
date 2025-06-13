@@ -175,6 +175,28 @@ export class TransactionController {
               owner: toOwner,
             },
           };
+        } else {
+          /* данные счетов */
+          const acc = accById.get(tx.accountId)!;
+
+          /* владелец счёта */
+          const owner =
+          acc.userId === userId
+            ? undefined
+            : {
+              id  : acc.userId,
+              name: (await this.rmq.send<
+                  AccountUserInfo.Request, AccountUserInfo.Response
+                >(AccountUserInfo.topic, { id: acc.userId })
+              ).profile.displayName };
+
+          return {
+            ...baseFields,
+            account: {
+              ...pick(acc, ['name', 'type', 'currency']),
+              owner: owner
+            }
+          };
         }
         //----------------------------------------------------------------
 
@@ -278,6 +300,28 @@ export class TransactionController {
             owner: toOwner,
           },
         },
+      };
+    } else {
+      /* данные счетов */
+      const acc = accById.get(tx.accountId)!;
+
+      /* владелец счёта */
+      const owner =
+      acc.userId === userId
+        ? undefined
+        : {
+          id  : acc.userId,
+          name: (await this.rmq.send<
+              AccountUserInfo.Request, AccountUserInfo.Response
+            >(AccountUserInfo.topic, { id: acc.userId })
+          ).profile.displayName };
+
+      return {
+        ...base,
+        account: {
+          ...pick(acc, ['name', 'type', 'currency']),
+          owner: owner
+        }
       };
     }
       
