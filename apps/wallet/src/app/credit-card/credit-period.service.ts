@@ -254,7 +254,7 @@ export class CreditPeriodService {
   async listOutstandingDebts(
     accountId: string
   ): Promise<
-    { periodId: string; debt: number; statementStart: string; paymentDue: string; status: string }[]
+    { periodId: string; debt: number; statementStart: string; statementEnd: string, paymentDue: string; status: string }[]
   > {
     // 1) все периоды payment|overdue
     const periods = await this.periods.findMany({ accountId });
@@ -266,20 +266,23 @@ export class CreditPeriodService {
       periodId: string;
       debt: number;
       statementStart: string;
+      statementEnd: string;
       paymentDue: string;
       status: string;
     }[] = [];
 
     for (const p of relevant) {
       const debt = await this.calculateDebt(p._id!);
-      if (debt > 0) {
+      if (debt > 0 || p.status === 'overdue' && p.hasInterest === false) {
         // форматируем даты YYYY-MM-DD
         const start = formatISO(p.statementStart, { representation: 'date' });
+        const end = formatISO(p.statementEnd, { representation: 'date' });
         const due   = formatISO(p.paymentDue,   { representation: 'date' });
         result.push({
           periodId:       p._id!,
           debt,
           statementStart: start,
+          statementEnd: end,
           paymentDue:     due,
           status: p.status
         });

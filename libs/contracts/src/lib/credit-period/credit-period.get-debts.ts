@@ -11,6 +11,7 @@ export namespace CreditPeriodsDebts {
       periodId!: string;
       debt!: number;
       statementStart!: string;  // "YYYY-MM-DD"
+      statementEnd!: string;
       paymentDue!: string;      // "YYYY-MM-DD"
       status!: string;
     }
