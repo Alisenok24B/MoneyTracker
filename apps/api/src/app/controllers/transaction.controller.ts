@@ -176,6 +176,7 @@ export class TransactionController {
             },
           };
         } else {
+          /* income | expense */
           /* данные счетов */
           const acc = accById.get(tx.accountId)!;
 
@@ -199,13 +200,6 @@ export class TransactionController {
           };
         }
         //----------------------------------------------------------------
-
-        /* income | expense */
-        const acc = accById.get(tx.accountId)!;
-        return {
-          ...baseFields,
-          account: pick(acc, ['name', 'type', 'currency']),
-        };
       }),
     );
 
@@ -302,6 +296,7 @@ export class TransactionController {
         },
       };
     } else {
+      /* income / expense */
       /* данные счетов */
       const acc = accById.get(tx.accountId)!;
 
@@ -317,23 +312,15 @@ export class TransactionController {
           ).profile.displayName };
 
       return {
-        ...base,
-        account: {
-          ...pick(acc, ['name', 'type', 'currency']),
-          owner: owner
+        transaction: {
+          ...base,
+          account: {
+            ...pick(acc, ['name', 'type', 'currency']),
+            owner: owner
+          }
         }
       };
     }
-      
-    /* income / expense */
-    const acc = accById.get(tx.accountId)!;
-
-    return {
-      transaction: {
-        ...base,
-        account: pick(acc, ['name', 'type', 'currency']),
-      },
-    };
   }
 
   @UseGuards(JWTAuthGuard)
