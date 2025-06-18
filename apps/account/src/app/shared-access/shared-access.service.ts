@@ -27,7 +27,13 @@ export class SharedAccessService {
   async invite(from: string, to: string) {
     if (from === to) throw new BadRequestException('Cannot invite yourself');
 
-    /* 0. Уже являемся «парами»? — запрещаем повторно приглашать */
+    // 0.1. Уже есть pending-инвайт от этого пользователя к этому?
+    const existing = await this.invites.findPending(from, to);
+    if (existing) {
+      throw new BadRequestException('Invite already sent and is pending');
+    }
+
+    /* 0.2. Уже являемся «парами»? — запрещаем повторно приглашать */
     if (await this.peers.existsPair(from, to)) {
       throw new BadRequestException(
         'Shared access with this user already exists',

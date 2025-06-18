@@ -33,4 +33,13 @@ export class InviteRepo {
   update(id: string, patch: Partial<InviteEntity>) {
     return this.model.updateOne({ _id: id }, { $set: patch }).exec();
   }
+
+  /** Проверить, есть ли pending-инвайт между пользователями */
+  async findPending(fromUserId: string, toUserId: string): Promise<InviteDocument | null> {
+    return this.model.findOne({
+      fromUserId,
+      toUserId,
+      status: 'pending',
+    }).exec();
+  }
 }
