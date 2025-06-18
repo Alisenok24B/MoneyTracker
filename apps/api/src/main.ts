@@ -15,6 +15,12 @@ async function bootstrap() {
     whitelist: true,
     transform: true,
   }));
+  app.enableCors({
+    origin: 'http://localhost:3001',        // фронт на 3001
+    methods: ['GET','HEAD','PUT','PATCH','POST','DELETE','OPTIONS'],
+    allowedHeaders: ['Content-Type','Authorization'],
+    credentials: true,
+  });
   const port = process.env.PORT || 3333;
   await app.listen(port);
   Logger.log(
