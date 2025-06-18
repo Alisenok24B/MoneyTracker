@@ -18,6 +18,9 @@ export class Notification extends Document {
   /** интерактивное («нужно действие») */
   @Prop({ type: Boolean, default: false })
   requiresResponse!: boolean;
+
+  @Prop({ type: String })
+  inviteId?: string;
 }
 
 export const NotificationSchema = SchemaFactory.createForClass(Notification);

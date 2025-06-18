@@ -17,6 +17,7 @@ export namespace NotificationListUnread {
       requiresResponse: boolean;
       /** могут понадобиться даты на фронте */
       createdAt: Date;
+      inviteId?: string;
     }[];
   }
 }

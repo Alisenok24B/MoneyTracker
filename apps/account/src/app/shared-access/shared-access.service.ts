@@ -47,6 +47,7 @@ export class SharedAccessService {
           userId: to, 
           text: AccessMessages.invite(fromName),
           requiresResponse: true,
+          inviteId: inv._id.toString(),
         },
     );
     await this.invites.update(inv._id.toString(), { notificationId });

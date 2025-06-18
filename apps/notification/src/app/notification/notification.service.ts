@@ -19,11 +19,12 @@ export class NotificationService {
         userId:   dto.userId,
         text:     dto.text,
         requiresResponse: dto.requiresResponse ?? false,
+        inviteId: dto.inviteId,
       }),
     );
 
     // 2. Web-socket push
-    this.ws.emitToUser(dto.userId, { id: doc._id.toString(), text: dto.text });
+    this.ws.emitToUser(dto.userId, { id: doc._id.toString(), text: dto.text, inviteId: dto.inviteId.toString() });
 
     // 3. Лог
     this.log.log(`notify → ${dto.userId}: "${dto.text}"`);
@@ -52,7 +53,8 @@ export class NotificationService {
       text     : n.text,
       read     : n.read,
       createdAt: n.createdAt!,
-      requiresResponse: n.requiresResponse
+      requiresResponse: n.requiresResponse,
+      inviteId: n.inviteId,
     }));
 
     return { notifications };

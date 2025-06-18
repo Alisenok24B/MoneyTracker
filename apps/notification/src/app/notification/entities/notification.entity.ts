@@ -6,6 +6,7 @@ export class NotificationEntity {
     requiresResponse!: boolean;
     read = false;
     createdAt?: Date;
+    inviteId?: string;
   
     constructor(data: Partial<NotificationEntity>) {
       Object.assign(this, data);

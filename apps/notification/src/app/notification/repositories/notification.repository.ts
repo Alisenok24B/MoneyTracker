@@ -24,7 +24,7 @@ export class NotificationRepo {
 
   findUnread(userId: string) {
     return this.model
-      .find({ userId, read: false }, { _id: 1, text: 1, read: 1, createdAt: 1, requiresResponse: 1 })
+      .find({ userId, read: false }, { _id: 1, text: 1, read: 1, inviteId: 1, createdAt: 1, requiresResponse: 1 })
       .sort({ createdAt: -1 })
       .lean()
       .exec();

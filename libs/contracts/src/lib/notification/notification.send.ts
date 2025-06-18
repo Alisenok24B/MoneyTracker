@@ -6,6 +6,7 @@ export namespace NotificationSend {
     @IsString() userId!: string; // получатель
     @IsString() text!: string;
     @IsOptional() @IsBoolean() requiresResponse?: boolean = false; // true → уведомление интерактивное, требует ответ (например, «invite»)
+    @IsOptional() @IsString() inviteId?: string;
   }
   export class Response {}
 }

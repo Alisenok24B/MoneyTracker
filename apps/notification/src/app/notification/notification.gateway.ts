@@ -49,7 +49,7 @@ import {
       this.log.log(`Client disconnected: ${client.id}`);
     }
   
-    emitToUser(userId: string, payload: { text: string; id: string }) {
+    emitToUser(userId: string, payload: { text: string; id: string; inviteId?: string }) {
       this.server.to(userId).emit('notification', payload);
     }
   }
