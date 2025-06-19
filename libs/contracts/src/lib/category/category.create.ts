@@ -1,4 +1,4 @@
-import { IsString, IsEnum } from 'class-validator';
+import { IsString, IsEnum, IsOptional, IsArray } from 'class-validator';
 import { ICategory, CategoryIcon, FlowType } from '@moneytracker/interfaces';
 
 export namespace CategoryCreate {
@@ -16,6 +16,7 @@ export namespace CategoryCreate {
 
     @IsEnum(CategoryIcon)
     icon: CategoryIcon;
+    @IsOptional() @IsArray() @IsString({ each:true }) peers?: string[];
   }
 
   export class Response {

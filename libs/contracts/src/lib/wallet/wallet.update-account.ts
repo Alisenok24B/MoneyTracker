@@ -3,6 +3,7 @@ import {
   IsOptional,
   ValidateNested,
   IsNumber,
+  IsArray,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import { ICreditCardDetails } from '@moneytracker/interfaces';
@@ -29,6 +30,7 @@ export namespace AccountUpdate {
     @ValidateNested()
     @Type(() => CreditDto)
     creditDetails?: CreditDto;
+    @IsOptional() @IsArray() @IsString({ each:true }) peers?: string[];
   }
 
   export class Response {}

@@ -143,6 +143,13 @@ export class AccountService {
       }
     }
     await this.events.emit(created.events);        // эмитируем события создания
+    const userIds = [dto.userId, ...(dto.peers ?? [])];
+    await this.rmq.notify('sync.peer.event', {
+      userIds,
+      type: 'account',
+      action: 'create',
+      data: {},
+    });
     return created;
   }
 
@@ -200,7 +207,7 @@ export class AccountService {
     return entity;
   }
 
-  async updateAccount(userId: string, id: string, update: Partial<IAccount>): Promise<AccountEntity> {
+  async updateAccount(userId: string, id: string, peers: string[], update: Partial<IAccount>): Promise<AccountEntity> {
     const doc = await this.repo.findById(id);
     if (!doc) throw new NotFoundException('Account not found or deleted');
     if (doc.userId !== userId) throw new ForbiddenException('Access denied');
@@ -221,10 +228,17 @@ export class AccountService {
     const entity = new AccountEntity(doc.toObject());
     entity.markUpdated();                          // ← генерируем событие обновления
     await this.events.emit(entity.events);        // ← эмитируем события обновления
+    const userIds = [userId, ...(peers ?? [])];
+    await this.rmq.notify('sync.peer.event', {
+      userIds,
+      type: 'account',
+      action: 'update',
+      data: {},
+    });
     return entity;
   }
 
-  async deleteAccount(userId: string, id: string): Promise<void> {
+  async deleteAccount(userId: string, id: string, peers: string[]): Promise<void> {
     // находим лишь НЕ удалённый документ
     const doc = await this.repo.findById(id);
     if (!doc) throw new NotFoundException('Account not found or already deleted');
@@ -244,6 +258,13 @@ export class AccountService {
 
     // отправляем все накопленные события (в частности, account.deleted.event)
     await this.events.emit(entity.events);
+    const userIds = [userId, ...(peers ?? [])];
+    await this.rmq.notify('sync.peer.event', {
+      userIds,
+      type: 'account',
+      action: 'delete',
+      data: {},
+    });
   }
 
   /**

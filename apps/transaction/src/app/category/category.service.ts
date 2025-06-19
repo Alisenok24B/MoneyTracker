@@ -4,12 +4,14 @@ import { CategoryRepository } from './repositories/category.repository';
 import { CategoryEntity } from './entities/category.entity';
 import { ICategory, FlowType } from '@moneytracker/interfaces';
 import { CategoryEventEmitter } from './category.event-immiter';
+import { RMQService } from 'nestjs-rmq';
 
 @Injectable()
 export class CategoryService {
   constructor(
     private readonly repo: CategoryRepository,
     private readonly events: CategoryEventEmitter,
+    private readonly rmq: RMQService,
   ) {}
 
   /** владелец либо пользователь-peer */
@@ -25,6 +27,7 @@ export class CategoryService {
   async create(
     userId: string,
     dto: Pick<ICategory, 'name' | 'type' | 'icon'>,
+    peers: string[]
   ): Promise<CategoryEntity> {
     const entity = new CategoryEntity({
       ...dto,
@@ -41,6 +44,13 @@ export class CategoryService {
       ...rest,
     });
     await this.events.emit(created.events);
+    const userIds = [userId, ...(peers ?? [])];
+    await this.rmq.notify('sync.peer.event', {
+      userIds,
+      type: 'category',
+      action: 'create',
+      data: {},
+    });
     return created;
   }
 
@@ -128,6 +138,13 @@ export class CategoryService {
     // формируем результат
     const updated = new CategoryEntity(updatedRaw);
     await this.events.emit(entity.events);
+    const userIds = [userId, ...(peers ?? [])];
+    await this.rmq.notify('sync.peer.event', {
+      userIds,
+      type: 'category',
+      action: 'update',
+      data: {},
+    });
     return updated;
   }
 
@@ -166,5 +183,12 @@ export class CategoryService {
 
     // Эмитим события
     await this.events.emit(entity.events);
+    const userIds = [userId, ...(peers ?? [])];
+    await this.rmq.notify('sync.peer.event', {
+      userIds,
+      type: 'category',
+      action: 'delete',
+      data: {},
+    });
   }
 }

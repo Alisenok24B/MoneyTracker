@@ -87,6 +87,7 @@ export class WalletController {
     @UserId() userId: string,
     @Body() dto: CreateAccountDto,
   ) {
+    const peers = await this.peersHelper.getPeers(userId);
     // balance обязателен для не-кредитных
     if (dto.type !== AccountType.CreditCard && dto.balance === undefined) {
       throw new BadRequestException('balance is required for non-credit accounts');
@@ -101,7 +102,7 @@ export class WalletController {
 
     return this.rmqService.send<AccountCreate.Request, AccountCreate.Response>(
       AccountCreate.topic,
-      { userId, ...dto },
+      { userId, peers, ...dto },
     );
   }
 
@@ -221,12 +222,14 @@ export class WalletController {
     @Param() params: AccountIdDto,
     @Body() dto: UpdateAccountDto,
   ) {
+    const peers = await this.peersHelper.getPeers(userId);
     return this.rmqService.send<
       AccountUpdate.Request,
       AccountUpdate.Response
     >(AccountUpdate.topic, {
       userId,
       id: params.id,
+      peers: peers,
       ...dto,
     });
   }
@@ -238,12 +241,14 @@ export class WalletController {
     @UserId() userId: string,
     @Param() params: AccountIdDto,
   ) {
+    const peers = await this.peersHelper.getPeers(userId);
     return this.rmqService.send<
       AccountDelete.Request,
       AccountDelete.Response
     >(AccountDelete.topic, {
       userId,
       id: params.id,
+      peers: peers
     });
   }
 }

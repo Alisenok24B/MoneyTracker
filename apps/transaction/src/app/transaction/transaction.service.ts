@@ -251,6 +251,13 @@ export class TransactionService {
   entity._id = saved._id;
   entity.markCreated();
   await this.events.emit(entity.events);
+  const userIds = [userId, ...(dto.peers ?? [])];
+  await this.rmq.notify('sync.peer.event', {
+    userIds,
+    type: 'transaction',
+    action: 'create',
+    data: {},
+  });
   return {};
 }
 
@@ -509,6 +516,13 @@ async list(
     const entity = existing.markDeleted(); // используем то же событие
     await this.repo.hardDelete(id);        // ⟵ непосредственно удаляем
     await this.events.emit(entity.events); // нотификация
+    const userIds = [userId, ...(peers ?? [])];
+    await this.rmq.notify('sync.peer.event', {
+      userIds,
+      type: 'transaction',
+      action: 'delete',
+      data: {},
+    });
   }
 
   

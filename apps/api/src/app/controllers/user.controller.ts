@@ -5,10 +5,11 @@ import { RMQService } from 'nestjs-rmq';
 import { AccountUserInfo, AccountChangeProfile, UserSearch } from '@moneytracker/contracts';
 import { ChangeProfileDto } from '../dtos/change-profile.dto';
 import { SearchUserDto } from '../dtos/search-user.dto';
+import { PeersHelper } from '../helpers/peer.helper';
 
 @Controller('user')
 export class UserController {
-  constructor(private readonly rmqService: RMQService) {}
+  constructor(private readonly rmqService: RMQService, private readonly peersHelper: PeersHelper) {}
 
   @UseGuards(JWTAuthGuard)
   @Get('info')
@@ -25,12 +26,14 @@ export class UserController {
     @UserId() userId: string,
     @Body() dto: ChangeProfileDto,
   ) {
+    const peers = await this.peersHelper.getPeers(userId);
     return this.rmqService.send<
       AccountChangeProfile.Request,
       AccountChangeProfile.Response
     >(AccountChangeProfile.topic, {
       id: userId,
       user: { displayName: dto.displayName },
+      peers: peers ?? []
     });
   }
 

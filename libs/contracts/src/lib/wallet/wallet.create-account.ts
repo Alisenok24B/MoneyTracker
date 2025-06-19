@@ -1,4 +1,4 @@
-import { IsString, IsIn, IsOptional, IsNumber, ValidateNested, ValidateIf } from 'class-validator';
+import { IsString, IsIn, IsOptional, IsNumber, ValidateNested, ValidateIf, IsArray } from 'class-validator';
 import { BillingCycleType, ICreditCardDetails } from '@moneytracker/interfaces';
 import { Type } from 'class-transformer';
 
@@ -41,6 +41,7 @@ export namespace AccountCreate {
     @ValidateNested()
     @Type(() => CreditDto)
     creditDetails?: CreditDto;
+    @IsOptional() @IsArray() @IsString({ each:true }) peers?: string[];
   }
 
   export class Response {

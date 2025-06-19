@@ -7,6 +7,8 @@ import { NotificationRepo } from './repositories/notification.repository';
 import { JwtModule } from '@nestjs/jwt';
 import { getJWTConfig } from '../configs/jwt.config';
 import { NotificationService } from './notification.service';
+import { SyncGateway } from './sync.gateway';
+import { SyncService } from './sync.service';
 
 @Module({
   imports: [
@@ -16,6 +18,6 @@ import { NotificationService } from './notification.service';
     JwtModule.registerAsync(getJWTConfig()),
   ],
   controllers: [NotificationController],
-  providers: [NotificationRepo, NotificationGateway, NotificationService],
+  providers: [NotificationRepo, NotificationGateway, SyncGateway, NotificationService, SyncService]
 })
 export class NotificationModule {}

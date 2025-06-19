@@ -15,8 +15,8 @@ export class CategoryCommands {
 
   @RMQValidate()
   @RMQRoute(CategoryCreate.topic)
-  async create({ userId, name, type, icon }: CategoryCreate.Request): Promise<CategoryCreate.Response> {
-    const category = await this.service.create(userId, { name, type, icon });
+  async create({ userId, name, type, icon, peers }: CategoryCreate.Request): Promise<CategoryCreate.Response> {
+    const category = await this.service.create(userId, { name, type, icon }, peers);
     return { category };
   }
 

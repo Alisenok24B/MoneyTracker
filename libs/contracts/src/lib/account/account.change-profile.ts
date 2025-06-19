@@ -1,4 +1,4 @@
-import { IsObject, IsString } from 'class-validator';
+import { IsArray, IsObject, IsOptional, IsString } from 'class-validator';
 import {IUser} from '@moneytracker/interfaces'
 
 export namespace AccountChangeProfile {
@@ -10,6 +10,7 @@ export namespace AccountChangeProfile {
 
         @IsObject()
         user: Pick<IUser, 'displayName'>;
+        @IsOptional() @IsArray() @IsString({ each:true }) peers?: string[];
     }
 
     export class Response {}

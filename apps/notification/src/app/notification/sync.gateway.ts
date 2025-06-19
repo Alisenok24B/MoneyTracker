@@ -1,0 +1,61 @@
+import {
+  WebSocketGateway,
+  WebSocketServer,
+  OnGatewayInit,
+  OnGatewayConnection,
+  OnGatewayDisconnect,
+} from '@nestjs/websockets';
+import { Server, Socket } from 'socket.io';
+import { JwtService } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
+import { Logger } from '@nestjs/common';
+
+@WebSocketGateway({ namespace: '/sync', cors: { origin: '*' } })
+export class SyncGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
+  @WebSocketServer()
+  server!: Server;
+  private readonly log = new Logger(SyncGateway.name);
+
+  constructor(
+    private readonly jwt: JwtService,
+    private readonly cfg: ConfigService,
+  ) {}
+
+  afterInit() {
+    const secret = this.cfg.get<string>('JWT_SECRET');
+    this.server.use((socket, next) => {
+      try {
+        const token =
+          socket.handshake.auth?.token ||
+          socket.handshake.query?.token;
+        if (!token) return next(new Error('No token'));
+        const payload: any = this.jwt.verify(token, { secret });
+        socket.data.userId = payload.id;
+        socket.join(payload.id);
+        return next();
+      } catch {
+        return next(new Error('Unauthorized'));
+      }
+    });
+    this.log.log('Sync WS initialised');
+  }
+
+  handleConnection(client: Socket) {
+    this.log.log(`Client connected: ${client.id}`);
+  }
+
+  handleDisconnect(client: Socket) {
+    this.log.log(`Client disconnected: ${client.id}`);
+  }
+
+  /**
+   * Отправить событие синхронизации сразу нескольким пользователям (массив userId)
+   * @param userIds — автор + peers
+   * @param payload — любые данные
+   */
+  emitToUsers(userIds: string[], payload: { type: string; data: any }) {
+    for (const userId of userIds) {
+      this.server.to(userId).emit('peer-sync', payload);
+    }
+  }
+}

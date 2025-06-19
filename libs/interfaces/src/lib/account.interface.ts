@@ -50,4 +50,5 @@ export interface IAccount {
   currency: string;
   creditDetails?: ICreditCardDetails;  // только для type = 'credit'
   deletedAt?: Date;        // soft-delete
+  peers?: string[];
 }

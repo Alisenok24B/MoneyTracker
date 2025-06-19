@@ -83,10 +83,11 @@ export class CategoryController {
     @UserId() userId: string,
     @Body() dto: CreateCategoryDto,
   ) {
+    const peers = await this.peersHelper.getPeers(userId);
     await this.rmqService.send<
       CategoryCreate.Request,
       CategoryCreate.Response
-    >(CategoryCreate.topic, { userId, ...dto });
+    >(CategoryCreate.topic, { userId, peers: peers ?? [], ...dto });
     return { };
   }
 

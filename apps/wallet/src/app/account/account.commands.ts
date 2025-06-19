@@ -21,7 +21,7 @@ export class AccountCommands {
   async create(
     payload: AccountCreate.Request,
   ): Promise<AccountCreate.Response> {
-    const { userId, name, type, balance, currency, creditDetails } = payload;
+    const { userId, name, type, balance, currency, creditDetails, peers } = payload;
     const account = await this.service.createAccount({
       userId,
       name,
@@ -29,6 +29,7 @@ export class AccountCommands {
       balance,
       currency,
       creditDetails,
+      peers: peers ?? []
     });
     return { accountId: account._id! };
   }
@@ -43,7 +44,7 @@ export class AccountCommands {
   async update(
     payload: AccountUpdate.Request,
   ): Promise<AccountUpdate.Response> {
-    const { userId, id, name, creditDetails } = payload;
+    const { userId, id, name, creditDetails, peers } = payload;
 
     const updateData: Partial<IAccount> = {};
     if (name !== undefined) {
@@ -57,7 +58,7 @@ export class AccountCommands {
       } as IAccount['creditDetails'];
     }
 
-    await this.service.updateAccount(userId, id, updateData);
+    await this.service.updateAccount(userId, id, peers, updateData);
     return {};
   }
 
@@ -70,8 +71,8 @@ export class AccountCommands {
   async delete(
     payload: AccountDelete.Request,
   ): Promise<AccountDelete.Response> {
-    const { userId, id } = payload;
-    await this.service.deleteAccount(userId, id);
+    const { userId, id, peers } = payload;
+    await this.service.deleteAccount(userId, id, peers);
     return {};
   }
 }
